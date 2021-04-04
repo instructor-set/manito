@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)  
         setContentView(binding.root)
         Log.d("test", "test")
     }
