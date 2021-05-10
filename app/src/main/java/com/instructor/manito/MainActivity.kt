@@ -1,21 +1,23 @@
 package com.instructor.manito
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.instructor.manito.databinding.ActivityMainBinding
 import splitties.activities.start
 
 class MainActivity : AppCompatActivity() {
 
-    private val binding by lazy {
+    private val main by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-        binding.button.setOnClickListener {
+        setContentView(main.root)
+        main.button.setOnClickListener {
             start<LobbyActivity>()
+            Log.d("sdfdsf","asd")
         }
     }
 }
