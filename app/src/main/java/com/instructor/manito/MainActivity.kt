@@ -1,7 +1,6 @@
 package com.instructor.manito
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.instructor.manito.databinding.ActivityMainBinding
 import splitties.activities.start
@@ -17,7 +16,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(main.root)
         main.button.setOnClickListener {
             start<LobbyActivity>()
-            Log.d("sdfdsf","asd")
         }
     }
 }
