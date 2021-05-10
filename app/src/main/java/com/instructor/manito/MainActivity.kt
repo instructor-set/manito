@@ -1,9 +1,9 @@
 package com.instructor.manito
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.instructor.manito.databinding.ActivityMainBinding
+import splitties.activities.start
 
 class MainActivity : AppCompatActivity() {
 
@@ -12,8 +12,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)  
+        super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        Log.d("test", "test")
+        binding.button.setOnClickListener {
+            start<LobbyActivity>()
+        }
     }
 }
