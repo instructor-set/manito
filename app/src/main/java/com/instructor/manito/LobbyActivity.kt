@@ -1,12 +1,14 @@
 package com.instructor.manito
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 
 class LobbyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lobby)
+        Log.d("sdfdsf","asd")
 
     }
 }
