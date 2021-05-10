@@ -15,7 +15,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(main.root)
         main.button.setOnClickListener {
-            start<LobbyActivity>()
         }
     }
 }
