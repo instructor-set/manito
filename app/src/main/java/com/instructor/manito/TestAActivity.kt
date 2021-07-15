@@ -2,16 +2,16 @@ package com.instructor.manito
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.instructor.manito.databinding.ActivityMainBinding
+import com.instructor.manito.databinding.ActivityTestaBinding
 import splitties.fragments.addToBackStack
 import splitties.fragments.fragmentTransaction
 
-class MainActivity : AppCompatActivity() {
+class TestAActivity : AppCompatActivity() {
 
     private val adminRoomFragment = AdminRoomFragment.newInstance(1, "아무나 들어와라", 1234, "진하?")
 
     private val main by lazy {
-        ActivityMainBinding.inflate(layoutInflater)
+        ActivityTestaBinding.inflate(layoutInflater)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

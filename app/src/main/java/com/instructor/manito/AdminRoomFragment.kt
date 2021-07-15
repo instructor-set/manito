@@ -15,11 +15,10 @@ import splitties.fragmentargs.argOrDefault
 
 class AdminRoomFragment private constructor() : Fragment() {
 
-    var roomNumber: Int by  arg()
-    var title: String by arg()
+    var roomNumber: Int by arg()
+    var roomTitle: String by arg()
     var roomPassword: String by argOrDefault("")
     var nickname: String by arg()
-
 
 
     private val whiteGrayInt by lazy {
@@ -40,7 +39,7 @@ class AdminRoomFragment private constructor() : Fragment() {
         binding.run {
             sendButton.isEnabled = false
             roomNumberText.text = roomNumber.toString()
-            titleText.text = title
+            titleText.text = roomTitle
             passwordText.text = roomPassword
         }
 
@@ -81,11 +80,11 @@ class AdminRoomFragment private constructor() : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(roomNumber: Int, title: String, roomPassword: Int?, nickname: String) =
+        fun newInstance(roomNumber: Int, roomTitle: String, roomPassword: Int?, nickname: String) =
             AdminRoomFragment().apply {
                 this.roomNumber = roomNumber
-                this.title = title
-                roomPassword?.let { this.roomPassword = it.toString()}
+                this.roomTitle = roomTitle
+                roomPassword?.let { this.roomPassword = it.toString() }
                 this.nickname = nickname
             }
     }
