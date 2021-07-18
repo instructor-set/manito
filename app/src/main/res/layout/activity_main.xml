@@ -28,15 +28,16 @@
 
 
         <Button
-            android:id="@+id/makeRoomButton"
+            android:id="@+id/createRoomButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:backgroundTint="#C84242"
             android:text="방 만들기"
             app:iconPadding="8dp" />
 
         <Button
-            android:id="@+id/EnterRoomButton"
+            android:id="@+id/enterRoomButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"

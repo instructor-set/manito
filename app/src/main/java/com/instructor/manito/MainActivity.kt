@@ -1,19 +1,23 @@
 package com.instructor.manito
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.instructor.manito.databinding.ActivityMainBinding
+import com.instructor.manito.dto.Room
+import splitties.activities.start
 
 class MainActivity : AppCompatActivity() {
 
+    private val main by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
 
     var dataList = arrayListOf<Room>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(main.root)
 
         fun makeDummyData() : MutableList<Room>{
             val data : MutableList<Room> = mutableListOf()
@@ -29,16 +33,17 @@ class MainActivity : AppCompatActivity() {
             }
             return data
         }
-
-        val enterRoomButton = findViewById<Button>(R.id.EnterRoomButton)
-        enterRoomButton.setOnClickListener {
+        main.createRoomButton.setOnClickListener {
+            start<CreateActivity>()
+        }
+        main.enterRoomButton.setOnClickListener {
             Toast.makeText(this, dataList.toString(), Toast.LENGTH_LONG).show()
         }
 
         dataList = makeDummyData() as ArrayList<Room>
 
         val adapter = MainAdapter(this, dataList)
-        val mainRecycler = findViewById<RecyclerView>(R.id.mainRecycler)
+        val mainRecycler = main.mainRecycler
 
         mainRecycler.adapter = adapter
         mainRecycler.layoutManager = LinearLayoutManager(this)

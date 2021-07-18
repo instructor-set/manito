@@ -8,7 +8,7 @@ import splitties.fragments.fragmentTransaction
 
 class TestAActivity : AppCompatActivity() {
 
-    private val adminRoomFragment = AdminRoomFragment.newInstance(1, "아무나 들어와라", 1234, "진하?")
+    private val adminRoomFragment = AdminRoomFragment.newInstance(1, "아무나 들어와라", "1234", "진하?")
 
     private val main by lazy {
         ActivityTestaBinding.inflate(layoutInflater)

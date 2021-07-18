@@ -1,19 +1,14 @@
 package com.instructor.manito
 
 import android.content.Context
-import android.os.Bundle
-import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.instructor.manito.databinding.FragmentAdminRoomBinding
-import splitties.fragmentargs.arg
-import splitties.fragmentargs.argOrDefault
+import com.instructor.manito.dto.Room
 
 class MainAdapter(val context: Context, val listData: ArrayList<Room>) : RecyclerView.Adapter<MainAdapter.Holder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainAdapter.Holder {
@@ -54,7 +49,4 @@ class MainAdapter(val context: Context, val listData: ArrayList<Room>) : Recycle
 
     }
 
-}
-data class Room(var no: Int?, var title: String, var roomPassword:Int?) {
-    constructor(title: String) : this(null, title, null)
 }

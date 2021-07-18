@@ -80,7 +80,7 @@ class AdminRoomFragment private constructor() : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(roomNumber: Int, roomTitle: String, roomPassword: Int?, nickname: String) =
+        fun newInstance(roomNumber: Int, roomTitle: String, roomPassword: String?, nickname: String) =
             AdminRoomFragment().apply {
                 this.roomNumber = roomNumber
                 this.roomTitle = roomTitle

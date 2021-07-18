@@ -1,7 +1,6 @@
 package com.instructor.manito
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
@@ -129,8 +128,7 @@ class LoginActivity : AppCompatActivity() {
         myRef.setValue("Hello, World!")
 
         login.testAButton.setOnClickListener {
-            Log.d("jinha", "what?")
-            start<TestAActivity>()
+            start<MainActivity>()
         }
         login.testBButton.setOnClickListener {
 
