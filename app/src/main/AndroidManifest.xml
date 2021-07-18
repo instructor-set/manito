@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Manito">
+        <activity android:name=".MainActivity"></activity>
         <activity android:name=".TestAActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
