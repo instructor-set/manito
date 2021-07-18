@@ -18,8 +18,8 @@ class CreateActivity : AppCompatActivity() {
         setContentView(create.root)
 
 
-        val createTitle = create.textName
-        val createPassword = create.textPassword
+        val createTitle = create.titleEditText
+        val createPassword = create.passwordEditText
         val createButton = create.buttonCreate
 
         adminRoomFragment = AdminRoomFragment.newInstance(1, createTitle.text.toString(), createPassword.text.toString(), "진하?")
