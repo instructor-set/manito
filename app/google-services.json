@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "405054831056",
+    "firebase_url": "https://android-manito-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "android-manito",
+    "storage_bucket": "android-manito.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:405054831056:android:4f103ccdf2718d9b2221d5",
+        "android_client_info": {
+          "package_name": "com.instructor.manito"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "405054831056-6917vuvfrhtin3hreid0dcoc8gg2qusu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.instructor.manito",
+            "certificate_hash": "bba235c48714242970ed36b0f9357ff310707790"
+          }
+        },
+        {
+          "client_id": "405054831056-lcelhsdpsf1g0tbkc8l73ojj8bql95ee.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABaK9ExuO2S4Fw6Q-KjeIXoMe6H3GgePc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "405054831056-lcelhsdpsf1g0tbkc8l73ojj8bql95ee.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
