@@ -33,6 +33,7 @@ class MainAdapter(val context: Context, val listData: ArrayList<Room>) : Recycle
         val titleText = itemView?.findViewById<TextView>(R.id.cellTitleText)
         val roomNumberText = itemView?.findViewById<TextView>(R.id.cellRoomNumberText)
         val keyImage = itemView?.findViewById<ImageView>(R.id.cellKeyImage)
+        val numberofPeople = itemView?.findViewById<TextView>(R.id.cellNumberOfPeople)
 
 
         fun bind(room: Room){
