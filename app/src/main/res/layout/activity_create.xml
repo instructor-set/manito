@@ -7,7 +7,7 @@
     tools:context=".CreateActivity">
 
     <Button
-        android:id="@+id/buttonCreate"
+        android:id="@+id/create_createRoomButton"
         android:layout_width="90dp"
         android:layout_height="45dp"
         android:layout_marginStart="16dp"
@@ -38,12 +38,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleEditText" />
-
-    <FrameLayout
-        android:id="@+id/mainFrame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,32 +2,53 @@ package com.instructor.manito
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.MutableData
+import com.google.firebase.database.Transaction
+import com.google.firebase.database.ktx.getValue
 import com.instructor.manito.databinding.ActivityCreateBinding
-import splitties.fragments.addToBackStack
-import splitties.fragments.fragmentTransaction
+import com.instructor.manito.dto.Room
+import com.instructor.manito.lib.Database
+import splitties.activities.start
+import splitties.bundle.putExtras
 
 class CreateActivity : AppCompatActivity() {
-    private val create by lazy {
+    private val bind by lazy {
         ActivityCreateBinding.inflate(layoutInflater)
     }
 
-    private lateinit var adminRoomFragment: AdminRoomFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(create.root)
+        bind.apply {
+            setContentView(root)
+            createCreateRoomButton.setOnClickListener {
+                createCreateRoomButton.isEnabled = false
+                Database.getReference("rooms").runTransaction(object : Transaction.Handler {
+                    override fun doTransaction(currentData: MutableData): Transaction.Result {
+                        val roomNo = currentData.childrenCount + 1
+                        currentData.child("$roomNo").value =
+                            Room(roomNo, titleEditText.text.toString(), passwordEditText.text.toString())
+                        return Transaction.success(currentData)
+                    }
 
+                    override fun onComplete(
+                        error: DatabaseError?,
+                        committed: Boolean,
+                        currentData: DataSnapshot?
+                    ) {
+                        currentData!!.apply {
+                            start<RoomActivity> {
+                                putExtras(RoomActivity.Extras) {
+                                    room = child("$childrenCount").getValue<Room>()!!
+                                }
+                            }
+                        }
+                    }
 
-        val createTitle = create.titleEditText
-        val createPassword = create.passwordEditText
-        val createButton = create.buttonCreate
+                })
 
-        adminRoomFragment = AdminRoomFragment.newInstance(1, createTitle.text.toString(), createPassword.text.toString(), "진하?")
-
-        create.buttonCreate.setOnClickListener {
-            fragmentTransaction(false) {
-                replace(R.id.mainFrame, adminRoomFragment)
-                addToBackStack()
             }
         }
 

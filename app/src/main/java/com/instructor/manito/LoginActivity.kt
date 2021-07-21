@@ -6,12 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
-import com.google.firebase.ktx.Firebase
 import com.instructor.manito.databinding.ActivityLoginBinding
 import com.instructor.manito.dto.User
 import com.instructor.manito.lib.Authentication
@@ -22,7 +18,7 @@ import splitties.alertdialog.material.materialAlertDialog
 
 class LoginActivity : AppCompatActivity() {
 
-    private val login by lazy {
+    private val bind by lazy {
         ActivityLoginBinding.inflate(layoutInflater)
     }
 
@@ -120,17 +116,12 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(login.root)
+        setContentView(bind.root)
 
-        val database = Firebase.database
-        val myRef = database.getReference("message/ewr")
-
-        myRef.setValue("Hello, World!")
-
-        login.testAButton.setOnClickListener {
+        bind.testAButton.setOnClickListener {
             start<MainActivity>()
         }
-        login.testBButton.setOnClickListener {
+        bind.testBButton.setOnClickListener {
 
             login()
 
