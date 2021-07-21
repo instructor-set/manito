@@ -1,54 +1,63 @@
 package com.instructor.manito
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.instructor.manito.databinding.ActivityLoginBinding
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.getValue
 import com.instructor.manito.databinding.ActivityMainBinding
 import com.instructor.manito.dto.Room
-import splitties.activities.start as start
+import com.instructor.manito.lib.Database
+import com.instructor.manito.lib.Util
+import splitties.activities.start
 
 class MainActivity : AppCompatActivity() {
 
-    private val main by lazy {
+    private val bind by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
-    
+
     var dataList = arrayListOf<Room>()
+    val adapter = MainAdapter(this@MainActivity, dataList)
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(main.root)
-
-        fun makeDummyData() : MutableList<Room>{
-            val data : MutableList<Room> = mutableListOf()
-
-            val roomT = Room(0, "test", null, 10)
-            data.add(roomT)
-            for(no in 1..10){
-                val num = no
-                val title = "${no}번째"
-                val key = (no - 1).toString()
-                val numberOfPeople = no
-                val room = Room(num, title, key, numberOfPeople)
-                data.add(room)
+        bind.apply {
+            setContentView(root)
+            createRoomButton.setOnClickListener {
+                start<CreateActivity>{
+                    flags = Intent.FLAG_ACTIVITY_NO_HISTORY
+                }
             }
-            return data
-        }
-        main.createRoomButton.setOnClickListener {
-            start<CreateActivity>()
-        }
-        main.enterRoomButton.setOnClickListener {
+            enterRoomButton.setOnClickListener {
+                Toast.makeText(this@MainActivity, dataList.toString(), Toast.LENGTH_LONG).show()
+            }
+
+            Database.getReference("rooms").addValueEventListener(object: ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    dataList.clear()
+                    for(a in snapshot.children){
+                        dataList.add(a.getValue<Room>()!!)
+                    }
+                    adapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Util.j(error.details)
+                }
+
+            })
+
+            mainRecycler.adapter = adapter
+            mainRecycler.layoutManager = LinearLayoutManager(this@MainActivity)
 
         }
 
-        dataList = makeDummyData() as ArrayList<Room>
-
-        val adapter = MainAdapter(this, dataList)
-        val mainRecycler = main.mainRecycler
-
-        mainRecycler.adapter = adapter
-        mainRecycler.layoutManager = LinearLayoutManager(this)
 
     }
 }

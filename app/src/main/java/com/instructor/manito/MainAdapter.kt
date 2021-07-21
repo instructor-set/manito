@@ -39,7 +39,7 @@ class MainAdapter(val context: Context, val listData: ArrayList<Room>) : Recycle
         fun bind(room: Room){
             titleText.text = room.title
             roomNumberText.text = room.no.toString()
-            if(room.roomPassword != null){
+            if(room.password != null){
                 keyImage?.setImageResource(R.drawable.ic_baseline_vpn_key_24)
             }else{
                 keyImage.visibility = View.INVISIBLE

@@ -1,3 +1,10 @@
 package com.instructor.manito.dto
 
-data class Room(var no: Int? = null, var title: String? = null, var roomPassword:String? = null, var numberOfPeople:Int? = null)
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+
+@Parcelize
+data class Room(var no: Long? = null, var title: String? = null, var password: String? = null) :
+    Parcelable
+
