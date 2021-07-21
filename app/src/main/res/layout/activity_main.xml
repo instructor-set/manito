@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".MainActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/mainRecycler"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/pullToRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -24,7 +26,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainRecycler">
+        app:layout_constraintTop_toBottomOf="@+id/mainScrollView">
 
 
         <Button
@@ -32,8 +34,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:backgroundTint="#C84242"
+            android:backgroundTint="#00A1A1A1"
             android:text="방 만들기"
+            android:textColor="#000000"
             app:iconPadding="8dp" />
 
         <Button
@@ -41,8 +44,173 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:backgroundTint="#00D65050"
             android:text="방 입장하기"
+            android:textColor="#000000"
             app:iconPadding="8dp" />
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mainRecycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/myManitoRoomText"
+        app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:text="마니또 방"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toTopOf="@id/mainRecycler"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/myManitoRoomText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:text="나의 마니또 방"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toTopOf="@id/mainScrollView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainRecycler" />
+
+
+    <ScrollView
+        android:id="@+id/mainScrollView"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toTopOf="@id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myManitoRoomText">
+
+        <LinearLayout
+            android:id="@+id/roomContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="100dp"
+                android:layout_height="150dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/view_background"
+                android:orientation="vertical"
+                android:outlineProvider="background">
+
+                <TextView
+                    android:id="@+id/roomTitleText2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="방제목"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/myManitoText2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="내 마니또"
+                    android:textAlignment="center"
+                    android:textColor="#888181" />
+
+                <TextView
+                    android:id="@+id/roomStateText2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="방 상태"
+                    android:textAlignment="center"
+                    android:textColor="#888181" />
+
+                <TextView
+                    android:id="@+id/blankText2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="viewStart"
+                    android:textColor="#888181" />
+
+                <TextView
+                    android:id="@+id/exitText2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="방 나가기"
+                    android:textAlignment="center"
+                    android:textColor="#888181" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="100dp"
+                android:layout_height="150dp"
+                android:background="@drawable/view_background"
+                android:orientation="vertical"
+                android:outlineProvider="background">
+
+                <TextView
+                    android:id="@+id/roomTitleText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="방제목"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/myManitoText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="내 마니또"
+                    android:textAlignment="center"
+                    android:textColor="#888181" />
+
+                <TextView
+                    android:id="@+id/roomStateText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="방 상태"
+                    android:textAlignment="center"
+                    android:textColor="#888181" />
+
+                <TextView
+                    android:id="@+id/blankText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="viewStart"
+                    android:textColor="#888181" />
+
+                <TextView
+                    android:id="@+id/exitText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="방 나가기"
+                    android:textAlignment="center"
+                    android:textColor="#888181" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

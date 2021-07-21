@@ -3,13 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF">
 
     <ImageView
         android:id="@+id/cellKeyImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
+        android:tint="#FFC400"
         app:layout_constraintBottom_toBottomOf="@+id/cellTitleText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cellTitleText"
@@ -27,7 +29,7 @@
         android:text="방제목"
         android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/cellKeyImage"
+        app:layout_constraintEnd_toStartOf="@+id/cellNumberOfPeople"
         app:layout_constraintStart_toEndOf="@+id/cellRoomNumberText"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,5 +42,16 @@
         android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="@+id/cellTitleText"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cellTitleText" />
+
+    <TextView
+        android:id="@+id/cellNumberOfPeople"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="8/10"
+        android:textColor="#787878"
+        app:layout_constraintBottom_toBottomOf="@+id/cellTitleText"
+        app:layout_constraintEnd_toStartOf="@+id/cellKeyImage"
         app:layout_constraintTop_toTopOf="@+id/cellTitleText" />
 </androidx.constraintlayout.widget.ConstraintLayout>
