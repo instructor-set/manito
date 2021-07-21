@@ -8,15 +8,26 @@
     android:background="#FFFFFF"
     tools:context=".MainActivity">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/pullToRefresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent">
 
+    <com.baoyz.widget.PullRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/myManitoRoomText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleTextView">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mainRecycler"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/myManitoRoomText"
+            app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </com.baoyz.widget.PullRefreshLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -50,14 +61,7 @@
             app:iconPadding="8dp" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/mainRecycler"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/myManitoRoomText"
-        app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
+
 
     <TextView
         android:id="@+id/titleTextView"
@@ -68,7 +72,7 @@
         android:gravity="center"
         android:text="마니또 방"
         android:textColor="#000000"
-        app:layout_constraintBottom_toTopOf="@id/mainRecycler"
+        app:layout_constraintBottom_toTopOf="@id/swipeRefreshLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -85,7 +89,7 @@
         app:layout_constraintBottom_toTopOf="@id/mainScrollView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainRecycler" />
+        app:layout_constraintTop_toBottomOf="@+id/swipeRefreshLayout" />
 
 
     <ScrollView
@@ -210,7 +214,6 @@
 
         </LinearLayout>
     </ScrollView>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
