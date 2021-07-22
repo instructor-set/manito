@@ -28,8 +28,12 @@ class CreateActivity : AppCompatActivity() {
                 Database.getReference("rooms").runTransaction(object : Transaction.Handler {
                     override fun doTransaction(currentData: MutableData): Transaction.Result {
                         val roomNo = currentData.childrenCount + 1
-                        current Data.child("$roomNo").value =
-                            Room(roomNo, titleEditText.text.toString(), passwordEditText.text.toString())
+                        currentData.child("$roomNo").value =
+                            Room(
+                                roomNo,
+                                titleEditText.text.toString(),
+                                passwordEditText.text.toString()
+                            )
                         return Transaction.success(currentData)
                     }
 

@@ -38,6 +38,7 @@ class MainAdapter(val context: Context, val listData: ArrayList<Room>) : Recycle
     }
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView){
+
         var mRoom : Room? = null
         val titleText = itemView?.findViewById<TextView>(R.id.cellTitleText)
         val roomNumberText = itemView?.findViewById<TextView>(R.id.cellRoomNumberText)
@@ -47,7 +48,6 @@ class MainAdapter(val context: Context, val listData: ArrayList<Room>) : Recycle
 
         fun bind(room: Room){
             titleText.text = room.title
-            roomNumberText.text = room.no.toString()
             numberOfPeople.text = room.users?.size.toString() + "/" + room.maxUsers.toString()
             if(room.password != null){
                 keyImage?.setImageResource(R.drawable.ic_baseline_vpn_key_24)

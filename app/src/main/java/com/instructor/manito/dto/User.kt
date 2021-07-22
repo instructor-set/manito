@@ -1,3 +1,4 @@
 package com.instructor.manito.dto
 
-data class User(val nickname: String = "")
+data class User(var nickname: String = "",
+                var rooms: HashMap<String, Boolean>? = null)

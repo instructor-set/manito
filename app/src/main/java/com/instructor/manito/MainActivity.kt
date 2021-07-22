@@ -84,6 +84,7 @@ class MainActivity : AppCompatActivity() {
                     swipeRefreshLayout.setRefreshing(false)
                 }
             }
+            val updates: MutableMap<String, Any> = HashMap()
 
         }
 
