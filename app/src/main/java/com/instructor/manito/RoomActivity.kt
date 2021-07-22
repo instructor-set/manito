@@ -41,7 +41,7 @@ class RoomActivity : AppCompatActivity() {
 
 
 
-        bind.apply {
+        with(bind) {
             sendButton.isEnabled = false
             roomNumberText.text = room.no.toString()
             titleText.text = room.title

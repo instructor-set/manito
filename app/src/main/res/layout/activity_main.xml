@@ -29,11 +29,10 @@
 
     </com.baoyz.widget.PullRefreshLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="150dp"
-        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,24 +41,30 @@
 
         <Button
             android:id="@+id/createRoomButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
             android:backgroundTint="#00A1A1A1"
             android:text="방 만들기"
             android:textColor="#000000"
-            app:iconPadding="8dp" />
+            android:textSize="18dp"
+            app:iconPadding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/enterRoomButton"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/enterRoomButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
             android:backgroundTint="#00D65050"
             android:text="방 입장하기"
             android:textColor="#000000"
-            app:iconPadding="8dp" />
-    </LinearLayout>
+            android:textSize="18dp"
+            app:iconPadding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/createRoomButton" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 

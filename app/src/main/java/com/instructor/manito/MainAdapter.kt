@@ -1,7 +1,6 @@
 package com.instructor.manito
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,7 +49,7 @@ class MainAdapter(val context: Context, val listData: ArrayList<Room>) : Recycle
         fun bind(room: Room){
             titleText.text = room.title
             roomNumberText.text = room.no.toString()
-            numberOfPeople.text = room.participatingUsers?.size.toString() + "/" + room.numberOfPeople.toString()
+            numberOfPeople.text = room.users?.size.toString() + "/" + room.maxUsers.toString()
             if(room.password != null){
                 keyImage?.setImageResource(R.drawable.ic_baseline_vpn_key_24)
             }else{
