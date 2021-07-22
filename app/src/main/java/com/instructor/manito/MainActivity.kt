@@ -1,5 +1,6 @@
 package com.instructor.manito
 
+
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -126,10 +127,5 @@ class MainActivity : AppCompatActivity() {
 //    }
 
 }
-
-
-
-
-
 
 

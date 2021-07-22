@@ -12,7 +12,6 @@
         <activity android:name=".RoomActivity" />
         <activity android:name=".CreateActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".TestAActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
