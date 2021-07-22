@@ -39,7 +39,6 @@ class MainAdapter(val context: Context, val listData: ArrayList<Room>) : Recycle
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView){
         var mRoom : Room? = null
-
         val titleText = itemView?.findViewById<TextView>(R.id.cellTitleText)
         val roomNumberText = itemView?.findViewById<TextView>(R.id.cellRoomNumberText)
         val keyImage = itemView?.findViewById<ImageView>(R.id.cellKeyImage)

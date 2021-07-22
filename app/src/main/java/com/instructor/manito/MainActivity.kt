@@ -6,16 +6,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
 import com.instructor.manito.databinding.ActivityMainBinding
 import com.instructor.manito.databinding.AlertdialogEdittextBinding
 import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Database
-import com.instructor.manito.lib.Util
-import kotlinx.android.synthetic.main.activity_main.*
 import splitties.activities.start
 import splitties.toast.toast
 
@@ -25,24 +20,8 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
-    val dataList = arrayListOf<Room>()
-    val adapter = MainAdapter(this@MainActivity, dataList)
-    private val valueEventListener = object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            dataList.clear()
-            for (room in snapshot.children) {
-                dataList.add(room.getValue<Room>()!!)
-            }
-            adapter.notifyDataSetChanged()
-            bind.swipeRefreshLayout.setRefreshing(false)
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-            Util.j(error.details)
-        }
-
-    }
-
+    private val dataList = arrayListOf<Room>()
+    private val adapter = MainAdapter(this@MainActivity, dataList)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                 with(builder) {
                     setTitle("초대 링크를 입력하세요")
                     setView(builderItem.root)
-                    setPositiveButton("OK") { dialogInterface: DialogInterface, i: Int ->
+                    setPositiveButton("OK") { _: DialogInterface, _: Int ->
                         if (editText.text != null) toast("입력된 것 : ${editText.text}")
                     }
                     show()
@@ -88,16 +67,39 @@ class MainActivity : AppCompatActivity() {
 
              */
 
+
+
             mainRecycler.adapter = adapter
             mainRecycler.layoutManager = LinearLayoutManager(this@MainActivity)
-            swipeRefreshLayout.setRefreshing(true)
-            Database.getReference("rooms").addListenerForSingleValueEvent(valueEventListener)
 
             //bind.swipeRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_CIRCLES);
             swipeRefreshLayout.setOnRefreshListener {
-                Database.getReference("rooms").addListenerForSingleValueEvent(valueEventListener)
+                Database.getReference("rooms").get().addOnSuccessListener {
+                    dataList.clear()
+                    for (room in it.children) {
+                        dataList.add(room.getValue<Room>()!!)
+                    }
+                    adapter.notifyDataSetChanged()
+                    swipeRefreshLayout.setRefreshing(false)
+                }
             }
 
+        }
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        with (bind) {
+            swipeRefreshLayout.setRefreshing(true)
+            Database.getReference("rooms").get().addOnSuccessListener {
+                dataList.clear()
+                for (room in it.children) {
+                    dataList.add(room.getValue<Room>()!!)
+                }
+                adapter.notifyDataSetChanged()
+                swipeRefreshLayout.setRefreshing(false)
+            }
         }
 
     }
