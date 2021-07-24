@@ -24,20 +24,32 @@ class CreateActivity : AppCompatActivity() {
                 createCreateRoomButton.isEnabled = false
                 val roomRef = Database.getReference("rooms").push()
                 val uid = Authentication.uid!!
-                val room = Room(roomRef.key, titleEditText.text.toString(), passwordEditText.text.toString(),
+                val rid = roomRef.key
+                val room = Room(rid, titleEditText.text.toString(), passwordEditText.text.toString(),
                     Util.dummy(16) as Int?,
-                    hashMapOf<String, Boolean>(
+                    hashMapOf(
                         uid to true
                     ),
                     uid
                 )
-                roomRef.setValue(room).addOnSuccessListener {
+                val updates = hashMapOf(
+                    "rooms/$rid" to room,
+                    "users/$uid/rooms/$rid" to true
+                )
+                Database.getReference("").updateChildren(updates).addOnSuccessListener {
                     start<RoomActivity> {
                         putExtras(RoomActivity.Extras) {
                             RoomActivity.Extras.room = room
                         }
                     }
                 }
+//                roomRef.setValue(room).addOnSuccessListener {
+//                    start<RoomActivity> {
+//                        putExtras(RoomActivity.Extras) {
+//                            RoomActivity.Extras.room = room
+//                        }
+//                    }
+//                }
             }
         }
 

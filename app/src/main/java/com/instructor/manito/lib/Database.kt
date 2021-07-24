@@ -5,6 +5,7 @@ import com.google.firebase.ktx.Firebase
 
 object Database {
     private val database = Firebase.database("https://android-manito-default-rtdb.asia-southeast1.firebasedatabase.app/")
+
     fun getReference(path: String) = database.getReference(path)
     fun set(path: String, value: Any?) = getReference(path).setValue(value)
 }
