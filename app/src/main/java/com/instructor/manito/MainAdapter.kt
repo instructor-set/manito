@@ -14,23 +14,6 @@ import splitties.bundle.putExtras
 class MainAdapter(private val context: Context, private var listData: ArrayList<Room>) :
     RecyclerView.Adapter<MainAdapter.Holder>() {
 
-    interface OnItemClickListener {
-        fun onItemClick(v: View, data: Room, pos: Int)
-    }
-
-    private var listener: OnItemClickListener = object: OnItemClickListener {
-        override fun onItemClick(v: View, data: Room, pos: Int) {
-
-        }
-    }
-
-    fun setOnItemClickListener(listener: OnItemClickListener) {
-        this.listener = listener
-    }
-    fun changeListData(listData: ArrayList<Room>) {
-        this.listData = listData
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainAdapter.Holder {
         val view = CellMainBinding.inflate(LayoutInflater.from(context), parent, false)
         return Holder(view)
@@ -66,7 +49,6 @@ class MainAdapter(private val context: Context, private var listData: ArrayList<
                                 RoomActivity.Extras.room = room
                             }
                         }
-//                        listener.onItemClick(itemView, room, pos)
                     }
                 }
             }
