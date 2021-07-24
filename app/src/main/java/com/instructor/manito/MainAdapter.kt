@@ -8,20 +8,28 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.instructor.manito.databinding.CellMainBinding
 import com.instructor.manito.dto.Room
+import splitties.activities.start
+import splitties.bundle.putExtras
 
-class MainAdapter(private val context: Context, private val listData: ArrayList<Room>) :
+class MainAdapter(private val context: Context, private var listData: ArrayList<Room>) :
     RecyclerView.Adapter<MainAdapter.Holder>() {
 
     interface OnItemClickListener {
         fun onItemClick(v: View, data: Room, pos: Int)
     }
 
-    private var listener: OnItemClickListener? = null
+    private var listener: OnItemClickListener = object: OnItemClickListener {
+        override fun onItemClick(v: View, data: Room, pos: Int) {
+
+        }
+    }
 
     fun setOnItemClickListener(listener: OnItemClickListener) {
         this.listener = listener
     }
-
+    fun changeListData(listData: ArrayList<Room>) {
+        this.listData = listData
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainAdapter.Holder {
         val view = CellMainBinding.inflate(LayoutInflater.from(context), parent, false)
@@ -53,7 +61,12 @@ class MainAdapter(private val context: Context, private val listData: ArrayList<
                 val pos = adapterPosition
                 if (pos != RecyclerView.NO_POSITION) {
                     itemView.setOnClickListener {
-                        listener?.onItemClick(itemView, room, pos)
+                        context.start<RoomActivity> {
+                            putExtras(RoomActivity.Extras) {
+                                RoomActivity.Extras.room = room
+                            }
+                        }
+//                        listener.onItemClick(itemView, room, pos)
                     }
                 }
             }

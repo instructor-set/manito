@@ -95,7 +95,6 @@ class MainActivity : AppCompatActivity() {
                     dataList.add(room.getValue<Room>()!!)
                 }
                 adapter.notifyDataSetChanged()
-
                 swipeRefreshLayout.setRefreshing(false)
             }
         }

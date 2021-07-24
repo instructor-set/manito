@@ -6,7 +6,7 @@ import com.instructor.manito.databinding.ActivityCreateBinding
 import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
-import com.instructor.manito.lib.Util
+import com.instructor.manito.lib.Util.dummy
 import splitties.activities.start
 import splitties.bundle.putExtras
 
@@ -26,7 +26,7 @@ class CreateActivity : AppCompatActivity() {
                 val uid = Authentication.uid!!
                 val rid = roomRef.key
                 val room = Room(rid, titleEditText.text.toString(), passwordEditText.text.toString(),
-                    Util.dummy(16) as Int?,
+                    dummy(16) as Int?,
                     hashMapOf(
                         uid to true
                     ),
