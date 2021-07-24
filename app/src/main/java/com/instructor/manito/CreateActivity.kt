@@ -2,7 +2,9 @@ package com.instructor.manito
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.database.ServerValue
 import com.instructor.manito.databinding.ActivityCreateBinding
+import com.instructor.manito.dto.Chat
 import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
@@ -34,22 +36,16 @@ class CreateActivity : AppCompatActivity() {
                 )
                 val updates = hashMapOf(
                     "rooms/$rid" to room,
-                    "users/$uid/rooms/$rid" to true
+                    "users/$uid/rooms/$rid" to ServerValue.TIMESTAMP
                 )
                 Database.getReference("").updateChildren(updates).addOnSuccessListener {
+                    Database.sendChat(rid!!, Chat.TYPE_ENTER, Chat.MESSAGE_ENTER)
                     start<RoomActivity> {
                         putExtras(RoomActivity.Extras) {
                             RoomActivity.Extras.room = room
                         }
                     }
                 }
-//                roomRef.setValue(room).addOnSuccessListener {
-//                    start<RoomActivity> {
-//                        putExtras(RoomActivity.Extras) {
-//                            RoomActivity.Extras.room = room
-//                        }
-//                    }
-//                }
             }
         }
 

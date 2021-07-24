@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val dataList = arrayListOf<Room>()
-    private val adapter = MainAdapter(this@MainActivity, dataList)
+    private val adapter = MainRoomAdapter(this@MainActivity, dataList)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

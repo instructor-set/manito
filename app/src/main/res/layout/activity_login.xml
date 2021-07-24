@@ -10,7 +10,8 @@
         android:id="@+id/testAButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="테스트A"
+        android:enabled="false"
+        android:text="입장"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -19,8 +20,18 @@
         android:id="@+id/testBButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="테스트B"
+        android:text="로그인"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/testAButton" />
+
+    <Button
+        android:id="@+id/testCButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="로그아웃"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/testBButton" />
 </androidx.constraintlayout.widget.ConstraintLayout>
