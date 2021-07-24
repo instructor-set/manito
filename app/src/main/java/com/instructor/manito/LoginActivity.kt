@@ -101,7 +101,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun login() {
-        logout()
+//        logout()
         signInLauncher.launch(signInIntent)
     }
 
@@ -118,14 +118,16 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(bind.root)
 
-        bind.testAButton.setOnClickListener {
-            start<MainActivity>()
+        with(bind) {
+            testAButton.setOnClickListener {
+                start<MainActivity>()
+            }
+            testBButton.setOnClickListener {
+                login()
+            }
         }
-        bind.testBButton.setOnClickListener {
 
-            login()
 
-        }
 
 
     }

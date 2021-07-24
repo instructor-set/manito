@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         with(bind) {
             setContentView(root)
-
             createRoomButton.setOnClickListener {
                 start<CreateActivity> {
                     flags = Intent.FLAG_ACTIVITY_NO_HISTORY
@@ -75,16 +74,8 @@ class MainActivity : AppCompatActivity() {
 
             //bind.swipeRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_CIRCLES);
             swipeRefreshLayout.setOnRefreshListener {
-                Database.getReference("rooms").get().addOnSuccessListener {
-                    dataList.clear()
-                    for (room in it.children) {
-                        dataList.add(room.getValue<Room>()!!)
-                    }
-                    adapter.notifyDataSetChanged()
-                    swipeRefreshLayout.setRefreshing(false)
-                }
+                onRefreshListener()
             }
-            val updates: MutableMap<String, Any> = HashMap()
 
         }
 
@@ -92,6 +83,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        onRefreshListener()
+    }
+
+    private fun onRefreshListener() {
         with (bind) {
             swipeRefreshLayout.setRefreshing(true)
             Database.getReference("rooms").get().addOnSuccessListener {
@@ -100,10 +95,10 @@ class MainActivity : AppCompatActivity() {
                     dataList.add(room.getValue<Room>()!!)
                 }
                 adapter.notifyDataSetChanged()
+
                 swipeRefreshLayout.setRefreshing(false)
             }
         }
-
     }
 
     //data class Room(var no: Long? = null, var title: String? = null, var password: String? = null, val numberOfPeople: Int? = 0, val participatingUsers: MutableList<User>? = null)

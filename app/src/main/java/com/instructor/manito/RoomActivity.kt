@@ -43,7 +43,6 @@ class RoomActivity : AppCompatActivity() {
 
         with(bind) {
             sendButton.isEnabled = false
-            roomNumberText.text = room.no.toString()
             titleText.text = room.title
             passwordText.text = room.password
             chatEditText.addTextChangedListener(object : TextWatcher {
