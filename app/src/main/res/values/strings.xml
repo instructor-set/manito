@@ -14,4 +14,5 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_dialog_nickname">닉네임을 입력하세요.</string>
+    <string name="enter_message">%1$s 님이 입장하셨습니다.</string>
 </resources>
