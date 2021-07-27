@@ -12,6 +12,7 @@ import com.instructor.manito.databinding.ActivityLoginBinding
 import com.instructor.manito.dto.User
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
+import com.instructor.manito.lib.Util
 import splitties.activities.start
 import splitties.alertdialog.appcompat.*
 import splitties.alertdialog.material.materialAlertDialog
@@ -45,6 +46,7 @@ class LoginActivity : AppCompatActivity() {
 
 
         val response = result.idpResponse
+        Util.j("${response?.error}")
         if (result.resultCode == RESULT_OK) {
 
             val userReference = Database.getReference("users/${Authentication.uid}")

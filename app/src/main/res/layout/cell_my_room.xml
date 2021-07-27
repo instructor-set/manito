@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="100dp"
+        android:layout_height="150dp"
+        android:background="@drawable/view_background"
+        android:orientation="vertical"
+        android:outlineProvider="background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/cellRoomTitleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="방제목"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="24dp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/cellMyManitoText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="내 마니또"
+            android:textAlignment="center"
+            android:textColor="#888181"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/cellRoomStateText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="방 상태"
+            android:textAlignment="center"
+            android:textColor="#888181"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/blankText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
+            android:textColor="#888181"
+            android:textSize="8dp" />
+
+        <Button
+            android:id="@+id/exitButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#00FFFFFF"
+            android:text="방 나가기"
+            android:textAlignment="center"
+            android:textColor="#888181"
+            android:textSize="14dp" />
+
+
+
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
