@@ -3,8 +3,11 @@ package com.instructor.manito
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -16,7 +19,6 @@ import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
 import com.instructor.manito.lib.Util
-import com.instructor.manito.lib.Util.j
 import splitties.bundle.BundleSpec
 import splitties.bundle.bundle
 import splitties.bundle.withExtras
@@ -74,7 +76,8 @@ class RoomActivity : AppCompatActivity() {
     private val chatList = arrayListOf<Chat>()
     private val chatAdapter = RoomChatAdapter(this, chatList)
 
-    private var firstTimestamp = Long.MAX_VALUE
+    private var nextItemId: Int = 1
+    private val uidToItemId: HashMap<String, Int> = hashMapOf()
 
 
 
@@ -89,61 +92,110 @@ class RoomActivity : AppCompatActivity() {
             titleText.text = room.title
             passwordText.text = room.password
             chatEditText.addTextChangedListener(textWatcher)
-            Database.getReference("chats/${room.rid}")
-                .addChildEventListener(object : ChildEventListener {
-                    var start = false
-                    override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                        val chat = snapshot.getValue<Chat>()!!
-                        Util.getTimestamp(Authentication.uid!!, room.rid!!, object: Util.ToDoListener{
-                            override fun toDo(any: Any?) {
-                                if (any == Util.MESSAGE_UNDEFINED) {
-                                    finish()
-                                }
-                                val timestamp = any as Long
-                                if (timestamp <= chat.timestamp as Long) {
-                                    chatList.add(chat)
-                                    chatAdapter.notifyDataSetChanged()
-                                    messageRecycler.scrollToPosition(chatList.size - 1)
-                                }
-
-                            }
-
-                        })
-
+            Util.getTimestamp(Authentication.uid!!, room.rid!!, object: Util.ToDoListener{
+                override fun toDo(any: Any?) {
+                    if (any == Util.MESSAGE_UNDEFINED) {
+                        finish()
                     }
+                    val timestamp = any as Long
+                    Database.getReference("chats/${room.rid}").orderByChild("timestamp").startAt(timestamp.toDouble()).addChildEventListener(object: ChildEventListener{
+                        override fun onChildAdded(
+                            snapshot: DataSnapshot,
+                            previousChildName: String?
+                        ) {
+                            val chat = snapshot.getValue<Chat>()!!
+                            chatList.add(chat)
+                            chatAdapter.notifyDataSetChanged()
+                            messageRecycler.scrollToPosition(chatList.size - 1)
+                        }
 
-                    override fun onChildChanged(
-                        snapshot: DataSnapshot,
-                        previousChildName: String?
-                    ) {
-                    }
+                        override fun onChildChanged(
+                            snapshot: DataSnapshot,
+                            previousChildName: String?
+                        ) {
+                        }
 
-                    override fun onChildRemoved(snapshot: DataSnapshot) {
-                        j("childremoved")
-                    }
+                        override fun onChildRemoved(snapshot: DataSnapshot) {
+                        }
 
-                    override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                        j("childmoved")
-                    }
+                        override fun onChildMoved(
+                            snapshot: DataSnapshot,
+                            previousChildName: String?
+                        ) {
+                        }
 
-                    override fun onCancelled(error: DatabaseError) {
-                        j("childcancelled")
-                    }
+                        override fun onCancelled(error: DatabaseError) {
+                        }
 
-                })
+                    })
+                }
+
+            })
+
             sendButton.setOnClickListener {
                 Database.sendChat(room.rid!!, Chat.TYPE_MESSAGE, chatEditText.text.toString())
                 chatEditText.text.clear()
             }
             messageRecycler.adapter = chatAdapter
             messageRecycler.layoutManager = LinearLayoutManager(this@RoomActivity)
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            menuButton.setOnClickListener {
+                drawerLayout.openDrawer(GravityCompat.END)
+            }
+            val playerMenu = drawerView.menu.getItem(0).subMenu
+            drawerView.setNavigationItemSelectedListener {
+                Util.j("${drawerLayout.isDrawerOpen(GravityCompat.END)}")
+                true
+            }
+
+            Database.getReference("rooms/${room.rid}/users").addChildEventListener(object: ChildEventListener{
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+
+                    val uid = snapshot.key!!
+                    val itemId = nextItemId++
+                    uidToItemId[uid] = itemId
+                    Util.uidToNickname(uid, object: Util.ToDoListener{
+                        override fun toDo(any: Any?) {
+                            if (any == Util.MESSAGE_UNDEFINED) {
+                                finish()
+                            }
+                            val nickname = any as String
+                            playerMenu.add(Menu.NONE, itemId, Menu.NONE, nickname)
+                        }
+
+                    })
+
+                }
+
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                }
+
+                override fun onChildRemoved(snapshot: DataSnapshot) {
+                    val uid = snapshot.key!!
+                    val itemId = uidToItemId.getValue(uid)
+                    uidToItemId.remove(uid)
+                    playerMenu.removeItem(itemId)
+                }
+
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+            })
 
 
         }
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
+        with(bind){
+            if(drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                drawerLayout.closeDrawer(GravityCompat.END)
+            } else {
+                finish()
+            }
+        }
     }
 }

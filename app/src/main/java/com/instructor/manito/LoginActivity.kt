@@ -96,7 +96,7 @@ class LoginActivity : AppCompatActivity() {
         materialAlertDialog {
             title = user.nickname
             message = "로그인 성공"
-            okButton{
+            okButton {
                 bind.testAButton.isEnabled = true
             }
         }.show()
@@ -132,6 +132,8 @@ class LoginActivity : AppCompatActivity() {
             testCButton.setOnClickListener {
                 logout()
             }
+
+
         }
 
 
