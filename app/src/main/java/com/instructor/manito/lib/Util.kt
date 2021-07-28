@@ -13,10 +13,10 @@ object Util {
     fun j(msg: String) = Log.d("jinha", msg)
     fun dummy(any: Any?) = any
 
-    fun uidToNickname(uid: String, toDoListener: ToDoListener): String? {
+    fun uidToNickname(uid: String, listener: (Any?) -> Unit): String? {
         return if (nicknameMap.containsKey(uid)) {
             val nickname = nicknameMap.getValue(uid)
-            toDoListener.toDo(nickname)
+            listener(nickname)
             nickname
         } else {
             Database.getReference("users/$uid/nickname").addValueEventListener(object: ValueEventListener {
@@ -26,7 +26,7 @@ object Util {
                     nicknameMap[uid] = nickname
                     if (first) {
                         first = false
-                        toDoListener.toDo(nickname)
+                        listener(nickname)
                     }
                 }
                 override fun onCancelled(error: DatabaseError) {
@@ -37,11 +37,11 @@ object Util {
             null
         }
     }
-    fun getTimestamp(uid: String, rid: String, toDoListener: ToDoListener) {
+    fun getTimestamp(uid: String, rid: String, listener: (Any?) -> Unit) {
         val id = uid + rid
         if (timestampMap.containsKey(id)) {
             val timestamp = timestampMap.getValue(id)
-            toDoListener.toDo(timestamp)
+            listener(timestamp)
         } else {
             Database.getReference("users/$uid/rooms/$rid").addValueEventListener(object: ValueEventListener {
                 var first = true
@@ -50,7 +50,7 @@ object Util {
                     timestampMap[id] = timestamp
                     if (first) {
                         first = false
-                        toDoListener.toDo(timestamp)
+                        listener(timestamp)
                     }
                 }
                 override fun onCancelled(error: DatabaseError) {
@@ -59,8 +59,5 @@ object Util {
 
             })
         }
-    }
-    interface ToDoListener {
-        fun toDo(any: Any?)
     }
 }

@@ -9,7 +9,6 @@ import com.instructor.manito.databinding.LayoutLeftMessageBinding
 import com.instructor.manito.databinding.LayoutRightMessageBinding
 import com.instructor.manito.dto.Chat
 import com.instructor.manito.lib.Authentication
-import com.instructor.manito.lib.Util
 import com.instructor.manito.lib.Util.uidToNickname
 import java.text.SimpleDateFormat
 import java.util.*
@@ -29,11 +28,9 @@ class RoomChatAdapter(private val context: Context, private val chatList: ArrayL
             with(bind) {
                 messageTextView.text = chat.message
                 timestampTextView.text = unixTimeToDateString(chat.timestamp as Long)
-                uidToNickname(chat.uid!!, object: Util.ToDoListener{
-                    override fun toDo(any: Any?) {
-                        nicknameTextView.text = any as String
-                    }
-                })
+                uidToNickname(chat.uid!!) {
+                    nicknameTextView.text = it as String
+                }
             }
         }
 
@@ -55,11 +52,9 @@ class RoomChatAdapter(private val context: Context, private val chatList: ArrayL
         fun binding(chat: Chat) {
             with(bind) {
                 if (chat.type == Chat.TYPE_ENTER) {
-                    uidToNickname(chat.uid!!, object: Util.ToDoListener{
-                        override fun toDo(any: Any?) {
-                            messageTextView1.text = context.getString(R.string.enter_message, any)
-                        }
-                    })
+                    uidToNickname(chat.uid!!) {
+                        messageTextView1.text = context.getString(R.string.enter_message, it)
+                    }
                 }
             }
         }

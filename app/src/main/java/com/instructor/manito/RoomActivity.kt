@@ -92,46 +92,43 @@ class RoomActivity : AppCompatActivity() {
             titleText.text = room.title
             passwordText.text = room.password
             chatEditText.addTextChangedListener(textWatcher)
-            Util.getTimestamp(Authentication.uid!!, room.rid!!, object: Util.ToDoListener{
-                override fun toDo(any: Any?) {
-                    if (Util.MESSAGE_UNDEFINED == any) {
-                        finish()
-                    } else {
-                        val timestamp = any as Long
-                        Database.getReference("chats/${room.rid}").orderByChild("timestamp").startAt(timestamp.toDouble()).addChildEventListener(object: ChildEventListener{
-                            override fun onChildAdded(
-                                snapshot: DataSnapshot,
-                                previousChildName: String?
-                            ) {
-                                val chat = snapshot.getValue<Chat>()!!
-                                chatList.add(chat)
-                                chatAdapter.notifyDataSetChanged()
-                                messageRecycler.scrollToPosition(chatList.size - 1)
-                            }
+            Util.getTimestamp(Authentication.uid!!, room.rid!!) {
+                if (Util.MESSAGE_UNDEFINED == it) {
+                    finish()
+                } else {
+                    val timestamp = it as Long
+                    Database.getReference("chats/${room.rid}").orderByChild("timestamp").startAt(timestamp.toDouble()).addChildEventListener(object: ChildEventListener{
+                        override fun onChildAdded(
+                            snapshot: DataSnapshot,
+                            previousChildName: String?
+                        ) {
+                            val chat = snapshot.getValue<Chat>()!!
+                            chatList.add(chat)
+                            chatAdapter.notifyDataSetChanged()
+                            messageRecycler.scrollToPosition(chatList.size - 1)
+                        }
 
-                            override fun onChildChanged(
-                                snapshot: DataSnapshot,
-                                previousChildName: String?
-                            ) {
-                            }
+                        override fun onChildChanged(
+                            snapshot: DataSnapshot,
+                            previousChildName: String?
+                        ) {
+                        }
 
-                            override fun onChildRemoved(snapshot: DataSnapshot) {
-                            }
+                        override fun onChildRemoved(snapshot: DataSnapshot) {
+                        }
 
-                            override fun onChildMoved(
-                                snapshot: DataSnapshot,
-                                previousChildName: String?
-                            ) {
-                            }
+                        override fun onChildMoved(
+                            snapshot: DataSnapshot,
+                            previousChildName: String?
+                        ) {
+                        }
 
-                            override fun onCancelled(error: DatabaseError) {
-                            }
+                        override fun onCancelled(error: DatabaseError) {
+                        }
 
-                        })
-                    }
+                    })
                 }
-
-            })
+            }
 
             sendButton.setOnClickListener {
                 Database.sendChat(room.rid!!, Chat.TYPE_MESSAGE, chatEditText.text.toString())
@@ -155,16 +152,14 @@ class RoomActivity : AppCompatActivity() {
                     val uid = snapshot.key!!
                     val itemId = nextItemId++
                     uidToItemId[uid] = itemId
-                    Util.uidToNickname(uid, object: Util.ToDoListener{
-                        override fun toDo(any: Any?) {
-                            if (any == Util.MESSAGE_UNDEFINED) {
-                                finish()
-                            }
-                            val nickname = any as String
+                    Util.uidToNickname(uid) {
+                        if (it == Util.MESSAGE_UNDEFINED) {
+                            finish()
+                        } else {
+                            val nickname = it as String
                             playerMenu.add(Menu.NONE, itemId, Menu.NONE, nickname)
                         }
-
-                    })
+                    }
 
                 }
 

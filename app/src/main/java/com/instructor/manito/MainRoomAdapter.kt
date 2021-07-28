@@ -13,12 +13,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ServerValue
-import com.google.firebase.database.ktx.getValue
 import com.instructor.manito.databinding.CellMainBinding
 import com.instructor.manito.dto.Chat
 import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
+import com.instructor.manito.lib.Util
 import splitties.activities.start
 import splitties.bundle.putExtras
 
@@ -120,10 +120,6 @@ class MainRoomAdapter(private val context: Context, private var listData: ArrayL
                                     with(alertDialog) {
                                         dialogTitle.text = room.title
                                         setView(dialogview)
-                                        Database.getReference("users/${room.manager}/nickname").get().addOnSuccessListener {
-                                            nickname ->
-                                            dialogManager.text = nickname.getValue<String>()
-                                        }
                                         @SuppressLint("SetTextI18n")
                                         dialogMembers.text = "${room.users?.size ?: 0} / ${room.maxUsers}"
                                         setPositiveButton("입장") { _: DialogInterface, _: Int->
@@ -134,7 +130,15 @@ class MainRoomAdapter(private val context: Context, private var listData: ArrayL
                                             }
                                         }
                                         setNeutralButton("취소", null)
-                                        show()
+                                        Util.uidToNickname(room.manager!!) {
+                                            if (it != Util.MESSAGE_UNDEFINED) {
+                                                val nickname = it as String
+                                                dialogManager.text = nickname
+                                                show()
+                                            }
+                                        }
+
+
                                     }
                                 } else {
                                     val updates = hashMapOf(

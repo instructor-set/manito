@@ -138,7 +138,6 @@ class LoginActivity : AppCompatActivity() {
                 logout()
             }
 
-
         }
 
 
