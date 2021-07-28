@@ -63,11 +63,11 @@ class MainRoomAdapter(private val context: Context, private var listData: ArrayL
                         // 비밀번호가 있을 때
                         if(!room.password.isNullOrBlank()){
                             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-                            val dialogview = inflater.inflate(R.layout.alertdialog_edittext, null)
-                            val dialogText = dialogview.findViewById<EditText>(R.id.alertEditText)
+                            val dialogView = inflater.inflate(R.layout.alertdialog_edittext, null)
+                            val dialogText = dialogView.findViewById<EditText>(R.id.alertEditText)
                             val alertDialog = AlertDialog.Builder(context)
                                 .setTitle("비밀번호를 입력하세요")
-                                .setView(dialogview)
+                                .setView(dialogView)
                                 .setPositiveButton("입장"){
                                         _: DialogInterface, _:Int->
                                     val enterPassword = dialogText.text.toString()
@@ -112,14 +112,14 @@ class MainRoomAdapter(private val context: Context, private var listData: ArrayL
                                 if(snapshot.exists()){
 
                                     val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-                                    val dialogview = inflater.inflate(R.layout.alertdialog_enter_room, null)
-                                    val dialogTitle = dialogview.findViewById<TextView>(R.id.alertTitleTextView)
-                                    val dialogManager = dialogview.findViewById<TextView>(R.id.alertManagerTextView)
-                                    val dialogMembers = dialogview.findViewById<TextView>(R.id.alertMembersTextView)
+                                    val dialogView = inflater.inflate(R.layout.alertdialog_enter_room, null)
+                                    val dialogTitle = dialogView.findViewById<TextView>(R.id.alertTitleTextView)
+                                    val dialogManager = dialogView.findViewById<TextView>(R.id.alertManagerTextView)
+                                    val dialogMembers = dialogView.findViewById<TextView>(R.id.alertMembersTextView)
                                     val alertDialog = AlertDialog.Builder(context)
                                     with(alertDialog) {
                                         dialogTitle.text = room.title
-                                        setView(dialogview)
+                                        setView(dialogView)
                                         @SuppressLint("SetTextI18n")
                                         dialogMembers.text = "${room.users?.size ?: 0} / ${room.maxUsers}"
                                         setPositiveButton("입장") { _: DialogInterface, _: Int->
@@ -137,8 +137,6 @@ class MainRoomAdapter(private val context: Context, private var listData: ArrayL
                                                 show()
                                             }
                                         }
-
-
                                     }
                                 } else {
                                     val updates = hashMapOf(

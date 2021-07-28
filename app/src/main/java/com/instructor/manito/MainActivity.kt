@@ -4,7 +4,6 @@ package com.instructor.manito
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     // 내가 들어간 방
     private val myRoomList = arrayListOf<Room>()
     private val roomAdapter = MainMyRoomAdapter(this@MainActivity, myRoomList)
+    private val ridToRoom = hashMapOf<String, Room>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,42 +75,72 @@ class MainActivity : AppCompatActivity() {
             //bind.swipeRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_CIRCLES);
             swipeRefreshLayout.setOnRefreshListener {
                 Database.getReference("rooms").get().addOnSuccessListener {
-                    dataList.clear()
-                    for (room in it.children) {
-                        dataList.add(room.getValue<Room>()!!)
-                    }
-                    adapter.notifyDataSetChanged()
-                    swipeRefreshLayout.setRefreshing(false)
+                    refreshChatList(it)
                 }
             }
 
         }
 
 
-        val mDatabase = Database.getReference("rooms")
-        mDatabase.child(Authentication.uid.toString()).addValueEventListener(object :
-            ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
+//        val mDatabase = Database.getReference("rooms")
+//        mDatabase.child(Authentication.uid.toString()).addValueEventListener(object :
+//            ValueEventListener {
+//            override fun onCancelled(error: DatabaseError) {
+//                TODO("Not yet implemented")
+//            }
+//
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                for (postSnapshot in snapshot.children) {
+//                    val name = postSnapshot.child("rooms").getValue(true)
+//                    Log.e("myName", name.toString())
+//
+//
+//                }
+//            }
+//
+//        }
 
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (postSnapshot in snapshot.children) {
-                    val name = postSnapshot.child("rooms").getValue(true)
-                    Log.e("myName", name.toString())
-
-
-                }
-            }
-
-        }
-
-
-        )
 
 
     }
 
+    private fun refreshChatList(snapshot: DataSnapshot) {
+        dataList.clear()
+        ridToRoom.clear()
+        for (snapshot in snapshot.children) {
+            val room = snapshot.getValue<Room>()!!
+            dataList.add(room)
+            ridToRoom[room.rid!!] = room
+        }
+        dataList.reverse()
+        adapter.notifyDataSetChanged()
+        bind.swipeRefreshLayout.setRefreshing(false)
+    }
+
+    fun test() {
+        Database.getReference("users/${Authentication.uid}/rooms").addChildEventListener(object: ChildEventListener{
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val rid = snapshot.key
+//                Database.getReference("rooms/$rid").addValueEventListener()
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
 
     //시작할 때 새로고침
     override fun onStart() {
@@ -118,13 +148,7 @@ class MainActivity : AppCompatActivity() {
         with(bind) {
             swipeRefreshLayout.setRefreshing(true)
             Database.getReference("rooms").get().addOnSuccessListener {
-                dataList.clear()
-                for (room in it.children) {
-                    dataList.add(room.getValue<Room>()!!)
-                }
-                adapter.notifyDataSetChanged()
-                swipeRefreshLayout.setRefreshing(false)
-
+                refreshChatList(it)
             }
             val roomList = arrayListOf<String>()
             roomList.clear()
@@ -135,7 +159,6 @@ class MainActivity : AppCompatActivity() {
                         for (room in snapshot.children) {
                             roomList.add(room.key.toString())
                         }
-                        Util.j(roomList.toString())
                         Database.getReference("rooms")
                             .addValueEventListener(object : ValueEventListener {
                                 override fun onDataChange(snapshot: DataSnapshot) {
