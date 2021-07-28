@@ -1,0 +1,38 @@
+[진하]
+
+1. Room dto 에서 password 항목 제거 - 암호가 걸려있는지 여부로 변경, rid 제거 - 필요 없음
+2. Database -
+password: {
+    $rid: $password
+}
+byUser: {
+    $uid: {
+        password: $password
+        $others
+    }
+}
+형식으로 데이터베이스 구조 만들기
+
+
+[가은]
+
+[성덕]
+
+[현재 데이터 구조]
+
+chats: {
+    $rid: {
+        $cid(의미 없음): dto.Chat
+    }
+}
+rooms: {
+    $rid: dto.Room
+}
+users: {
+    $uid: dto.User {
+        nickname: String
+        rooms: {
+            $rid: $timestamp
+        }
+    }
+}
