@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity() {
     // 내가 들어간 방
     private val myRoomList = arrayListOf<Room>()
     private val roomAdapter = MainMyRoomAdapter(this@MainActivity, myRoomList)
-    private val ridToRoom = hashMapOf<String, Room>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,11 +105,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun refreshChatList(snapshot: DataSnapshot) {
         dataList.clear()
-        ridToRoom.clear()
-        for (snapshot in snapshot.children) {
-            val room = snapshot.getValue<Room>()!!
+        for (roomPair in snapshot.children) {
+            val room = roomPair.getValue<Room>()!!
             dataList.add(room)
-            ridToRoom[room.rid!!] = room
         }
         dataList.reverse()
         adapter.notifyDataSetChanged()
