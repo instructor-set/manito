@@ -94,40 +94,41 @@ class RoomActivity : AppCompatActivity() {
             chatEditText.addTextChangedListener(textWatcher)
             Util.getTimestamp(Authentication.uid!!, room.rid!!, object: Util.ToDoListener{
                 override fun toDo(any: Any?) {
-                    if (any == Util.MESSAGE_UNDEFINED) {
+                    if (Util.MESSAGE_UNDEFINED == any) {
                         finish()
+                    } else {
+                        val timestamp = any as Long
+                        Database.getReference("chats/${room.rid}").orderByChild("timestamp").startAt(timestamp.toDouble()).addChildEventListener(object: ChildEventListener{
+                            override fun onChildAdded(
+                                snapshot: DataSnapshot,
+                                previousChildName: String?
+                            ) {
+                                val chat = snapshot.getValue<Chat>()!!
+                                chatList.add(chat)
+                                chatAdapter.notifyDataSetChanged()
+                                messageRecycler.scrollToPosition(chatList.size - 1)
+                            }
+
+                            override fun onChildChanged(
+                                snapshot: DataSnapshot,
+                                previousChildName: String?
+                            ) {
+                            }
+
+                            override fun onChildRemoved(snapshot: DataSnapshot) {
+                            }
+
+                            override fun onChildMoved(
+                                snapshot: DataSnapshot,
+                                previousChildName: String?
+                            ) {
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                            }
+
+                        })
                     }
-                    val timestamp = any as Long
-                    Database.getReference("chats/${room.rid}").orderByChild("timestamp").startAt(timestamp.toDouble()).addChildEventListener(object: ChildEventListener{
-                        override fun onChildAdded(
-                            snapshot: DataSnapshot,
-                            previousChildName: String?
-                        ) {
-                            val chat = snapshot.getValue<Chat>()!!
-                            chatList.add(chat)
-                            chatAdapter.notifyDataSetChanged()
-                            messageRecycler.scrollToPosition(chatList.size - 1)
-                        }
-
-                        override fun onChildChanged(
-                            snapshot: DataSnapshot,
-                            previousChildName: String?
-                        ) {
-                        }
-
-                        override fun onChildRemoved(snapshot: DataSnapshot) {
-                        }
-
-                        override fun onChildMoved(
-                            snapshot: DataSnapshot,
-                            previousChildName: String?
-                        ) {
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-                        }
-
-                    })
                 }
 
             })
