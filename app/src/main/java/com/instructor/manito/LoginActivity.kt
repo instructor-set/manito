@@ -102,11 +102,11 @@ class LoginActivity : AppCompatActivity() {
         }.show()
     }
 
-    fun login() {
+    private fun login() {
         signInLauncher.launch(signInIntent)
     }
 
-    fun logout() {
+    private fun logout() {
         AuthUI.getInstance()
             .signOut(this)
             .addOnCompleteListener {

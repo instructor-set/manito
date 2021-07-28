@@ -1,6 +1,7 @@
 [진하]
 
-1. Room dto 에서 password 항목 제거 - 암호가 걸려있는지 여부로 변경, rid 제거 - 필요 없음
+1. Room dto 에서 password 항목 제거 - 암호가 걸려있는지 여부로 변경
+
 2. Database -
 password: {
     $rid: $password
@@ -12,6 +13,10 @@ byUser: {
     }
 }
 형식으로 데이터베이스 구조 만들기
+
+3. 액티비티마다 onCreate 함수에 몰려있는 코드들 함수로 빼서 정리하기
+
+4. 액티비티, layout 등 이름과 폴더 정리하기
 
 
 [가은]

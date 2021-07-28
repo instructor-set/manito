@@ -192,16 +192,16 @@ class MainActivity : AppCompatActivity() {
      */
 
 
-    fun test() {
-        Database.getReference("users/${Authentication.uid}/rooms").get().addOnSuccessListener {
-            for (child in it.children) {
-                Database.getReference("rooms/${child.key}").get().addOnSuccessListener {
-                    val room = it.getValue<Room>()
-
-                }
-            }
-        }
-    }
+//    fun test() {
+//        Database.getReference("users/${Authentication.uid}/rooms").get().addOnSuccessListener {
+//            for (child in it.children) {
+//                Database.getReference("rooms/${child.key}").get().addOnSuccessListener {
+//                    val room = it.getValue<Room>()
+//
+//                }
+//            }
+//        }
+//    }
 
 
 }

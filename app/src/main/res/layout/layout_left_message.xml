@@ -49,9 +49,8 @@
             android:paddingBottom="18dp"
             android:textColor="@color/white"
             android:textSize="14dp"
-            app:layout_constraintEnd_toStartOf="@+id/timestampTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="wewesdfdsfsdfsdfsdfsdfsdf" />
+            tools:text="a" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

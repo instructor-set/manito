@@ -1,6 +1,7 @@
 package com.instructor.manito
 
 import android.content.Context
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +27,11 @@ class RoomChatAdapter(private val context: Context, private val chatList: ArrayL
         RecyclerView.ViewHolder(bind.root) {
         fun binding(chat: Chat) {
             with(bind) {
+                if (chat.message!!.length < 5) {
+                    messageTextView.gravity = Gravity.CENTER
+                } else {
+                    messageTextView.gravity = Gravity.START
+                }
                 messageTextView.text = chat.message
                 timestampTextView.text = unixTimeToDateString(chat.timestamp as Long)
                 uidToNickname(chat.uid!!) {
@@ -40,6 +46,14 @@ class RoomChatAdapter(private val context: Context, private val chatList: ArrayL
         RecyclerView.ViewHolder(bind.root) {
         fun binding(chat: Chat) {
             with(bind) {
+                val message = chat.message!!
+                messageTextView.apply {
+                    gravity = if (message.length < 5) {
+                        Gravity.CENTER
+                    } else {
+                        Gravity.START
+                    }
+                }
                 messageTextView.text = chat.message
                 timestampTextView.text = unixTimeToDateString(chat.timestamp as Long)
             }

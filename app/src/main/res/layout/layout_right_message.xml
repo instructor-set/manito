@@ -38,11 +38,10 @@
             android:paddingTop="10dp"
             android:paddingEnd="6dp"
             android:paddingBottom="18dp"
-            android:textAlignment="viewStart"
             android:textSize="14dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="ddsfdsfdsfdsfdsf" />
+            tools:text="가" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
