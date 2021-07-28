@@ -110,6 +110,7 @@ class MainRoomAdapter(private val context: Context, private var listData: ArrayL
                             Database.getReference("users/$uid/rooms/$rid").get().addOnSuccessListener {
                                     snapshot: DataSnapshot ->
                                 if(snapshot.exists()){
+
                                     val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
                                     val dialogview = inflater.inflate(R.layout.alertdialog_enter_room, null)
                                     val dialogTitle = dialogview.findViewById<TextView>(R.id.alertTitleTextView)
@@ -120,7 +121,8 @@ class MainRoomAdapter(private val context: Context, private var listData: ArrayL
                                         dialogTitle.text = room.title
                                         setView(dialogview)
                                         Database.getReference("users/${room.manager}/nickname").get().addOnSuccessListener {
-                                            dialogManager.text = snapshot.getValue<String>()
+                                            nickname ->
+                                            dialogManager.text = nickname.getValue<String>()
                                         }
                                         @SuppressLint("SetTextI18n")
                                         dialogMembers.text = "${room.users?.size ?: 0} / ${room.maxUsers}"
