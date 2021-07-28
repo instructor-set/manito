@@ -1,0 +1,55 @@
+[진하]
+
+1. Room dto 에서 password 항목 제거 - 암호가 걸려있는지 여부로 변경, 방 상태 추가
+
+2. Database -
+password: {
+    $rid: $password
+}
+byUser: {
+    $uid: {
+        password: $password
+        $others
+    }
+}
+형식으로 데이터베이스 구조 만들기
+
+3. 액티비티마다 onCreate 함수에 몰려있는 코드들 함수로 빼서 정리하기
+
+4. 액티비티, layout 등 이름과 폴더 정리하기
+
+5
+
+
+[가은]
+
+1. 방 나가기 - 방장이 나가면 폭파, 시작하기 전에만 활성화
+
+2. 내 방 리스너 잘 하기
+
+[성덕]
+
+1. 방 최대인원
+
+2. 미션
+
+3.
+
+[현재 데이터 구조]
+
+chats: {
+    $rid: {
+        $cid(의미 없음): dto.Chat
+    }
+}
+rooms: {
+    $rid: dto.Room
+}
+users: {
+    $uid: dto.User {
+        nickname: String
+        rooms: {
+            $rid: $timestamp
+        }
+    }
+}

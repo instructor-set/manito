@@ -96,16 +96,17 @@ class LoginActivity : AppCompatActivity() {
         materialAlertDialog {
             title = user.nickname
             message = "로그인 성공"
-            okButton()
+            okButton {
+                bind.testAButton.isEnabled = true
+            }
         }.show()
     }
 
-    fun login() {
-        logout()
+    private fun login() {
         signInLauncher.launch(signInIntent)
     }
 
-    fun logout() {
+    private fun logout() {
         AuthUI.getInstance()
             .signOut(this)
             .addOnCompleteListener {
@@ -118,12 +119,24 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(bind.root)
 
-        bind.testAButton.setOnClickListener {
-            start<MainActivity>()
-        }
-        bind.testBButton.setOnClickListener {
-
-            login()
+        with(bind) {
+            if (Authentication.isLoggedIn()) {
+                testAButton.isEnabled = true
+            }
+            testAButton.setOnClickListener {
+                if (!Authentication.isLoggedIn()) {
+                    testAButton.isEnabled = false
+                } else {
+                    start<MainActivity>()
+                }
+            }
+            testBButton.setOnClickListener {
+                login()
+            }
+            testCButton.setOnClickListener {
+                testAButton.isEnabled = false
+                logout()
+            }
 
         }
 
