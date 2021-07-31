@@ -4,9 +4,12 @@ package com.instructor.manito
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.instructor.manito.databinding.ActivityMainBinding
@@ -79,25 +82,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-
-
-//        val mDatabase = Database.getReference("rooms")
-//        mDatabase.child(Authentication.uid.toString()).addValueEventListener(object :
-//            ValueEventListener {
-//            override fun onCancelled(error: DatabaseError) {
-//                TODO("Not yet implemented")
-//            }
-//
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                for (postSnapshot in snapshot.children) {
-//                    val name = postSnapshot.child("rooms").getValue(true)
-//                    Log.e("myName", name.toString())
-//
-//
-//                }
-//            }
-//
-//        }
+        test()
 
 
 
@@ -115,17 +100,61 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun test() {
+        myRoomList.clear()
         Database.getReference("users/${Authentication.uid}/rooms").addChildEventListener(object: ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val rid = snapshot.key
-//                Database.getReference("rooms/$rid").addValueEventListener()
+
+                val rid = snapshot.key as String
+                Database.getReference("rooms/${rid}").addValueEventListener(object: ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        myRoomList.add(snapshot.getValue<Room>()!!)
+                        Util.j(myRoomList.toString())
+                        roomAdapter.notifyDataSetChanged()
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
+                
+                // 잘모르겠어 아무것도안했어 ㅋㅋㅋㅋㅋ 왜 2개씩 생기지
+                val rid = snapshot.key as String
+                Database.getReference("rooms/${rid}").addValueEventListener(object: ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        roomAdapter.notifyDataSetChanged()
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
+
+                // user의 rooms 정보에서 삭제
+                Database.getReference("users/${Authentication.uid}/rooms").child("${snapshot.key}").removeValue().addOnSuccessListener(object: OnSuccessListener<Void>{
+                    override fun onSuccess(p0: Void?) {
+                        Toast.makeText(this@MainActivity, "삭제 완료", Toast.LENGTH_SHORT).show()
+                        // 어댑터에는 어떻게 해줘야하지?
+                        // 리스트에 있는거 지우는걸 모르겠어
+                        adapter.notifyDataSetChanged()
+                    }
+
+                })
+                Database.getReference("rooms/${snapshot.key}/users").child("${Authentication.uid}").removeValue().addOnSuccessListener(object: OnSuccessListener<Void>{
+                    override fun onSuccess(p0: Void?) {
+                        Toast.makeText(this@MainActivity, "삭제 완료", Toast.LENGTH_SHORT).show()
+                        adapter.notifyDataSetChanged()
+                    }
+
+                })
+
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
@@ -147,44 +176,6 @@ class MainActivity : AppCompatActivity() {
             Database.getReference("rooms").get().addOnSuccessListener {
                 refreshChatList(it)
             }
-            val roomList = arrayListOf<String>()
-            roomList.clear()
-            myRoomList.clear()
-            Database.getReference("users/${Authentication.uid}/rooms")
-                .addValueEventListener(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        for (room in snapshot.children) {
-                            roomList.add(room.key.toString())
-                        }
-                        Database.getReference("rooms")
-                            .addValueEventListener(object : ValueEventListener {
-                                override fun onDataChange(snapshot: DataSnapshot) {
-                                    for (room in snapshot.children) {
-                                        Util.j(room.key.toString())
-                                        if (room.key in roomList) {
-                                            myRoomList.add(room.getValue<Room>()!!)
-                                            Util.j(room.getValue<Room>()!!.toString())
-                                        }
-                                        roomAdapter.notifyDataSetChanged()
-
-                                    }
-                                }
-
-                                override fun onCancelled(error: DatabaseError) {
-                                    TODO("Not yet implemented")
-                                }
-
-                            })
-
-
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        TODO("Not yet implemented")
-                    }
-
-                })
-
 
         }
 
