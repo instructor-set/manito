@@ -6,6 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".CreateActivity">
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
@@ -38,17 +42,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/createRoomMissionTextview"
         app:layout_constraintTop_toBottomOf="@+id/createRoomMissionTextview" />
-
-    <EditText
-        android:id="@+id/missionEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="예) 마니또에게 커피사주기!"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <EditText
         android:id="@+id/titleEditText"
@@ -149,13 +142,16 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/missionRecycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toTopOf="@+id/create_createRoomButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        tools:listitem="@layout/cell_mission" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
