@@ -22,6 +22,7 @@ import com.instructor.manito.lib.Util
 import splitties.bundle.BundleSpec
 import splitties.bundle.bundle
 import splitties.bundle.withExtras
+import java.util.*
 
 class RoomActivity : AppCompatActivity() {
 
@@ -78,6 +79,7 @@ class RoomActivity : AppCompatActivity() {
 
     private var nextItemId: Int = 1
     private val uidToItemId: HashMap<String, Int> = hashMapOf()
+    private val rand = Random()
 
     private val playerMenu by lazy {
         bind.drawerView.menu.getItem(0).subMenu
@@ -115,6 +117,22 @@ class RoomActivity : AppCompatActivity() {
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             menuButton.setOnClickListener {
                 drawerLayout.openDrawer(GravityCompat.END)
+            }
+            // todo 서버에서 users 다시 받아서 해야됨
+            startButton.setOnClickListener {
+                val users = room.users!!
+                var maxGroup = users.size / 2
+
+                for (i in 1..maxGroup) {
+                    val success = when(rand.nextInt(2)){
+                        1 -> true
+                        else -> false
+                    }
+                    if (success || i == maxGroup) {
+                        maxGroup = i
+                        break
+                    }
+                }
             }
 
 
