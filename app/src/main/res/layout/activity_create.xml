@@ -6,9 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".CreateActivity">
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <EditText
+        android:id="@+id/MemberNumEditText"
+        android:layout_width="122dp"
+        android:layout_height="43dp"
+        android:ems="10"
+        android:inputType="number"
+        tools:layout_editor_absoluteX="258dp"
+        tools:layout_editor_absoluteY="190dp" />
 
     <View
         android:layout_width="match_parent"
@@ -153,5 +158,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
         tools:listitem="@layout/cell_mission" />
+
+    <Button
+        android:id="@+id/AddButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+"
+        tools:layout_editor_absoluteX="270dp"
+        tools:layout_editor_absoluteY="234dp" />
+
+    <Button
+        android:id="@+id/MinusButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-"
+        tools:layout_editor_absoluteX="271dp"
+        tools:layout_editor_absoluteY="290dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

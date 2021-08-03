@@ -1,6 +1,8 @@
 package com.instructor.manito
 
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.ServerValue
@@ -12,6 +14,7 @@ import com.instructor.manito.lib.Database
 import com.instructor.manito.lib.Util.dummy
 import splitties.activities.start
 import splitties.bundle.putExtras
+import java.lang.reflect.Member
 
 class CreateActivity : AppCompatActivity() {
     private val bind by lazy {
@@ -24,10 +27,26 @@ class CreateActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
+//        val memberNum = findViewById<EditText>(R.id.MemberNumEditText)
+//        val btnAdd = findViewById<Button>(R.id.AddButton)
+//        val btnMinus = findViewById<Button>(R.id.MinusButton)
+        var count:Int =0
 
 
         super.onCreate(savedInstanceState)
         with(bind) {
+
+            MemberNumEditText.setText(count)
+
+            AddButton.setOnClickListener{
+                count++;
+                MemberNumEditText.setText(count)
+            }
+            MinusButton.setOnClickListener{
+                count--;
+                MemberNumEditText.setText(count)
+            }
+
             dataList.add("미션1")
             setContentView(root)
             createCreateRoomButton.setOnClickListener {
