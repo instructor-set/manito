@@ -104,6 +104,7 @@ class MainActivity : AppCompatActivity() {
         Database.getReference("users/${Authentication.uid}/rooms").addChildEventListener(object: ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
 
+                //get 사용하기
                 val rid = snapshot.key as String
                 Database.getReference("rooms/${rid}").addValueEventListener(object: ValueEventListener{
                     override fun onDataChange(snapshot: DataSnapshot) {
@@ -121,40 +122,16 @@ class MainActivity : AppCompatActivity() {
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 
-                // 잘모르겠어 아무것도안했어 ㅋㅋㅋㅋㅋ 왜 2개씩 생기지
-                val rid = snapshot.key as String
-                Database.getReference("rooms/${rid}").addValueEventListener(object: ValueEventListener{
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        roomAdapter.notifyDataSetChanged()
-                    }
-                    override fun onCancelled(error: DatabaseError) {
-                        TODO("Not yet implemented")
-                    }
-
-                })
-
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-
-                // user의 rooms 정보에서 삭제
-                Database.getReference("users/${Authentication.uid}/rooms").child("${snapshot.key}").removeValue().addOnSuccessListener(object: OnSuccessListener<Void>{
-                    override fun onSuccess(p0: Void?) {
-                        Toast.makeText(this@MainActivity, "삭제 완료", Toast.LENGTH_SHORT).show()
-                        // 어댑터에는 어떻게 해줘야하지?
-                        // 리스트에 있는거 지우는걸 모르겠어
-                        adapter.notifyDataSetChanged()
-                    }
-
-                })
-                Database.getReference("rooms/${snapshot.key}/users").child("${Authentication.uid}").removeValue().addOnSuccessListener(object: OnSuccessListener<Void>{
-                    override fun onSuccess(p0: Void?) {
-                        Toast.makeText(this@MainActivity, "삭제 완료", Toast.LENGTH_SHORT).show()
-                        adapter.notifyDataSetChanged()
-                    }
-
-                })
-
+                // 어댑터 안의 내용 삭제
+                // hashmap?
+                // remove
+                // 값을 get으로 가지고 와서 room으로
+                // 안되면 hashmap 사용해서 rid 키로
+                myRoomList.remove(snapshot.getValue<Room>())
+                adapter.notifyDataSetChanged()
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {

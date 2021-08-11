@@ -69,22 +69,11 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
                                     setMessage("나가면 다시 들어갈 수 없습니다. ")
                                     setMessage("방장이 나가면 방이 사라집니다.")
                                     setPositiveButton("확인") { _: DialogInterface, _: Int->
-                                        Database.getReference("users/${Authentication.uid}/rooms").child("${room.rid}").removeValue().addOnSuccessListener(object:
-                                            OnSuccessListener<Void> {
-                                            override fun onSuccess(p0: Void?) {
-                                                // 어댑터에는 어떻게 해줘야하지?
-                                                // 리스트에 있는거 지우는걸 모르겠어
-                                            }
-                                        })
-                                        Database.getReference("rooms").child("${room.rid}").removeValue().addOnSuccessListener(object:
-                                            OnSuccessListener<Void> {
-                                            override fun onSuccess(p0: Void?) {
-                                                Toast.makeText(context, "삭제 완료", Toast.LENGTH_SHORT).show()
-                                                // 얘는 얘방에 들어가있던 친구들 데이터 삭제 이거 자동으로 되나? 우째 해?
-                                            }
+                                        // 동시에 지우는거 찾기 update
+                                        Database.getReference("users/${Authentication.uid}/rooms/${room.rid}").removeValue()
+                                        Database.getReference("rooms/${room.rid}").removeValue()
 
-
-                                        })
+                                        // manager가 나라면 room의 user들을 다 돌면서 삭제를 내가 해줘야해
 
                                     }
                                     setNeutralButton("취소", null)
