@@ -30,6 +30,7 @@ class RoomActivity : AppCompatActivity() {
         var room: Room by bundle()
     }
 
+
     private val room by lazy {
         withExtras(Extras) {
             room
@@ -121,17 +122,8 @@ class RoomActivity : AppCompatActivity() {
             // todo 서버에서 users 다시 받아서 해야됨
             startButton.setOnClickListener {
                 val users = room.users!!
-                var maxGroup = users.size / 2
+                for (user in users.keys){
 
-                for (i in 1..maxGroup) {
-                    val success = when(rand.nextInt(2)){
-                        1 -> true
-                        else -> false
-                    }
-                    if (success || i == maxGroup) {
-                        maxGroup = i
-                        break
-                    }
                 }
             }
 

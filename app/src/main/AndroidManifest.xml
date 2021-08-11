@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Manito">
         <activity android:name=".RoomActivity" />
-        <activity android:name=".CreateActivity" />
+        <activity android:name=".CreateActivity"/>
         <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
