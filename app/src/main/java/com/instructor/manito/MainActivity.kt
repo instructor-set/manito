@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
@@ -121,7 +120,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                
+
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
@@ -133,6 +132,9 @@ class MainActivity : AppCompatActivity() {
                 myRoomList.remove(snapshot.getValue<Room>())
                 adapter.notifyDataSetChanged()
             }
+
+
+
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
                 TODO("Not yet implemented")
