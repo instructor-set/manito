@@ -4,6 +4,7 @@ package com.instructor.manito
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -81,6 +82,8 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
+        myRoomList.clear()
         test()
 
 
@@ -99,17 +102,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun test() {
-        myRoomList.clear()
+
         Database.getReference("users/${Authentication.uid}/rooms").addChildEventListener(object: ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
 
-                //get 사용하기
                 val rid = snapshot.key as String
+                Database.getReference("rooms/${rid}").get().addOnSuccessListener {
+                    myRoomList.add(it.getValue<Room>()!!)
+                    roomAdapter.notifyDataSetChanged()
+                    Log.e("gaeun", "더하기")
+                }
+                /*
                 Database.getReference("rooms/${rid}").addValueEventListener(object: ValueEventListener{
-                    override fun onDataChange(snapshot: DataSnapshot) {
+                    override fun onDataChange(snapshot: DataSnalopshot) {
                         myRoomList.add(snapshot.getValue<Room>()!!)
-                        Util.j(myRoomList.toString())
                         roomAdapter.notifyDataSetChanged()
+                        Toast.makeText(this@MainActivity, "더하기해", Toast.LENGTH_SHORT).show()
+
                     }
 
                     override fun onCancelled(error: DatabaseError) {
@@ -117,24 +126,27 @@ class MainActivity : AppCompatActivity() {
                     }
 
                 })
+                */
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-
+                roomAdapter.notifyDataSetChanged()
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                // 어댑터 안의 내용 삭제
-                // hashmap?
-                // remove
-                // 값을 get으로 가지고 와서 room으로
-                // 안되면 hashmap 사용해서 rid 키로
-                myRoomList.remove(snapshot.getValue<Room>())
-                adapter.notifyDataSetChanged()
+
+                Database.getReference("rooms/${snapshot.key}/users/${Authentication.uid}").get().addOnSuccessListener {
+
+                }
+                Database.getReference("users/${Authentication.uid}/rooms/${snapshot.key}").get().addOnSuccessListener {
+                    myRoomList.remove(it.getValue<Room>())
+                    roomAdapter.notifyDataSetChanged()
+                    Log.e("gaeun", "빼기")
+                }
+
+
+
             }
-
-
-
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
                 TODO("Not yet implemented")
@@ -157,6 +169,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
 
     }
     /*
