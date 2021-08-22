@@ -81,7 +81,12 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
                                         updates["rooms/$rid/users/$uid"] =
                                             null
                                     }
-                                    Database.getReference("").updateChildren(updates)
+                                    Database.getReference("").updateChildren(updates).addOnSuccessListener {
+
+
+                                        (this@MainMyRoomAdapter.context as MainActivity).refreshChatList(true)
+                                        Database.sendChat(rid!!, Chat.TYPE_EXIT, Chat.MESSAGE_EXIT)
+                                    }
                                     // 방을 삭제
                                 }
                                 setNeutralButton("취소", null)

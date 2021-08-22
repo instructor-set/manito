@@ -19,7 +19,7 @@ class RoomChatAdapter(private val context: Context, private val chatList: ArrayL
     companion object {
         private const val VIEW_TYPE_LEFT = 0
         private const val VIEW_TYPE_RIGHT = 1
-        private const val VIEW_TYPE_ENTER = 2
+        private const val VIEW_TYPE_IMPORTANT = 2
     }
     private val simpleDateFormat = SimpleDateFormat("a h:mm", Locale.KOREA)
 
@@ -65,10 +65,18 @@ class RoomChatAdapter(private val context: Context, private val chatList: ArrayL
         RecyclerView.ViewHolder(bind.root) {
         fun binding(chat: Chat) {
             with(bind) {
-                if (chat.type == Chat.TYPE_ENTER) {
-                    uidToNickname(chat.uid!!) {
-                        messageTextView1.text = context.getString(R.string.enter_message, it)
+                when (chat.type) {
+                    Chat.TYPE_ENTER -> {
+                        uidToNickname(chat.uid!!) {
+                            messageTextView1.text = context.getString(R.string.enter_message, it)
+                        }
                     }
+                    Chat.TYPE_EXIT -> {
+                        uidToNickname(chat.uid!!) {
+                            messageTextView1.text = context.getString(R.string.exit_message, it)
+                        }
+                    }
+                    else -> {}
                 }
             }
         }
@@ -79,8 +87,8 @@ class RoomChatAdapter(private val context: Context, private val chatList: ArrayL
 
     override fun getItemViewType(position: Int): Int {
         val chat = chatList[position]
-        return if (chat.type == Chat.TYPE_ENTER) {
-            VIEW_TYPE_ENTER
+        return if (chat.type != Chat.TYPE_MESSAGE) {
+            VIEW_TYPE_IMPORTANT
         } else {
             when (chat.uid) {
                 Authentication.uid -> VIEW_TYPE_RIGHT

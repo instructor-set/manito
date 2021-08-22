@@ -4,7 +4,6 @@ package com.instructor.manito
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +14,6 @@ import com.instructor.manito.databinding.AlertdialogEdittextBinding
 import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
-import com.instructor.manito.lib.Util
 import splitties.activities.start
 import splitties.toast.toast
 
@@ -30,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     // 내가 들어간 방
     private val myRoomList = arrayListOf<Room>()
+    private val myRoomIndexMap = hashMapOf<String, Int>()
     private val roomAdapter = MainMyRoomAdapter(this@MainActivity, myRoomList)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,9 +73,7 @@ class MainActivity : AppCompatActivity() {
             // 새로고침
             //bind.swipeRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_CIRCLES);
             swipeRefreshLayout.setOnRefreshListener {
-                Database.getReference("rooms").get().addOnSuccessListener {
-                    refreshChatList(it)
-                }
+                refreshChatList(false)
             }
 
         }
@@ -88,15 +85,18 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun refreshChatList(snapshot: DataSnapshot) {
-        dataList.clear()
-        for (roomPair in snapshot.children) {
-            val room = roomPair.getValue<Room>()!!
-            dataList.add(room)
+    fun refreshChatList(refreshing: Boolean) {
+        bind.swipeRefreshLayout.setRefreshing(refreshing)
+        Database.getReference("rooms").get().addOnSuccessListener {
+            dataList.clear()
+            for (roomPair in it.children) {
+                val room = roomPair.getValue<Room>()!!
+                dataList.add(room)
+            }
+            dataList.reverse()
+            adapter.notifyDataSetChanged()
+            bind.swipeRefreshLayout.setRefreshing(false)
         }
-        dataList.reverse()
-        adapter.notifyDataSetChanged()
-        bind.swipeRefreshLayout.setRefreshing(false)
     }
 
     fun test() {
@@ -107,8 +107,8 @@ class MainActivity : AppCompatActivity() {
                 val rid = snapshot.key as String
                 Database.getReference("rooms/${rid}").get().addOnSuccessListener {
                     myRoomList.add(it.getValue<Room>()!!)
+                    myRoomIndexMap[rid] = myRoomList.lastIndex
                     roomAdapter.notifyItemInserted(myRoomList.lastIndex)
-                    Log.e("gaeun", "더하기")
                 }
                 /*
                 Database.getReference("rooms/${rid}").addValueEventListener(object: ValueEventListener{
@@ -128,17 +128,13 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                roomAdapter.notifyDataSetChanged()
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                Util.j("removed")
-
-                Database.getReference("users/${Authentication.uid}/rooms/${snapshot.key}").get().addOnSuccessListener {
-                    myRoomList.remove(it.getValue<Room>())
-                    roomAdapter.notifyDataSetChanged()
-                }
-
+                val myRoomIndex = myRoomIndexMap.getValue(snapshot.key!!)
+                myRoomIndexMap.remove(snapshot.key!!)
+                myRoomList.removeAt(myRoomIndex)
+                roomAdapter.notifyItemRemoved(myRoomIndex)
 
             }
 
@@ -157,11 +153,7 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         with(bind) {
-            swipeRefreshLayout.setRefreshing(true)
-            Database.getReference("rooms").get().addOnSuccessListener {
-                refreshChatList(it)
-            }
-
+            refreshChatList(true)
         }
 
 
