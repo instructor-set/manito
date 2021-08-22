@@ -4,6 +4,7 @@ package com.instructor.manito
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -81,6 +82,8 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
+        myRoomList.clear()
         test()
 
 
@@ -99,16 +102,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun test() {
-        myRoomList.clear()
+
         Database.getReference("users/${Authentication.uid}/rooms").addChildEventListener(object: ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
 
                 val rid = snapshot.key as String
+                Database.getReference("rooms/${rid}").get().addOnSuccessListener {
+                    myRoomList.add(it.getValue<Room>()!!)
+                    roomAdapter.notifyDataSetChanged()
+                    Log.e("gaeun", "더하기")
+                }
+                /*
                 Database.getReference("rooms/${rid}").addValueEventListener(object: ValueEventListener{
-                    override fun onDataChange(snapshot: DataSnapshot) {
+                    override fun onDataChange(snapshot: DataSnalopshot) {
                         myRoomList.add(snapshot.getValue<Room>()!!)
-                        Util.j(myRoomList.toString())
                         roomAdapter.notifyDataSetChanged()
+                        Toast.makeText(this@MainActivity, "더하기해", Toast.LENGTH_SHORT).show()
+
                     }
 
                     override fun onCancelled(error: DatabaseError) {
@@ -116,45 +126,25 @@ class MainActivity : AppCompatActivity() {
                     }
 
                 })
+                */
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                
-                // 잘모르겠어 아무것도안했어 ㅋㅋㅋㅋㅋ 왜 2개씩 생기지
-                val rid = snapshot.key as String
-                Database.getReference("rooms/${rid}").addValueEventListener(object: ValueEventListener{
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        roomAdapter.notifyDataSetChanged()
-                    }
-                    override fun onCancelled(error: DatabaseError) {
-                        TODO("Not yet implemented")
-                    }
-
-                })
-
+                roomAdapter.notifyDataSetChanged()
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
 
+                Database.getReference("rooms/${snapshot.key}/users/${Authentication.uid}").get().addOnSuccessListener {
+
+                }
+                Database.getReference("users/${Authentication.uid}/rooms/${snapshot.key}").get().addOnSuccessListener {
+                    myRoomList.remove(it.getValue<Room>())
+                    roomAdapter.notifyDataSetChanged()
+                    Log.e("gaeun", "빼기")
+                }
 
 
-                // user의 rooms 정보에서 삭제
-                Database.getReference("users/${Authentication.uid}/rooms").child("${snapshot.key}").removeValue().addOnSuccessListener(object: OnSuccessListener<Void>{
-                    override fun onSuccess(p0: Void?) {
-                        Toast.makeText(this@MainActivity, "삭제 완료", Toast.LENGTH_SHORT).show()
-                        // 어댑터에는 어떻게 해줘야하지?
-                        // 리스트에 있는거 지우는걸 모르겠어
-                        adapter.notifyDataSetChanged()
-                    }
-
-                })
-                Database.getReference("rooms/${snapshot.key}/users").child("${Authentication.uid}").removeValue().addOnSuccessListener(object: OnSuccessListener<Void>{
-                    override fun onSuccess(p0: Void?) {
-                        Toast.makeText(this@MainActivity, "삭제 완료", Toast.LENGTH_SHORT).show()
-                        adapter.notifyDataSetChanged()
-                    }
-
-                })
 
             }
 
@@ -179,6 +169,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
 
     }
     /*
