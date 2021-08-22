@@ -87,8 +87,6 @@ class RoomActivity : AppCompatActivity() {
     }
 
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(bind.root)
@@ -105,7 +103,9 @@ class RoomActivity : AppCompatActivity() {
                     finish()
                 } else {
                     val timestamp = it as Long
-                    Database.getReference("chats/${room.rid}").orderByChild("timestamp").startAt(timestamp.toDouble()).addChildEventListener(chatsChildEventListener)
+                    Database.getReference("chats/${room.rid}").orderByChild("timestamp")
+                        .startAt(timestamp.toDouble())
+                        .addChildEventListener(chatsChildEventListener)
                 }
             }
 
@@ -121,22 +121,42 @@ class RoomActivity : AppCompatActivity() {
             }
             // todo 서버에서 users 다시 받아서 해야됨
             startButton.setOnClickListener {
-                val users = room.users!!
-                for (user in users.keys){
-
-                }
+                Database.getReference("rooms/${room.rid}/state").setValue(Room.STATE_READY)
+                    .addOnSuccessListener {
+                        Database.getReference("rooms/${room.rid}/users").get()
+                            .addOnSuccessListener {
+                                val userList = it.getValue<HashMap<String, Any>>()!!
+                                val users = userList.keys.shuffled()
+                                val game = hashMapOf<String, String>()
+                                val lastUserNumber = users.size - 1
+                                for (i in users.indices) {
+                                    if (i != lastUserNumber) {
+                                        game[users[i]] = users[i + 1]
+                                    } else {
+                                        game[users[i]] = users[0]
+                                    }
+                                }
+                                Database.getReference("")
+                                    .updateChildren(
+                                        hashMapOf<String, Any>(
+                                            "games/${room.rid}" to game,
+                                            "rooms/${room.rid}/state" to Room.STATE_START)
+                                    )
+                            }
+                    }
             }
 
 
-            Database.getReference("rooms/${room.rid}/users").addChildEventListener(roomChildEventListener)
+            Database.getReference("rooms/${room.rid}/users")
+                .addChildEventListener(roomChildEventListener)
 
 
         }
     }
 
     override fun onBackPressed() {
-        with(bind){
-            if(drawerLayout.isDrawerOpen(GravityCompat.END)) {
+        with(bind) {
+            if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
                 drawerLayout.closeDrawer(GravityCompat.END)
             } else {
                 finish()
@@ -144,14 +164,14 @@ class RoomActivity : AppCompatActivity() {
         }
     }
 
-    private val chatsChildEventListener = object: ChildEventListener{
+    private val chatsChildEventListener = object : ChildEventListener {
         override fun onChildAdded(
             snapshot: DataSnapshot,
             previousChildName: String?
         ) {
             val chat = snapshot.getValue<Chat>()!!
             chatList.add(chat)
-            chatAdapter.notifyDataSetChanged()
+            chatAdapter.notifyItemInserted(chatList.size - 1)
             bind.messageRecycler.scrollToPosition(chatList.size - 1)
         }
 
@@ -175,7 +195,7 @@ class RoomActivity : AppCompatActivity() {
 
     }
 
-    private val roomChildEventListener = object: ChildEventListener{
+    private val roomChildEventListener = object : ChildEventListener {
 
         override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
 
