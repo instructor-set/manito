@@ -62,7 +62,7 @@ class MainRoomAdapter(private val context: Context, private var listData: ArrayL
 
                         // 비밀번호가 있을 때
                         if(!room.password.isNullOrBlank()){
-                            val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                            val inflater = LayoutInflater.from(context)
                             val dialogView = inflater.inflate(R.layout.alertdialog_edittext, null)
                             val dialogText = dialogView.findViewById<EditText>(R.id.alertEditText)
                             val alertDialog = AlertDialog.Builder(context)
@@ -99,6 +99,7 @@ class MainRoomAdapter(private val context: Context, private var listData: ArrayL
                                     }
                                     // 비밀번호 틀렸을 때
                                     else{
+//                                        toast("비밀번호가 틀렸습니다.")
                                         Toast.makeText(context, "비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show()
                                     }
                                 }
@@ -109,7 +110,7 @@ class MainRoomAdapter(private val context: Context, private var listData: ArrayL
                         }else { // 비밀번호 없을 때
                             Database.getReference("users/$uid/rooms/$rid").get().addOnSuccessListener {
                                     snapshot: DataSnapshot ->
-                                if(snapshot.exists()){
+                                if(snapshot.exists()){1
 
                                     val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
                                     val dialogView = inflater.inflate(R.layout.alertdialog_enter_room, null)
