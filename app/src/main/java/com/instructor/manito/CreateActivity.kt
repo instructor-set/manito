@@ -1,8 +1,12 @@
 package com.instructor.manito
 
+import android.graphics.Rect
 import android.os.Bundle
+import android.view.ViewTreeObserver
+import android.view.Window
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.ServerValue
@@ -17,6 +21,7 @@ import splitties.bundle.putExtras
 import java.lang.reflect.Member
 
 class CreateActivity : AppCompatActivity() {
+
     private val bind by lazy {
         ActivityCreateBinding.inflate(layoutInflater)
     }
@@ -24,31 +29,29 @@ class CreateActivity : AppCompatActivity() {
     private val dataList = arrayListOf<String>()
     private val adapter = MissionAdapter(this@CreateActivity, dataList)
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
-
-//        val memberNum = findViewById<EditText>(R.id.MemberNumEditText)
-//        val btnAdd = findViewById<Button>(R.id.AddButton)
-//        val btnMinus = findViewById<Button>(R.id.MinusButton)
         var count:Int =0
 
-
         super.onCreate(savedInstanceState)
+
         with(bind) {
 
-            MemberNumEditText.setText(count)
+            MemberNumEditText.setText("$count")
 
-            AddButton.setOnClickListener{
+            AddButton.setOnClickListener {
                 count++;
-                MemberNumEditText.setText(count)
+                MemberNumEditText.setText("$count")
             }
-            MinusButton.setOnClickListener{
-                count--;
-                MemberNumEditText.setText(count)
+            MinusButton.setOnClickListener {
+                if(count >0){
+                    count--;
+                    MemberNumEditText.setText("$count")
+                }
             }
 
             dataList.add("미션1")
             setContentView(root)
+
             createCreateRoomButton.setOnClickListener {
                 createCreateRoomButton.isEnabled = false
                 val roomRef = Database.getReference("rooms").push()
@@ -80,15 +83,5 @@ class CreateActivity : AppCompatActivity() {
             missionRecycler.layoutManager = LinearLayoutManager(this@CreateActivity)
         }
 
-
-
-
     }
-
-//    override fun onStart() {
-//        super.onStart()
-//
-//    }
-
-
-}
+    }
