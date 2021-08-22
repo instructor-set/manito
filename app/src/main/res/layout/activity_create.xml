@@ -93,20 +93,6 @@
         app:layout_constraintStart_toStartOf="@+id/createRoomPasswordTextView"
         app:layout_constraintTop_toBottomOf="@+id/createRoomPasswordTextView" />
 
-    <Button
-        android:id="@+id/create_createRoomButton"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="#00A1A1A1"
-        android:text="방만들기"
-        android:textColor="#000000"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
         android:layout_width="410dp"
@@ -143,14 +129,26 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/missionRecycler"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/create_createRoomButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
         tools:listitem="@layout/cell_mission" />
+
+    <Button
+        android:id="@+id/create_createRoomButton"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="#00A1A1A1"
+        android:text="방만들기"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/missionRecycler" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

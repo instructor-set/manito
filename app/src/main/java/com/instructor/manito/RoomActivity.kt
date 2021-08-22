@@ -171,8 +171,8 @@ class RoomActivity : AppCompatActivity() {
         ) {
             val chat = snapshot.getValue<Chat>()!!
             chatList.add(chat)
-            chatAdapter.notifyItemInserted(chatList.size - 1)
-            bind.messageRecycler.scrollToPosition(chatList.size - 1)
+            chatAdapter.notifyItemInserted(chatList.lastIndex)
+            bind.messageRecycler.scrollToPosition(chatList.lastIndex)
         }
 
         override fun onChildChanged(
