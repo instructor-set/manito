@@ -1,22 +1,11 @@
 package com.instructor.manito
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.content.DialogInterface
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.instructor.manito.databinding.CellMissionBinding
-import com.instructor.manito.dto.Chat
-import com.instructor.manito.dto.Room
-import com.instructor.manito.lib.Authentication
-import com.instructor.manito.lib.Database
-import com.instructor.manito.lib.Util
 import splitties.activities.start
 import splitties.bundle.putExtras
 import splitties.toast.toast

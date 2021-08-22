@@ -22,12 +22,14 @@ import com.instructor.manito.lib.Util
 import splitties.bundle.BundleSpec
 import splitties.bundle.bundle
 import splitties.bundle.withExtras
+import java.util.*
 
 class RoomActivity : AppCompatActivity() {
 
     object Extras : BundleSpec() {
         var room: Room by bundle()
     }
+
 
     private val room by lazy {
         withExtras(Extras) {
@@ -78,12 +80,11 @@ class RoomActivity : AppCompatActivity() {
 
     private var nextItemId: Int = 1
     private val uidToItemId: HashMap<String, Int> = hashMapOf()
+    private val rand = Random()
 
     private val playerMenu by lazy {
         bind.drawerView.menu.getItem(0).subMenu
     }
-
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,7 +103,9 @@ class RoomActivity : AppCompatActivity() {
                     finish()
                 } else {
                     val timestamp = it as Long
-                    Database.getReference("chats/${room.rid}").orderByChild("timestamp").startAt(timestamp.toDouble()).addChildEventListener(chatsChildEventListener)
+                    Database.getReference("chats/${room.rid}").orderByChild("timestamp")
+                        .startAt(timestamp.toDouble())
+                        .addChildEventListener(chatsChildEventListener)
                 }
             }
 
@@ -116,17 +119,44 @@ class RoomActivity : AppCompatActivity() {
             menuButton.setOnClickListener {
                 drawerLayout.openDrawer(GravityCompat.END)
             }
+            // todo 서버에서 users 다시 받아서 해야됨
+            startButton.setOnClickListener {
+                Database.getReference("rooms/${room.rid}/state").setValue(Room.STATE_READY)
+                    .addOnSuccessListener {
+                        Database.getReference("rooms/${room.rid}/users").get()
+                            .addOnSuccessListener {
+                                val userList = it.getValue<HashMap<String, Any>>()!!
+                                val users = userList.keys.shuffled()
+                                val game = hashMapOf<String, String>()
+                                val lastUserNumber = users.size - 1
+                                for (i in users.indices) {
+                                    if (i != lastUserNumber) {
+                                        game[users[i]] = users[i + 1]
+                                    } else {
+                                        game[users[i]] = users[0]
+                                    }
+                                }
+                                Database.getReference("")
+                                    .updateChildren(
+                                        hashMapOf<String, Any>(
+                                            "games/${room.rid}" to game,
+                                            "rooms/${room.rid}/state" to Room.STATE_START)
+                                    )
+                            }
+                    }
+            }
 
 
-            Database.getReference("rooms/${room.rid}/users").addChildEventListener(roomChildEventListener)
+            Database.getReference("rooms/${room.rid}/users")
+                .addChildEventListener(roomChildEventListener)
 
 
         }
     }
 
     override fun onBackPressed() {
-        with(bind){
-            if(drawerLayout.isDrawerOpen(GravityCompat.END)) {
+        with(bind) {
+            if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
                 drawerLayout.closeDrawer(GravityCompat.END)
             } else {
                 finish()
@@ -134,15 +164,15 @@ class RoomActivity : AppCompatActivity() {
         }
     }
 
-    private val chatsChildEventListener = object: ChildEventListener{
+    private val chatsChildEventListener = object : ChildEventListener {
         override fun onChildAdded(
             snapshot: DataSnapshot,
             previousChildName: String?
         ) {
             val chat = snapshot.getValue<Chat>()!!
             chatList.add(chat)
-            chatAdapter.notifyDataSetChanged()
-            bind.messageRecycler.scrollToPosition(chatList.size - 1)
+            chatAdapter.notifyItemInserted(chatList.lastIndex)
+            bind.messageRecycler.scrollToPosition(chatList.lastIndex)
         }
 
         override fun onChildChanged(
@@ -165,7 +195,7 @@ class RoomActivity : AppCompatActivity() {
 
     }
 
-    private val roomChildEventListener = object: ChildEventListener{
+    private val roomChildEventListener = object : ChildEventListener {
 
         override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
 

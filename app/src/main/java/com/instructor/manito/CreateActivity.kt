@@ -62,7 +62,8 @@ class CreateActivity : AppCompatActivity() {
                     hashMapOf(
                         uid to true
                     ),
-                    uid
+                    uid,
+                    Room.STATE_WAIT
                 )
                 val updates = hashMapOf(
                     "rooms/$rid" to room,
@@ -72,7 +73,7 @@ class CreateActivity : AppCompatActivity() {
                     Database.sendChat(rid!!, Chat.TYPE_ENTER, Chat.MESSAGE_ENTER)
                     start<RoomActivity> {
                         putExtras(RoomActivity.Extras) {
-                            RoomActivity.Extras.room = room
+                            this.room = room
                         }
                     }
                 }

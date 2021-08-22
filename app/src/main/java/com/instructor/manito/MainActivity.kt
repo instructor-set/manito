@@ -4,6 +4,7 @@ package com.instructor.manito
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -80,24 +81,8 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-
-//        val mDatabase = Database.getReference("rooms")
-//        mDatabase.child(Authentication.uid.toString()).addValueEventListener(object :
-//            ValueEventListener {
-//            override fun onCancelled(error: DatabaseError) {
-//                TODO("Not yet implemented")
-//            }
-//
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                for (postSnapshot in snapshot.children) {
-//                    val name = postSnapshot.child("rooms").getValue(true)
-//                    Log.e("myName", name.toString())
-//
-//
-//                }
-//            }
-//
-//        }
+        myRoomList.clear()
+        test()
 
 
 
@@ -115,17 +100,46 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun test() {
+
         Database.getReference("users/${Authentication.uid}/rooms").addChildEventListener(object: ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val rid = snapshot.key
-//                Database.getReference("rooms/$rid").addValueEventListener()
+
+                val rid = snapshot.key as String
+                Database.getReference("rooms/${rid}").get().addOnSuccessListener {
+                    myRoomList.add(it.getValue<Room>()!!)
+                    roomAdapter.notifyItemInserted(myRoomList.lastIndex)
+                    Log.e("gaeun", "더하기")
+                }
+                /*
+                Database.getReference("rooms/${rid}").addValueEventListener(object: ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnalopshot) {
+                        myRoomList.add(snapshot.getValue<Room>()!!)
+                        roomAdapter.notifyDataSetChanged()
+                        Toast.makeText(this@MainActivity, "더하기해", Toast.LENGTH_SHORT).show()
+
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+                */
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
+                roomAdapter.notifyDataSetChanged()
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
+                Util.j("removed")
+
+                Database.getReference("users/${Authentication.uid}/rooms/${snapshot.key}").get().addOnSuccessListener {
+                    myRoomList.remove(it.getValue<Room>())
+                    roomAdapter.notifyDataSetChanged()
+                }
+
+
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
@@ -147,46 +161,9 @@ class MainActivity : AppCompatActivity() {
             Database.getReference("rooms").get().addOnSuccessListener {
                 refreshChatList(it)
             }
-            val roomList = arrayListOf<String>()
-            roomList.clear()
-            myRoomList.clear()
-            Database.getReference("users/${Authentication.uid}/rooms")
-                .addValueEventListener(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        for (room in snapshot.children) {
-                            roomList.add(room.key.toString())
-                        }
-                        Database.getReference("rooms")
-                            .addValueEventListener(object : ValueEventListener {
-                                override fun onDataChange(snapshot: DataSnapshot) {
-                                    for (room in snapshot.children) {
-                                        Util.j(room.key.toString())
-                                        if (room.key in roomList) {
-                                            myRoomList.add(room.getValue<Room>()!!)
-                                            Util.j(room.getValue<Room>()!!.toString())
-                                        }
-                                        roomAdapter.notifyDataSetChanged()
-
-                                    }
-                                }
-
-                                override fun onCancelled(error: DatabaseError) {
-                                    TODO("Not yet implemented")
-                                }
-
-                            })
-
-
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        TODO("Not yet implemented")
-                    }
-
-                })
-
 
         }
+
 
     }
     /*
