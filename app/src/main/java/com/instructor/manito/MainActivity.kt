@@ -5,11 +5,9 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.instructor.manito.databinding.ActivityMainBinding
@@ -109,7 +107,7 @@ class MainActivity : AppCompatActivity() {
                 val rid = snapshot.key as String
                 Database.getReference("rooms/${rid}").get().addOnSuccessListener {
                     myRoomList.add(it.getValue<Room>()!!)
-                    roomAdapter.notifyDataSetChanged()
+                    roomAdapter.notifyItemInserted(myRoomList.lastIndex)
                     Log.e("gaeun", "더하기")
                 }
                 /*
@@ -134,16 +132,12 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
+                Util.j("removed")
 
-                Database.getReference("rooms/${snapshot.key}/users/${Authentication.uid}").get().addOnSuccessListener {
-
-                }
                 Database.getReference("users/${Authentication.uid}/rooms/${snapshot.key}").get().addOnSuccessListener {
                     myRoomList.remove(it.getValue<Room>())
                     roomAdapter.notifyDataSetChanged()
-                    Log.e("gaeun", "빼기")
                 }
-
 
 
             }

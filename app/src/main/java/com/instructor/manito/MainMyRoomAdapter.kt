@@ -83,9 +83,6 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
                                     }
                                     Database.getReference("").updateChildren(updates)
                                     // 방을 삭제
-                                    val roomIndex = listData.indexOf(room)
-                                    listData.removeAt(roomIndex)
-                                    notifyItemRemoved(roomIndex)
                                 }
                                 setNeutralButton("취소", null)
                                 show()
