@@ -73,9 +73,7 @@ class MainActivity : AppCompatActivity() {
             // 새로고침
             //bind.swipeRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_CIRCLES);
             swipeRefreshLayout.setOnRefreshListener {
-                Database.getReference("rooms").get().addOnSuccessListener {
-                    refreshChatList(it)
-                }
+                refreshChatList(false)
             }
 
         }
@@ -87,15 +85,18 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun refreshChatList(snapshot: DataSnapshot) {
-        dataList.clear()
-        for (roomPair in snapshot.children) {
-            val room = roomPair.getValue<Room>()!!
-            dataList.add(room)
+    fun refreshChatList(refreshing: Boolean) {
+        bind.swipeRefreshLayout.setRefreshing(refreshing)
+        Database.getReference("rooms").get().addOnSuccessListener {
+            dataList.clear()
+            for (roomPair in it.children) {
+                val room = roomPair.getValue<Room>()!!
+                dataList.add(room)
+            }
+            dataList.reverse()
+            adapter.notifyDataSetChanged()
+            bind.swipeRefreshLayout.setRefreshing(false)
         }
-        dataList.reverse()
-        adapter.notifyDataSetChanged()
-        bind.swipeRefreshLayout.setRefreshing(false)
     }
 
     fun test() {
@@ -152,11 +153,7 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         with(bind) {
-            swipeRefreshLayout.setRefreshing(true)
-            Database.getReference("rooms").get().addOnSuccessListener {
-                refreshChatList(it)
-            }
-
+            refreshChatList(true)
         }
 
 
