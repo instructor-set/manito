@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -80,7 +80,6 @@ class RoomActivity : AppCompatActivity() {
 
     private var nextItemId: Int = 1
     private val uidToItemId: HashMap<String, Int> = hashMapOf()
-    private val rand = Random()
 
     private val playerMenu by lazy {
         bind.drawerView.menu.getItem(0).subMenu
@@ -114,7 +113,6 @@ class RoomActivity : AppCompatActivity() {
                 chatEditText.text.clear()
             }
             messageRecycler.adapter = chatAdapter
-            messageRecycler.layoutManager = LinearLayoutManager(this@RoomActivity)
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             menuButton.setOnClickListener {
                 drawerLayout.openDrawer(GravityCompat.END)
@@ -144,6 +142,9 @@ class RoomActivity : AppCompatActivity() {
                                     )
                             }
                     }
+            }
+            if (room.manager == Authentication.uid) {
+                startButton.visibility = View.VISIBLE
             }
 
 

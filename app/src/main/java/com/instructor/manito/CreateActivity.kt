@@ -2,7 +2,6 @@ package com.instructor.manito
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.ServerValue
 import com.instructor.manito.databinding.ActivityCreateBinding
 import com.instructor.manito.dto.Chat
@@ -18,8 +17,8 @@ class CreateActivity : AppCompatActivity() {
         ActivityCreateBinding.inflate(layoutInflater)
     }
 
-    private val dataList = arrayListOf<String>()
-    private val adapter = MissionAdapter(this@CreateActivity, dataList)
+    private val missions = arrayListOf("")
+    private val adapter = MissionAdapter(this@CreateActivity, missions)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,9 +27,11 @@ class CreateActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         with(bind) {
-            dataList.add("미션1")
             setContentView(root)
             createCreateRoomButton.setOnClickListener {
+                titleEditText.text.ifEmpty {
+                    return@setOnClickListener
+                }
                 createCreateRoomButton.isEnabled = false
                 val roomRef = Database.getReference("rooms").push()
                 val uid = Authentication.uid!!
@@ -41,7 +42,8 @@ class CreateActivity : AppCompatActivity() {
                         uid to true
                     ),
                     uid,
-                    Room.STATE_WAIT
+                    Room.STATE_WAIT,
+                    missions
                 )
                 val updates = hashMapOf(
                     "rooms/$rid" to room,
@@ -59,7 +61,6 @@ class CreateActivity : AppCompatActivity() {
 
             // 어댑터 연결
             missionRecycler.adapter = adapter
-            missionRecycler.layoutManager = LinearLayoutManager(this@CreateActivity)
         }
 
 
