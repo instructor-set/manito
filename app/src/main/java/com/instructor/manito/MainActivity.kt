@@ -11,9 +11,11 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.instructor.manito.databinding.ActivityMainBinding
 import com.instructor.manito.databinding.AlertdialogEdittextBinding
+import com.instructor.manito.databinding.CellMyRoomBinding
 import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
+import com.instructor.manito.lib.Util
 import splitties.activities.start
 import splitties.toast.toast
 
@@ -35,11 +37,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         with(bind) {
             setContentView(root)
-            toolbar.title = "${Authentication.user?.nickname}"
 
             if (!Authentication.isLoggedIn()) {
                 finish()
             }
+            Database.getReference("users/${Authentication.uid}/nickname").addValueEventListener(object: ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    toolbar.title = snapshot.getValue<String>()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+
             // 방 만들기
             createRoomButton.setOnClickListener {
                 start<CreateActivity> {
@@ -107,6 +119,7 @@ class MainActivity : AppCompatActivity() {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
 
                 val rid = snapshot.key as String
+
                 Database.getReference("rooms/${rid}").get().addOnSuccessListener {
                     myRoomList.add(it.getValue<Room>()!!)
                     myRoomIndexMap[rid] = myRoomList.lastIndex
@@ -127,9 +140,30 @@ class MainActivity : AppCompatActivity() {
 
                 })
                 */
+
+
+
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                //TODO: 방상태 change
+                val rid = snapshot.key as String
+                val myRoomIndex = myRoomIndexMap.getValue(snapshot.key!!)
+
+                Database.getReference("rooms/${rid}/state").addValueEventListener(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val myState = snapshot.getValue<String>()
+                        myRoomList.get(myRoomIndex).state = myState
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+
+
+
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {

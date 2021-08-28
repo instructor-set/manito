@@ -48,17 +48,16 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
                 const val STATE_START = "START"
                  */
 
-                Database.getReference("rooms/${room.rid}").get().addOnSuccessListener {
-                    val roomData = it.getValue<Room>()
 
-                    if (roomData?.state.equals("WAIT"))
-                        cellRoomStateText.text = "대기중"
-                    else if (roomData?.state.equals("READY"))
-                        cellRoomStateText.text = "준비"
-                    else if (roomData?.state.equals("START"))
-                        cellRoomStateText.text = "게임중"
 
-                }
+                if (room.state.equals("WAIT"))
+                    cellRoomStateText.text = "대기중"
+                else if (room.state.equals("READY"))
+                    cellRoomStateText.text = "준비"
+                else if (room.state.equals("START"))
+                    cellRoomStateText.text = "게임중"
+
+
 
                 // 방 나가기 버튼을 눌렀을 때
                 exitButton.setOnClickListener {
