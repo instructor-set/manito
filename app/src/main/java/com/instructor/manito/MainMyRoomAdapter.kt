@@ -42,6 +42,22 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
 
             with(bind) {
                 cellRoomTitleText.text = room.title.toString()
+                /*
+                const val STATE_WAIT = "WAIT"
+                const val STATE_READY = "READY"
+                const val STATE_START = "START"
+                 */
+
+
+
+                if (room.state.equals("WAIT"))
+                    cellRoomStateText.text = "대기중"
+                else if (room.state.equals("READY"))
+                    cellRoomStateText.text = "준비"
+                else if (room.state.equals("START"))
+                    cellRoomStateText.text = "게임중"
+
+
 
                 // 방 나가기 버튼을 눌렀을 때
                 exitButton.setOnClickListener {
