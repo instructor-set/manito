@@ -35,6 +35,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         with(bind) {
             setContentView(root)
+            toolbar.title = "${Authentication.user?.nickname}"
+
             if (!Authentication.isLoggedIn()) {
                 finish()
             }
