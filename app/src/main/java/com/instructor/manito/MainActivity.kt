@@ -11,11 +11,9 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.instructor.manito.databinding.ActivityMainBinding
 import com.instructor.manito.databinding.AlertdialogEdittextBinding
-import com.instructor.manito.databinding.CellMyRoomBinding
 import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
-import com.instructor.manito.lib.Util
 import splitties.activities.start
 import splitties.toast.toast
 
@@ -31,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     // 내가 들어간 방
     private val myRoomList = arrayListOf<Room>()
     private val myRoomIndexMap = hashMapOf<String, Int>()
+    private val myRoomValueEventListenerMap = hashMapOf<String, ValueEventListener>()
     private val roomAdapter = MainMyRoomAdapter(this@MainActivity, myRoomList)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -117,58 +116,39 @@ class MainActivity : AppCompatActivity() {
 
         Database.getReference("users/${Authentication.uid}/rooms").addChildEventListener(object: ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-
                 val rid = snapshot.key as String
 
                 Database.getReference("rooms/${rid}").get().addOnSuccessListener {
+                    val myRoomIndex = myRoomList.lastIndex + 1
                     myRoomList.add(it.getValue<Room>()!!)
-                    myRoomIndexMap[rid] = myRoomList.lastIndex
-                    roomAdapter.notifyItemInserted(myRoomList.lastIndex)
+                    myRoomIndexMap[rid] = myRoomIndex
+                    myRoomValueEventListenerMap[rid] = object: ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            myRoomList[myRoomIndex].state = snapshot.getValue<String>()
+                            roomAdapter.notifyItemChanged(myRoomIndex)
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+
+                    }
+                    roomAdapter.notifyItemInserted(myRoomIndex)
+                    Database.getReference("rooms/$rid/state").addValueEventListener(myRoomValueEventListenerMap.getValue(rid))
                 }
-                /*
-                Database.getReference("rooms/${rid}").addValueEventListener(object: ValueEventListener{
-                    override fun onDataChange(snapshot: DataSnalopshot) {
-                        myRoomList.add(snapshot.getValue<Room>()!!)
-                        roomAdapter.notifyDataSetChanged()
-                        Toast.makeText(this@MainActivity, "더하기해", Toast.LENGTH_SHORT).show()
-
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        TODO("Not yet implemented")
-                    }
-
-                })
-                */
 
 
 
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                //TODO: 방상태 change
-                val rid = snapshot.key as String
-                val myRoomIndex = myRoomIndexMap.getValue(snapshot.key!!)
-
-                Database.getReference("rooms/${rid}/state").addValueEventListener(object : ValueEventListener{
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        val myState = snapshot.getValue<String>()
-                        myRoomList.get(myRoomIndex).state = myState
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        TODO("Not yet implemented")
-                    }
-
-                })
-
-
-
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                val myRoomIndex = myRoomIndexMap.getValue(snapshot.key!!)
-                myRoomIndexMap.remove(snapshot.key!!)
+                val rid = snapshot.key!!
+                val myRoomIndex = myRoomIndexMap.getValue(rid)
+                myRoomIndexMap.remove(rid)
+                Database.getReference("rooms/$rid/state").removeEventListener(myRoomValueEventListenerMap.getValue(rid))
+                myRoomValueEventListenerMap.remove(rid)
                 myRoomList.removeAt(myRoomIndex)
                 roomAdapter.notifyItemRemoved(myRoomIndex)
 

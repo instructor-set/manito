@@ -50,12 +50,12 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
 
 
 
-                if (room.state.equals("WAIT"))
-                    cellRoomStateText.text = "대기중"
-                else if (room.state.equals("READY"))
-                    cellRoomStateText.text = "준비"
-                else if (room.state.equals("START"))
-                    cellRoomStateText.text = "게임중"
+                cellRoomStateText.text = when(room.state) {
+                    Room.STATE_WAIT -> "대기중"
+                    Room.STATE_READY -> "준비"
+                    Room.STATE_START -> "게임중"
+                    else -> ""
+                }
 
 
 
