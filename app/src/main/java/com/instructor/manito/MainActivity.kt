@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.instructor.manito.databinding.ActivityMainBinding
@@ -14,6 +13,7 @@ import com.instructor.manito.databinding.AlertdialogEdittextBinding
 import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
+import com.instructor.manito.lib.Util
 import splitties.activities.start
 import splitties.toast.toast
 
@@ -40,16 +40,11 @@ class MainActivity : AppCompatActivity() {
             if (!Authentication.isLoggedIn()) {
                 finish()
             }
-            Database.getReference("users/${Authentication.uid}/nickname").addValueEventListener(object: ValueEventListener{
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    toolbar.title = snapshot.getValue<String>()
+            Util.uidToNickname(Authentication.uid.toString()) {
+                if (it != Util.MESSAGE_UNDEFINED) {
+                    toolbar.title = it as String
                 }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-
-            })
+            }
 
             // 방 만들기
             createRoomButton.setOnClickListener {
@@ -76,11 +71,8 @@ class MainActivity : AppCompatActivity() {
 
             // 어댑터 연결
             mainRecycler.adapter = adapter
-            mainRecycler.layoutManager = LinearLayoutManager(this@MainActivity)
 
             // 내가 들어간 방 어댑터 연결
-            mainManitoRoomRecycler.layoutManager =
-                LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
             mainManitoRoomRecycler.adapter = roomAdapter
 
             // 새로고침
@@ -90,17 +82,14 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-
-        myRoomList.clear()
         test()
-
 
 
     }
 
     fun refreshChatList(refreshing: Boolean) {
         bind.swipeRefreshLayout.setRefreshing(refreshing)
-        Database.getReference("rooms").get().addOnSuccessListener {
+        Database.getReference("rooms").orderByChild("state").equalTo(Room.STATE_WAIT).get().addOnSuccessListener {
             dataList.clear()
             for (roomPair in it.children) {
                 val room = roomPair.getValue<Room>()!!
@@ -114,63 +103,64 @@ class MainActivity : AppCompatActivity() {
 
     fun test() {
 
-        Database.getReference("users/${Authentication.uid}/rooms").addChildEventListener(object: ChildEventListener{
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val rid = snapshot.key as String
+        Database.getReference("users/${Authentication.uid}/rooms")
+            .addChildEventListener(object : ChildEventListener {
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    val rid = snapshot.key as String
 
-                myRoomValueEventListenerMap[rid] = object: ValueEventListener{
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        if (myRoomIndexMap.containsKey(rid)) {
-                            val myRoomIndex = myRoomIndexMap.getValue(rid)
-                            myRoomList[myRoomIndex] = snapshot.getValue<Room>()!!
-                            roomAdapter.notifyItemChanged(myRoomIndex)
-                        } else {
-                            val myRoomIndex = myRoomList.lastIndex + 1
-                            myRoomList.add(snapshot.getValue<Room>()!!)
-                            myRoomIndexMap[rid] = myRoomIndex
-                            roomAdapter.notifyItemInserted(myRoomIndex)
+                    myRoomValueEventListenerMap[rid] = object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if (!snapshot.exists())
+                                return
+                            if (myRoomIndexMap.containsKey(rid)) {
+                                val myRoomIndex = myRoomIndexMap.getValue(rid)
+                                myRoomList[myRoomIndex] = snapshot.getValue<Room>()!!
+                                roomAdapter.notifyItemChanged(myRoomIndex)
+                            } else {
+                                val myRoomIndex = myRoomList.lastIndex + 1
+                                myRoomList.add(snapshot.getValue<Room>()!!)
+                                myRoomIndexMap[rid] = myRoomIndex
+                                roomAdapter.notifyItemInserted(myRoomIndex)
+                            }
                         }
+
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+
                     }
 
-                    override fun onCancelled(error: DatabaseError) {
-                    }
+                    Database.getReference("rooms/${rid}")
+                        .addValueEventListener(myRoomValueEventListenerMap.getValue(rid))
 
                 }
 
-                Database.getReference("rooms/${rid}").addValueEventListener(myRoomValueEventListenerMap.getValue(rid))
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                }
 
-            }
+                override fun onChildRemoved(snapshot: DataSnapshot) {
+                    val rid = snapshot.key!!
+                    val myRoomIndex = myRoomIndexMap.getValue(rid)
+                    myRoomIndexMap.remove(rid)
+                    Database.getReference("rooms/$rid")
+                        .removeEventListener(myRoomValueEventListenerMap.getValue(rid))
+                    myRoomValueEventListenerMap.remove(rid)
+                    myRoomList.removeAt(myRoomIndex)
+                    roomAdapter.notifyItemRemoved(myRoomIndex)
+                }
 
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-            }
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                }
 
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-                val rid = snapshot.key!!
-                val myRoomIndex = myRoomIndexMap.getValue(rid)
-                myRoomIndexMap.remove(rid)
-                Database.getReference("rooms/$rid").removeEventListener(myRoomValueEventListenerMap.getValue(rid))
-                myRoomValueEventListenerMap.remove(rid)
-                myRoomList.removeAt(myRoomIndex)
-                roomAdapter.notifyItemRemoved(myRoomIndex)
-            }
+                override fun onCancelled(error: DatabaseError) {
+                }
 
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        })
+            })
     }
 
     //시작할 때 새로고침
     override fun onStart() {
         super.onStart()
-        with(bind) {
             refreshChatList(true)
-        }
 
 
     }
