@@ -3,6 +3,7 @@ package com.instructor.manito
 import android.content.Context
 import android.content.DialogInterface
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +14,7 @@ import com.instructor.manito.dto.Chat
 import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
+import com.instructor.manito.lib.Util
 import splitties.activities.start
 import splitties.bundle.putExtras
 
@@ -42,19 +44,25 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
 
             with(bind) {
                 cellRoomTitleText.text = room.title.toString()
-                /*
-                const val STATE_WAIT = "WAIT"
-                const val STATE_READY = "READY"
-                const val STATE_START = "START"
-                 */
-
-
-
                 cellRoomStateText.text = when(room.state) {
                     Room.STATE_WAIT -> "대기중"
                     Room.STATE_READY -> "준비"
                     Room.STATE_START -> "게임중"
                     else -> ""
+                }
+                Database.getReference("games/$rid/$uid").get().addOnSuccessListener {
+                    val manitoUid = it.getValue<String>()
+                    // 게임 시작 안했음
+                    if (manitoUid == null) {
+                        cellMyManitoText.visibility = View.GONE
+                    } else {
+                        Util.uidToNickname(manitoUid) { nickname ->
+                            if (nickname != Util.MESSAGE_UNDEFINED) {
+                                cellMyManitoText.text = nickname as String
+                            }
+                        }
+                    }
+
                 }
 
 

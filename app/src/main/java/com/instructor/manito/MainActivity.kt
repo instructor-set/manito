@@ -118,25 +118,26 @@ class MainActivity : AppCompatActivity() {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val rid = snapshot.key as String
 
-                Database.getReference("rooms/${rid}").get().addOnSuccessListener {
-                    val myRoomIndex = myRoomList.lastIndex + 1
-                    myRoomList.add(it.getValue<Room>()!!)
-                    myRoomIndexMap[rid] = myRoomIndex
-                    myRoomValueEventListenerMap[rid] = object: ValueEventListener{
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            myRoomList[myRoomIndex].state = snapshot.getValue<String>()
+                myRoomValueEventListenerMap[rid] = object: ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if (myRoomIndexMap.containsKey(rid)) {
+                            val myRoomIndex = myRoomIndexMap.getValue(rid)
+                            myRoomList[myRoomIndex] = snapshot.getValue<Room>()!!
                             roomAdapter.notifyItemChanged(myRoomIndex)
+                        } else {
+                            val myRoomIndex = myRoomList.lastIndex + 1
+                            myRoomList.add(snapshot.getValue<Room>()!!)
+                            myRoomIndexMap[rid] = myRoomIndex
+                            roomAdapter.notifyItemInserted(myRoomIndex)
                         }
-
-                        override fun onCancelled(error: DatabaseError) {
-                        }
-
                     }
-                    roomAdapter.notifyItemInserted(myRoomIndex)
-                    Database.getReference("rooms/$rid/state").addValueEventListener(myRoomValueEventListenerMap.getValue(rid))
+
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+
                 }
 
-
+                Database.getReference("rooms/${rid}").addValueEventListener(myRoomValueEventListenerMap.getValue(rid))
 
             }
 
@@ -147,11 +148,10 @@ class MainActivity : AppCompatActivity() {
                 val rid = snapshot.key!!
                 val myRoomIndex = myRoomIndexMap.getValue(rid)
                 myRoomIndexMap.remove(rid)
-                Database.getReference("rooms/$rid/state").removeEventListener(myRoomValueEventListenerMap.getValue(rid))
+                Database.getReference("rooms/$rid").removeEventListener(myRoomValueEventListenerMap.getValue(rid))
                 myRoomValueEventListenerMap.remove(rid)
                 myRoomList.removeAt(myRoomIndex)
                 roomAdapter.notifyItemRemoved(myRoomIndex)
-
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
