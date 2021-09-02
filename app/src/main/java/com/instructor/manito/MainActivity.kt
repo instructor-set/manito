@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
 
     fun refreshChatList(refreshing: Boolean) {
         bind.swipeRefreshLayout.setRefreshing(refreshing)
-        Database.getReference("rooms").orderByChild("state").equalTo(Room.STATE_WAIT).get().addOnSuccessListener {
+        Database.getReference("rooms").get().addOnSuccessListener {
             dataList.clear()
             for (roomPair in it.children) {
                 val room = roomPair.getValue<Room>()!!
@@ -110,6 +110,7 @@ class MainActivity : AppCompatActivity() {
 
                     myRoomValueEventListenerMap[rid] = object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
+                            Util.j("$rid, ${snapshot.getValue<Room>()}")
                             if (!snapshot.exists())
                                 return
                             if (myRoomIndexMap.containsKey(rid)) {
