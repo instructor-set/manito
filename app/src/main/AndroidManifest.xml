@@ -9,13 +9,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Manito">
+        <activity
+            android:name=".ShowAllActivity"
+            android:exported="true" />
+        <activity
+            android:name=".FinishActivity"
+            android:exported="true" />
         <activity android:name=".RoomActivity" />
         <activity
             android:name=".CreateActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".LoginActivity"/>
-        <activity android:name=".SplashActivity"
+        <activity android:name=".LoginActivity" />
+        <activity
+            android:name=".SplashActivity"
             android:exported="true"
             android:theme="@style/Splash">
             <intent-filter>
