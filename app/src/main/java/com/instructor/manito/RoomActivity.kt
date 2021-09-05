@@ -1,13 +1,18 @@
 package com.instructor.manito
 
+import android.animation.ValueAnimator
+import android.animation.ValueAnimator.AnimatorUpdateListener
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.core.view.get
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -84,6 +89,9 @@ class RoomActivity : AppCompatActivity() {
     private val playerMenu by lazy {
         bind.drawerView.menu.getItem(0).subMenu
     }
+    // 미션창
+    private var isExpanded = false
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -151,9 +159,50 @@ class RoomActivity : AppCompatActivity() {
             Database.getReference("rooms/${room.rid}/users")
                 .addChildEventListener(roomChildEventListener)
 
+            Database.getReference("rooms/${room.rid}/state").get().addOnSuccessListener {
+                if(it.value.toString().equals("START")){
+                    startButton.visibility = View.GONE
+                }
+            }
+
+            constraintLayout6.layoutParams.height = 45
+
+            constraintLayout6.setOnClickListener {
+                isExpanded = !isExpanded
+                changeVisibility(isExpanded)
+
+            }
+
 
         }
+
     }
+
+    private fun changeVisibility(isExpanded: Boolean){
+        with(bind){
+            // ValueAnimator.ofInt(int... values)는 View가 변할 값을 지정, 인자는 int 배열
+
+            // ValueAnimator.ofInt(int... values)는 View가 변할 값을 지정, 인자는 int 배열
+            val va = if (isExpanded) ValueAnimator.ofInt(45, 300) else ValueAnimator.ofInt(300, 45)
+            // Animation이 실행되는 시간, n/1000초
+            // Animation이 실행되는 시간, n/1000초
+            va.duration = 500
+            va.addUpdateListener { animation -> // imageView의 높이 변경
+                constraintLayout6.layoutParams.height = animation.animatedValue as Int
+                constraintLayout6.requestLayout()
+                // imageView가 실제로 사라지게하는 부분
+                //constraintLayout6.setVisibility(if (isExpanded) View.VISIBLE else View.GONE)
+            }
+            // Animation start
+            // Animation start
+            va.start()
+
+        }
+
+
+    }
+
+
 
     override fun onBackPressed() {
         with(bind) {
