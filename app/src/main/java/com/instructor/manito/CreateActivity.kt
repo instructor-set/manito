@@ -43,7 +43,7 @@ class CreateActivity : AppCompatActivity() {
                     ),
                     uid,
                     Room.STATE_WAIT,
-                    missions.subList(0, missions.lastIndex)
+                    missions
                 )
                 val updates = hashMapOf(
                     "rooms/$rid" to room,
