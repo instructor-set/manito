@@ -28,6 +28,7 @@ import splitties.bundle.BundleSpec
 import splitties.bundle.bundle
 import splitties.bundle.withExtras
 import java.util.*
+import kotlin.collections.HashMap
 
 class RoomActivity : AppCompatActivity() {
 
@@ -91,6 +92,8 @@ class RoomActivity : AppCompatActivity() {
     }
     // 미션창
     private var isExpanded = false
+    private val missionCheckList: HashMap<String, Boolean> = hashMapOf()
+    private val missionCheckAdapter = MissionCheckAdapter(this, missionCheckList)
 
 
 
@@ -165,6 +168,7 @@ class RoomActivity : AppCompatActivity() {
                 }
             }
 
+            //미션창
             constraintLayout6.layoutParams.height = 45
 
             constraintLayout6.setOnClickListener {
@@ -172,6 +176,7 @@ class RoomActivity : AppCompatActivity() {
                 changeVisibility(isExpanded)
 
             }
+            missionRecyclerView.adapter = missionCheckAdapter
 
 
         }
