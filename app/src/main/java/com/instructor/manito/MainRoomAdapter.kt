@@ -6,13 +6,13 @@ import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ServerValue
+import com.google.firebase.database.ktx.getValue
+import com.instructor.manito.databinding.AlertdialogEdittextBinding
+import com.instructor.manito.databinding.AlertdialogEnterRoomBinding
 import com.instructor.manito.databinding.CellMainBinding
 import com.instructor.manito.dto.Chat
 import com.instructor.manito.dto.Room
@@ -25,8 +25,10 @@ import splitties.bundle.putExtras
 class MainRoomAdapter(private val context: Context, private var listData: ArrayList<Room>) :
     RecyclerView.Adapter<MainRoomAdapter.Holder>() {
 
+    val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainRoomAdapter.Holder {
-        val view = CellMainBinding.inflate(LayoutInflater.from(context), parent, false)
+        val view = CellMainBinding.inflate(inflater, parent, false)
         return Holder(view)
     }
 
@@ -41,6 +43,43 @@ class MainRoomAdapter(private val context: Context, private var listData: ArrayL
         //Log.e("dataList", "size : ${listData.size}")
     }
 
+    private fun enterRoom(context: Context, rid: String?, uid: String?) {
+
+        Database.getReference("rooms/$rid").get().addOnSuccessListener {
+            val room = it.getValue<Room>()
+            if (room != null && room.state == Room.STATE_WAIT) {
+                if (it.child("users/$uid").exists()) {
+                    context.start<RoomActivity> {
+                        putExtras(RoomActivity.Extras) {
+                             this.room = room
+                        }
+                    }
+                } else {
+                    val updates = hashMapOf(
+                        "rooms/$rid/users/$uid" to true,
+                        "users/$uid/rooms/$rid" to ServerValue.TIMESTAMP
+                    )
+                    Database.getReference("")
+                        .updateChildren(updates)
+                        .addOnSuccessListener {
+                            Database.sendChat(
+                                rid!!,
+                                Chat.TYPE_ENTER,
+                                Chat.MESSAGE_ENTER
+                            )
+                            context.start<RoomActivity> {
+                                putExtras(RoomActivity.Extras) {
+                                    this.room = room
+                                }
+                            }
+                        }
+                }
+            } else {
+                // 방이 게임중이거나 없을 때
+            }
+        }
+    }
+
     inner class Holder(private val bind: CellMainBinding) : RecyclerView.ViewHolder(bind.root) {
         fun binding(room: Room) {
 
@@ -53,110 +92,68 @@ class MainRoomAdapter(private val context: Context, private var listData: ArrayL
                 }
 
 
-                val pos = adapterPosition
-                if (pos != RecyclerView.NO_POSITION) {
-                    // 눌렀을 때
-                    itemView.setOnClickListener {
-                        val rid = room.rid
-                        val uid = Authentication.uid
+                // 눌렀을 때
+                itemView.setOnClickListener {
+                    val rid = room.rid
+                    val uid = Authentication.uid
 
-                        // 비밀번호가 있을 때
-                        if(!room.password.isNullOrBlank()){
-                            val inflater = LayoutInflater.from(context)
-                            val dialogView = inflater.inflate(R.layout.alertdialog_edittext, null)
-                            val dialogText = dialogView.findViewById<EditText>(R.id.alertEditText)
-                            val alertDialog = AlertDialog.Builder(context)
-                                .setTitle("비밀번호를 입력하세요")
-                                .setView(dialogView)
-                                .setPositiveButton("입장"){
-                                        _: DialogInterface, _:Int->
-                                    val enterPassword = dialogText.text.toString()
-                                    // 비밀 번호 맞을 때
-                                    if(room.password == enterPassword){
-                                        Database.getReference("users/$uid/rooms/$rid").get().addOnSuccessListener {
-                                            snapshot: DataSnapshot ->
-                                            if(snapshot.exists()){
-                                                context.start<RoomActivity> {
-                                                    putExtras(RoomActivity.Extras) {
-                                                        RoomActivity.Extras.room = room
-                                                    }
+                    val enterRoomBinding =
+                        AlertdialogEnterRoomBinding.inflate(inflater)
+                    with(enterRoomBinding) {
+                        alertTitleTextView.text = room.title
+                        @SuppressLint("SetTextI18n")
+                        alertMembersTextView.text =
+                            "${room.users?.size ?: 0} / ${room.maxUsers}"
+                        AlertDialog.Builder(context).setView(root)
+                            .setPositiveButton("입장") { _: DialogInterface, _: Int ->
+
+
+                                if (!room.password.isNullOrBlank()) {
+
+                                    val editTextBinding =
+                                        AlertdialogEdittextBinding.inflate(inflater)
+
+                                    with(editTextBinding) {
+                                        AlertDialog.Builder(context)
+                                            .setTitle("비밀번호를 입력하세요")
+                                            .setView(root)
+                                            .setPositiveButton("입장") { _: DialogInterface, _: Int ->
+                                                val enterPassword =
+                                                    alertEditText.text.toString()
+                                                // 비밀 번호 맞을 때
+                                                if (room.password == enterPassword) {
+                                                    enterRoom(context, rid, uid)
                                                 }
-                                            } else {
-                                                val updates = hashMapOf(
-                                                    "rooms/$rid/users/$uid" to true,
-                                                    "users/$uid/rooms/$rid" to ServerValue.TIMESTAMP
-                                                )
-                                                Database.getReference("").updateChildren(updates).addOnSuccessListener {
-                                                    Database.sendChat(rid!!, Chat.TYPE_ENTER, Chat.MESSAGE_ENTER)
-                                                    context.start<RoomActivity> {
-                                                        putExtras(RoomActivity.Extras) {
-                                                            RoomActivity.Extras.room = room
-                                                        }
-                                                    }
+                                                // 비밀번호 틀렸을 때
+                                                else {
+                                                    Toast.makeText(
+                                                        context,
+                                                        "비밀번호가 틀렸습니다.",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
                                                 }
                                             }
-                                        }
+                                            .setNeutralButton("취소", null)
+                                            .create().show()
                                     }
-                                    // 비밀번호 틀렸을 때
-                                    else{
-//                                        toast("비밀번호가 틀렸습니다.")
-                                        Toast.makeText(context, "비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show()
-                                    }
+
+                                } else { // 비밀번호 없을 때
+                                    enterRoom(context, rid, uid)
                                 }
-                                .setNeutralButton("취소", null)
-                                .create()
-                            alertDialog.show()
-
-                        }else { // 비밀번호 없을 때
-                            Database.getReference("users/$uid/rooms/$rid").get().addOnSuccessListener {
-                                    snapshot: DataSnapshot ->
-                                if(snapshot.exists()){1
-
-                                    val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-                                    val dialogView = inflater.inflate(R.layout.alertdialog_enter_room, null)
-                                    val dialogTitle = dialogView.findViewById<TextView>(R.id.alertTitleTextView)
-                                    val dialogManager = dialogView.findViewById<TextView>(R.id.alertManagerTextView)
-                                    val dialogMembers = dialogView.findViewById<TextView>(R.id.alertMembersTextView)
-                                    val alertDialog = AlertDialog.Builder(context)
-                                    with(alertDialog) {
-                                        dialogTitle.text = room.title
-                                        setView(dialogView)
-                                        @SuppressLint("SetTextI18n")
-                                        dialogMembers.text = "${room.users?.size ?: 0} / ${room.maxUsers}"
-                                        setPositiveButton("입장") { _: DialogInterface, _: Int->
-                                            context.start<RoomActivity> {
-                                                putExtras(RoomActivity.Extras) {
-                                                    RoomActivity.Extras.room = room
-                                                }
-                                            }
-                                        }
-                                        setNeutralButton("취소", null)
-                                        Util.uidToNickname(room.manager!!) {
-                                            if (it != Util.MESSAGE_UNDEFINED) {
-                                                val nickname = it as String
-                                                dialogManager.text = nickname
-                                                show()
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    val updates = hashMapOf(
-                                        "rooms/$rid/users/$uid" to true,
-                                        "users/$uid/rooms/$rid" to ServerValue.TIMESTAMP
-                                    )
-                                    Database.getReference("").updateChildren(updates).addOnSuccessListener {
-                                        Database.sendChat(rid!!, Chat.TYPE_ENTER, Chat.MESSAGE_ENTER)
-                                        context.start<RoomActivity> {
-                                            putExtras(RoomActivity.Extras) {
-                                                RoomActivity.Extras.room = room
-                                            }
-                                        }
+                            }.setNeutralButton("취소", null).also { alertDialog ->
+                                Util.uidToNickname(room.manager!!) {
+                                    if (it != Util.MESSAGE_UNDEFINED) {
+                                        val nickname = it as String
+                                        alertManagerTextView.text = nickname
+                                        alertDialog.show()
                                     }
                                 }
                             }
-                        }
                     }
+
+
                 }
+
             }
 
 

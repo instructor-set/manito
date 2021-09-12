@@ -12,7 +12,8 @@ data class Room(
     var maxUsers: Int? = 0,
     var users: Map<String, Boolean>? = null,
     var manager: String? = null,
-    var state: String? = STATE_WAIT
+    var state: String? = STATE_WAIT,
+    var missions: List<String>? = null
 ) :
     Parcelable {
     companion object {

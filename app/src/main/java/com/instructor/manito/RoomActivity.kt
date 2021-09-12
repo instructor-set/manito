@@ -1,14 +1,16 @@
 package com.instructor.manito
 
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -23,6 +25,7 @@ import splitties.bundle.BundleSpec
 import splitties.bundle.bundle
 import splitties.bundle.withExtras
 import java.util.*
+import kotlin.collections.set
 
 class RoomActivity : AppCompatActivity() {
 
@@ -80,11 +83,16 @@ class RoomActivity : AppCompatActivity() {
 
     private var nextItemId: Int = 1
     private val uidToItemId: HashMap<String, Int> = hashMapOf()
-    private val rand = Random()
 
     private val playerMenu by lazy {
         bind.drawerView.menu.getItem(0).subMenu
     }
+    // 미션창
+    private var isExpanded = false
+    private val missionCheckAdapter by lazy {
+        MissionCheckAdapter(this, room.missions ?: arrayListOf())
+    }
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -114,7 +122,6 @@ class RoomActivity : AppCompatActivity() {
                 chatEditText.text.clear()
             }
             messageRecycler.adapter = chatAdapter
-            messageRecycler.layoutManager = LinearLayoutManager(this@RoomActivity)
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             menuButton.setOnClickListener {
                 drawerLayout.openDrawer(GravityCompat.END)
@@ -145,14 +152,69 @@ class RoomActivity : AppCompatActivity() {
                             }
                     }
             }
+            if (room.manager == Authentication.uid) {
+                startButton.visibility = View.VISIBLE
+            }
 
 
             Database.getReference("rooms/${room.rid}/users")
                 .addChildEventListener(roomChildEventListener)
 
+            Database.getReference("rooms/${room.rid}/state").get().addOnSuccessListener {
+                if(it.value.toString() == "START"){
+                    startButton.visibility = View.GONE
+                }
+            }
+
+            //미션창
+            missionRecyclerRoom.layoutParams.height = 0
+            constraintLayout6.setOnClickListener {
+                changeVisibility()
+
+            }
+            missionRecyclerRoom.adapter = missionCheckAdapter
+
 
         }
+
     }
+
+    private fun changeVisibility(){
+        with(bind){
+            isExpanded = !isExpanded
+            // ValueAnimator.ofInt(int... values)는 View가 변할 값을 지정, 인자는 int 배열
+
+            // ValueAnimator.ofInt(int... values)는 View가 변할 값을 지정, 인자는 int 배열
+
+
+            missionRecyclerRoom.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            val targetHeight = missionRecyclerRoom.measuredHeight
+
+            val va = if (isExpanded) ValueAnimator.ofInt(0, targetHeight) else ValueAnimator.ofInt(targetHeight, 0)
+            // Animation이 실행되는 시간, n/1000초
+            // Animation이 실행되는 시간, n/1000초
+            va.duration = 200
+            va.addUpdateListener { animation -> // imageView의 높이 변경
+                missionRecyclerRoom.layoutParams.height = animation.animatedValue as Int
+                missionRecyclerRoom.requestLayout()
+                // imageView가 실제로 사라지게하는 부분
+                //constraintLayout6.setVisibility(if (isExpanded) View.VISIBLE else View.GONE)
+            }
+            // Animation start
+            // Animation start
+            if (isExpanded) {
+                arrowImage.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp)
+            } else {
+                arrowImage.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp)
+            }
+            va.start()
+
+        }
+
+
+    }
+
+
 
     override fun onBackPressed() {
         with(bind) {

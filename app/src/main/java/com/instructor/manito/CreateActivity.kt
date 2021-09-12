@@ -1,14 +1,7 @@
 package com.instructor.manito
 
-import android.graphics.Rect
 import android.os.Bundle
-import android.view.ViewTreeObserver
-import android.view.Window
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.ServerValue
 import com.instructor.manito.databinding.ActivityCreateBinding
 import com.instructor.manito.dto.Chat
@@ -18,41 +11,27 @@ import com.instructor.manito.lib.Database
 import com.instructor.manito.lib.Util.dummy
 import splitties.activities.start
 import splitties.bundle.putExtras
-import java.lang.reflect.Member
 
 class CreateActivity : AppCompatActivity() {
-
     private val bind by lazy {
         ActivityCreateBinding.inflate(layoutInflater)
     }
 
-    private val dataList = arrayListOf<String>()
-    private val adapter = MissionAdapter(this@CreateActivity, dataList)
+    private val missions = arrayListOf("")
+    private val adapter = MissionAdapter(this@CreateActivity, missions)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        var count:Int =0
+
+
 
         super.onCreate(savedInstanceState)
-
         with(bind) {
-
-            MemberNumEditText.setText("$count")
-
-            AddButton.setOnClickListener {
-                count++;
-                MemberNumEditText.setText("$count")
-            }
-            MinusButton.setOnClickListener {
-                if(count >0){
-                    count--;
-                    MemberNumEditText.setText("$count")
-                }
-            }
-
-            dataList.add("미션1")
             setContentView(root)
-
             createCreateRoomButton.setOnClickListener {
+                titleEditText.text.ifEmpty {
+                    return@setOnClickListener
+                }
                 createCreateRoomButton.isEnabled = false
                 val roomRef = Database.getReference("rooms").push()
                 val uid = Authentication.uid!!
@@ -63,7 +42,8 @@ class CreateActivity : AppCompatActivity() {
                         uid to true
                     ),
                     uid,
-                    Room.STATE_WAIT
+                    Room.STATE_WAIT,
+                    missions
                 )
                 val updates = hashMapOf(
                     "rooms/$rid" to room,
@@ -81,8 +61,17 @@ class CreateActivity : AppCompatActivity() {
 
             // 어댑터 연결
             missionRecycler.adapter = adapter
-            missionRecycler.layoutManager = LinearLayoutManager(this@CreateActivity)
         }
 
+
+
+
     }
-    }
+
+//    override fun onStart() {
+//        super.onStart()
+//
+//    }
+
+
+}

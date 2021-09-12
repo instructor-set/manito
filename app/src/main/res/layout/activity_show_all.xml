@@ -12,49 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/gray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <EditText
-                android:id="@+id/chatEditText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:background="@null"
-                android:hint="@string/text_sendMessage"
-                android:importantForAutofill="no"
-                android:inputType="textPersonName"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"
-                android:textColor="@color/white"
-                android:textColorHint="@color/whiteGray"
-                android:textSize="18dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/sendButton"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <ImageButton
-                android:id="@+id/sendButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:padding="16dp"
-                app:tint="@color/whiteGray"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/chatEditText"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_baseline_send_24" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout2"
+            android:id="@+id/showAllConstraint1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -125,82 +85,78 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
-
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout5"
+            android:id="@+id/showAllConstraint2"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/blackGray"
-            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/view_background"
+            app:layout_constraintBottom_toTopOf="@+id/showAllConstraint3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+            app:layout_constraintTop_toBottomOf="@+id/showAllConstraint1">
 
-            <Button
-                android:id="@+id/startButton"
+            <TextView
+                android:id="@+id/showAllText1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="게임 시작"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="16dp"
+                android:text="총 00명"
+                android:textColor="#000000"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:visibility="visible" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/messageRecycler"
+                android:id="@+id/resultRecycler"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/view_background"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout6"
-                app:layout_constraintVertical_bias="0.0"
-                tools:listitem="@layout/layout_right_message" />
+                app:layout_constraintTop_toBottomOf="@+id/showAllText1"
+                tools:listitem="@layout/cell_result" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/missionRecyclerRoom"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="#B2AA4242"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout6"
-                tools:listitem="@layout/cell_mission_check"
-                tools:visibility="visible" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout6"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="#982727"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/arrowImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_keyboard_arrow_down_black_24dp"
-                    app:tint="#0A284C" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/showAllConstraint3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/showAllConstraint2">
+
+
+            <Button
+                android:id="@+id/showAllPrevButton"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/view_background"
+                android:text="이전 화면으로"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
