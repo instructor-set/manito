@@ -50,6 +50,9 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
                     Room.STATE_START -> "게임중"
                     else -> ""
                 }
+                if (room.state != Room.STATE_WAIT) {
+                    exitButton.visibility = View.GONE
+                }
                 Database.getReference("games/$rid/$uid").get().addOnSuccessListener {
                     val manitoUid = it.getValue<String>()
                     // 게임 시작 안했음
