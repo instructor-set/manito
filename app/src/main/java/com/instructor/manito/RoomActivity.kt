@@ -1,18 +1,15 @@
 package com.instructor.manito
 
 import android.animation.ValueAnimator
-import android.animation.ValueAnimator.AnimatorUpdateListener
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.View
-import android.widget.Toast
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import androidx.core.view.get
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -28,7 +25,7 @@ import splitties.bundle.BundleSpec
 import splitties.bundle.bundle
 import splitties.bundle.withExtras
 import java.util.*
-import kotlin.collections.HashMap
+import kotlin.collections.set
 
 class RoomActivity : AppCompatActivity() {
 
@@ -92,8 +89,9 @@ class RoomActivity : AppCompatActivity() {
     }
     // 미션창
     private var isExpanded = false
-    private val missionCheckList: HashMap<String, Boolean> = hashMapOf()
-    private val missionCheckAdapter = MissionCheckAdapter(this, missionCheckList)
+    private val missionCheckAdapter by lazy {
+        MissionCheckAdapter(this, room.missions ?: arrayListOf())
+    }
 
 
 
@@ -163,43 +161,52 @@ class RoomActivity : AppCompatActivity() {
                 .addChildEventListener(roomChildEventListener)
 
             Database.getReference("rooms/${room.rid}/state").get().addOnSuccessListener {
-                if(it.value.toString().equals("START")){
+                if(it.value.toString() == "START"){
                     startButton.visibility = View.GONE
                 }
             }
 
             //미션창
-            constraintLayout6.layoutParams.height = 45
-
+            missionRecyclerRoom.layoutParams.height = 0
             constraintLayout6.setOnClickListener {
-                isExpanded = !isExpanded
-                changeVisibility(isExpanded)
+                changeVisibility()
 
             }
-            missionRecyclerView.adapter = missionCheckAdapter
+            missionRecyclerRoom.adapter = missionCheckAdapter
 
 
         }
 
     }
 
-    private fun changeVisibility(isExpanded: Boolean){
+    private fun changeVisibility(){
         with(bind){
+            isExpanded = !isExpanded
             // ValueAnimator.ofInt(int... values)는 View가 변할 값을 지정, 인자는 int 배열
 
             // ValueAnimator.ofInt(int... values)는 View가 변할 값을 지정, 인자는 int 배열
-            val va = if (isExpanded) ValueAnimator.ofInt(45, 300) else ValueAnimator.ofInt(300, 45)
+
+
+            missionRecyclerRoom.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            val targetHeight = missionRecyclerRoom.measuredHeight
+
+            val va = if (isExpanded) ValueAnimator.ofInt(0, targetHeight) else ValueAnimator.ofInt(targetHeight, 0)
             // Animation이 실행되는 시간, n/1000초
             // Animation이 실행되는 시간, n/1000초
-            va.duration = 500
+            va.duration = 200
             va.addUpdateListener { animation -> // imageView의 높이 변경
-                constraintLayout6.layoutParams.height = animation.animatedValue as Int
-                constraintLayout6.requestLayout()
+                missionRecyclerRoom.layoutParams.height = animation.animatedValue as Int
+                missionRecyclerRoom.requestLayout()
                 // imageView가 실제로 사라지게하는 부분
                 //constraintLayout6.setVisibility(if (isExpanded) View.VISIBLE else View.GONE)
             }
             // Animation start
             // Animation start
+            if (isExpanded) {
+                arrowImage.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp)
+            } else {
+                arrowImage.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp)
+            }
             va.start()
 
         }

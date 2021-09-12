@@ -108,7 +108,7 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
                                     Database.getReference("").updateChildren(updates).addOnSuccessListener {
 
 
-                                        (this@MainMyRoomAdapter.context as MainActivity).refreshChatList(true)
+                                        (this@MainMyRoomAdapter.context as MainActivity).refreshRoomList(true)
                                         Database.sendChat(rid!!, Chat.TYPE_EXIT, Chat.MESSAGE_EXIT)
                                     }
                                     // 방을 삭제

@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
             // 새로고침
             //bind.swipeRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_CIRCLES);
             swipeRefreshLayout.setOnRefreshListener {
-                refreshChatList(false)
+                refreshRoomList(false)
             }
 
         }
@@ -87,13 +87,15 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun refreshChatList(refreshing: Boolean) {
+    fun refreshRoomList(refreshing: Boolean) {
         bind.swipeRefreshLayout.setRefreshing(refreshing)
         Database.getReference("rooms").get().addOnSuccessListener {
             dataList.clear()
             for (roomPair in it.children) {
                 val room = roomPair.getValue<Room>()!!
-                dataList.add(room)
+                if (room.state == Room.STATE_WAIT) {
+                    dataList.add(room)
+                }
             }
             dataList.reverse()
             adapter.notifyDataSetChanged()
@@ -161,7 +163,7 @@ class MainActivity : AppCompatActivity() {
     //시작할 때 새로고침
     override fun onStart() {
         super.onStart()
-            refreshChatList(true)
+            refreshRoomList(true)
 
 
     }
