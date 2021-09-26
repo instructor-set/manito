@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ktx.getValue
 import com.instructor.manito.databinding.ActivityRoomBinding
 import com.instructor.manito.dto.Chat
+import com.instructor.manito.dto.Game
 import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
@@ -133,19 +134,23 @@ class RoomActivity : AppCompatActivity() {
                             .addOnSuccessListener {
                                 val userList = it.getValue<HashMap<String, Any>>()!!
                                 val users = userList.keys.shuffled()
-                                val game = hashMapOf<String, String>()
+                                val games = hashMapOf<String, Game>()
+                                val missions = HashMap<String, Boolean>()
                                 val lastUserNumber = users.size - 1
+                                room.missions?.forEach {  mission ->
+                                    missions[mission] = false
+                                }
                                 for (i in users.indices) {
                                     if (i != lastUserNumber) {
-                                        game[users[i]] = users[i + 1]
+                                        games[users[i]] = Game(users[i + 1], missions)
                                     } else {
-                                        game[users[i]] = users[0]
+                                        games[users[i]] = Game(users[0], missions)
                                     }
                                 }
                                 Database.getReference("")
                                     .updateChildren(
                                         hashMapOf<String, Any>(
-                                            "games/${room.rid}" to game,
+                                            "games/${room.rid}" to games,
                                             "rooms/${room.rid}/state" to Room.STATE_START)
                                     )
                             }

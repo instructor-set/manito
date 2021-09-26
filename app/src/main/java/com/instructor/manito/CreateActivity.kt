@@ -38,7 +38,6 @@ class CreateActivity : AppCompatActivity() {
                 val uid = Authentication.uid!!
                 val rid = roomRef.key
                 val iter = missions.iterator()
-
                 while (iter.hasNext()){
                     iter.next().ifBlank {
                         iter.remove()
@@ -51,7 +50,7 @@ class CreateActivity : AppCompatActivity() {
                     ),
                     uid,
                     Room.STATE_WAIT,
-                    missions
+                    missions.distinct()
                 )
                 val updates = hashMapOf(
                     "rooms/$rid" to room,
