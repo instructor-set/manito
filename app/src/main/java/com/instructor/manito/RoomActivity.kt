@@ -14,6 +14,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
 import com.instructor.manito.databinding.ActivityRoomBinding
 import com.instructor.manito.dto.Chat
@@ -88,6 +89,9 @@ class RoomActivity : AppCompatActivity() {
     private val playerMenu by lazy {
         bind.drawerView.menu.getItem(0).subMenu
     }
+    private val myManitoMenu by lazy {
+        bind.drawerView.menu.getItem(1).subMenu
+    }
     // 미션창
     private var isExpanded = false
     private val missionCheckAdapter by lazy {
@@ -117,6 +121,24 @@ class RoomActivity : AppCompatActivity() {
                         .addChildEventListener(chatsChildEventListener)
                 }
             }
+            Database.getReference("games/${room.rid}/${Authentication.uid}").addValueEventListener(object:
+                ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val game = snapshot.getValue<Game>()
+                    if (game != null) {
+                        Util.uidToNickname(game.manito!!) { nickname ->
+                            if (nickname != Util.MESSAGE_UNDEFINED) {
+                                myManitoMenu.add("$nickname")
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
 
             sendButton.setOnClickListener {
                 Database.sendChat(room.rid!!, Chat.TYPE_MESSAGE, chatEditText.text.toString())

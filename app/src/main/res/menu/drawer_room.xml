@@ -5,4 +5,8 @@
         <menu>
         </menu>
     </item>
+    <item android:title="@string/my_manito">
+        <menu>
+        </menu>
+    </item>
 </menu>

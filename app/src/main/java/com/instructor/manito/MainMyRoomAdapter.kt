@@ -7,10 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ServerValue
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
 import com.instructor.manito.databinding.CellMyRoomBinding
 import com.instructor.manito.dto.Chat
+import com.instructor.manito.dto.Game
 import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
@@ -53,20 +57,25 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
                 if (room.state != Room.STATE_WAIT) {
                     exitButton.visibility = View.GONE
                 }
-                Database.getReference("games/$rid/$uid").get().addOnSuccessListener {
-                    val manitoUid = it.getValue<String>()
-                    // 게임 시작 안했음
-                    if (manitoUid == null) {
-                        cellMyManitoText.visibility = View.GONE
-                    } else {
-                        Util.uidToNickname(manitoUid) { nickname ->
-                            if (nickname != Util.MESSAGE_UNDEFINED) {
-                                cellMyManitoText.text = nickname as String
+                Database.getReference("games/$rid/$uid").addValueEventListener(object: ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val game = snapshot.getValue<Game>()
+                        if (game == null) {
+                            cellMyManitoText.visibility = View.GONE
+                        } else {
+                            Util.uidToNickname(game.manito!!) { nickname ->
+                                if (nickname != Util.MESSAGE_UNDEFINED) {
+                                    cellMyManitoText.text = nickname as String
+                                }
                             }
                         }
                     }
 
-                }
+                    override fun onCancelled(error: DatabaseError) {
+
+                    }
+
+                })
 
 
 
