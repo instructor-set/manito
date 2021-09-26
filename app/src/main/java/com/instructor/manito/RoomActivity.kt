@@ -126,7 +126,6 @@ class RoomActivity : AppCompatActivity() {
             menuButton.setOnClickListener {
                 drawerLayout.openDrawer(GravityCompat.END)
             }
-            // todo 서버에서 users 다시 받아서 해야됨
             startButton.setOnClickListener {
                 Database.getReference("rooms/${room.rid}/state").setValue(Room.STATE_READY)
                     .addOnSuccessListener {

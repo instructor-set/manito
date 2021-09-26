@@ -43,7 +43,7 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
             val uid = Authentication.uid
 
             with(bind) {
-                cellRoomTitleText.text = room.title.toString()
+                cellRoomTitleText.text = room.title
                 cellRoomStateText.text = when(room.state) {
                     Room.STATE_WAIT -> "대기중"
                     Room.STATE_READY -> "준비"
