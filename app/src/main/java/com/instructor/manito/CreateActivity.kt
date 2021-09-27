@@ -29,13 +29,20 @@ class CreateActivity : AppCompatActivity() {
         with(bind) {
             setContentView(root)
             createCreateRoomButton.setOnClickListener {
-                titleEditText.text.ifEmpty {
+                // 제목이 없으면
+                titleEditText.text.ifBlank {
                     return@setOnClickListener
                 }
                 createCreateRoomButton.isEnabled = false
                 val roomRef = Database.getReference("rooms").push()
                 val uid = Authentication.uid!!
                 val rid = roomRef.key
+                val iter = missions.iterator()
+                while (iter.hasNext()){
+                    iter.next().ifBlank {
+                        iter.remove()
+                    }
+                }
                 val room = Room(rid, titleEditText.text.toString(), passwordEditText.text.toString(),
                     dummy(16) as Int?,
                     hashMapOf(
@@ -43,7 +50,7 @@ class CreateActivity : AppCompatActivity() {
                     ),
                     uid,
                     Room.STATE_WAIT,
-                    missions
+                    missions.distinct()
                 )
                 val updates = hashMapOf(
                     "rooms/$rid" to room,

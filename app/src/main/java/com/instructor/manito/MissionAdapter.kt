@@ -50,7 +50,7 @@ class MissionAdapter(private val context: Context, private var listData: ArrayLi
 
                 missionButton.setOnClickListener {
                     if (missionButton.text == "추가") {
-                        if (missionEditText.text.isNotEmpty()) {
+                        if (missionEditText.text.isNotBlank()) {
                             missionButton.text = "삭제"
                             listData.add("")
                             notifyItemInserted(listData.lastIndex)

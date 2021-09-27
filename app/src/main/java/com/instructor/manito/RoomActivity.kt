@@ -14,9 +14,11 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
 import com.instructor.manito.databinding.ActivityRoomBinding
 import com.instructor.manito.dto.Chat
+import com.instructor.manito.dto.Game
 import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
@@ -87,6 +89,9 @@ class RoomActivity : AppCompatActivity() {
     private val playerMenu by lazy {
         bind.drawerView.menu.getItem(0).subMenu
     }
+    private val myManitoMenu by lazy {
+        bind.drawerView.menu.getItem(1).subMenu
+    }
     // 미션창
     private var isExpanded = false
     private val missionCheckAdapter by lazy {
@@ -116,6 +121,24 @@ class RoomActivity : AppCompatActivity() {
                         .addChildEventListener(chatsChildEventListener)
                 }
             }
+            Database.getReference("games/${room.rid}/${Authentication.uid}").addValueEventListener(object:
+                ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val game = snapshot.getValue<Game>()
+                    if (game != null) {
+                        Util.uidToNickname(game.manito!!) { nickname ->
+                            if (nickname != Util.MESSAGE_UNDEFINED) {
+                                myManitoMenu.add("$nickname")
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
 
             sendButton.setOnClickListener {
                 Database.sendChat(room.rid!!, Chat.TYPE_MESSAGE, chatEditText.text.toString())
@@ -126,7 +149,6 @@ class RoomActivity : AppCompatActivity() {
             menuButton.setOnClickListener {
                 drawerLayout.openDrawer(GravityCompat.END)
             }
-            // todo 서버에서 users 다시 받아서 해야됨
             startButton.setOnClickListener {
                 Database.getReference("rooms/${room.rid}/state").setValue(Room.STATE_READY)
                     .addOnSuccessListener {
@@ -134,19 +156,23 @@ class RoomActivity : AppCompatActivity() {
                             .addOnSuccessListener {
                                 val userList = it.getValue<HashMap<String, Any>>()!!
                                 val users = userList.keys.shuffled()
-                                val game = hashMapOf<String, String>()
+                                val games = hashMapOf<String, Game>()
+                                val missions = HashMap<String, Boolean>()
                                 val lastUserNumber = users.size - 1
+                                room.missions?.forEach {  mission ->
+                                    missions[mission] = false
+                                }
                                 for (i in users.indices) {
                                     if (i != lastUserNumber) {
-                                        game[users[i]] = users[i + 1]
+                                        games[users[i]] = Game(users[i + 1], missions)
                                     } else {
-                                        game[users[i]] = users[0]
+                                        games[users[i]] = Game(users[0], missions)
                                     }
                                 }
                                 Database.getReference("")
                                     .updateChildren(
                                         hashMapOf<String, Any>(
-                                            "games/${room.rid}" to game,
+                                            "games/${room.rid}" to games,
                                             "rooms/${room.rid}/state" to Room.STATE_START)
                                     )
                             }

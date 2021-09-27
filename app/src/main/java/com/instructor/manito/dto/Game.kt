@@ -1,10 +1,8 @@
 package com.instructor.manito.dto
 
 data class Game(
-    var uid: String? = null,
-    var type: Int? = null,
-    var message: String? = null,
-    var timestamp: Any? = null
+    var manito: String? = null,
+    var missions: HashMap<String, Boolean>? = null
 ) {
     companion object {
         const val TYPE_MESSAGE = 0
