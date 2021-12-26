@@ -11,6 +11,8 @@
         android:background="@drawable/view_background"
         android:orientation="vertical"
         android:outlineProvider="background"
+        android:outlineSpotShadowColor="@color/g4"
+        android:outlineAmbientShadowColor="@color/g4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,12 +55,13 @@
             android:textColor="#888181"
             android:textSize="8dp" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/exitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="#00FFFFFF"
+            android:background="@drawable/shadow"
             android:text="방 나가기"
+            android:layout_marginStart="4dp"
             android:textAlignment="center"
             android:textColor="#888181"
             android:textSize="14dp" />
