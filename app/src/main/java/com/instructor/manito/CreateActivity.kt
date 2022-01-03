@@ -70,9 +70,6 @@ class CreateActivity : AppCompatActivity() {
             missionRecycler.adapter = adapter
         }
 
-
-
-
     }
 
 //    override fun onStart() {
