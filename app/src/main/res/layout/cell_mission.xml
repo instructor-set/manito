@@ -13,6 +13,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:hint="미션을 입력해주세요"
+        android:textStyle="normal"
+        android:fontFamily="@font/font_custom"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/missionButton"
@@ -29,6 +31,8 @@
         android:layout_marginEnd="8dp"
         android:background="@drawable/shadow"
         android:text="추가"
+        android:textStyle="normal"
+        android:fontFamily="@font/font_custom"
         app:layout_constraintBottom_toBottomOf="@+id/missionEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/missionEditText" />

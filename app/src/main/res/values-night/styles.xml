@@ -3,5 +3,11 @@
     <style name="Widget.Theme.Manito.MyView" parent="">
         <item name="android:background">@color/b1</item>
         <item name="exampleColor">@color/b2</item>
+
+        <item name="android:textViewStyle">@style/customTextViewFontStyle</item>
+        <item name="android:buttonStyle">@style/customButtonFontStyle</item>
+        <item name="android:editTextStyle">@style/customEditTextFontStyle</item>
+        <item name="android:radioButtonStyle">@style/customRadioButtonFontStyle</item>
+        <item name="android:checkboxStyle">@style/customCheckboxFontStyle</item>
     </style>
 </resources>

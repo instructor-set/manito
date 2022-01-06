@@ -92,6 +92,10 @@ class RoomActivity : AppCompatActivity() {
     private val myManitoMenu by lazy {
         bind.drawerView.menu.getItem(1).subMenu
     }
+    // 종료
+    private val exit by lazy {
+        bind.drawerView.menu.getItem(2).subMenu
+    }
     // 미션창
     private var isExpanded = false
     private val missionCheckAdapter by lazy {
