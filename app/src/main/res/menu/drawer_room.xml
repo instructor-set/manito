@@ -9,4 +9,8 @@
         <menu>
         </menu>
     </item>
+
+    <item android:id="@+id/exitRoom"
+        android:title="게임 종료">
+    </item>
 </menu>

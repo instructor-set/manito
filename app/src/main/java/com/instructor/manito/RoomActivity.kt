@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
@@ -26,6 +28,7 @@ import com.instructor.manito.lib.Util
 import splitties.bundle.BundleSpec
 import splitties.bundle.bundle
 import splitties.bundle.withExtras
+import splitties.toast.toast
 import java.util.*
 import kotlin.collections.set
 
@@ -93,8 +96,8 @@ class RoomActivity : AppCompatActivity() {
         bind.drawerView.menu.getItem(1).subMenu
     }
     // 종료
-    private val exit by lazy {
-        bind.drawerView.menu.getItem(2).subMenu
+    private val exitMenu by lazy {
+        bind.drawerView.menu.getItem(2)
     }
     // 미션창
     private var isExpanded = false

@@ -38,6 +38,7 @@
             android:background="@drawable/right"
             android:textSize="14dp"
             android:textStyle="bold"
+            android:textColor="@color/textColor"
             android:fontFamily="@font/font_custom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

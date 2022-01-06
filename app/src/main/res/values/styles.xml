@@ -1,25 +1,15 @@
 <resources>
 
-    <style name="Widget.Theme.Manito.MyView" parent="">
+    <style name="Widget.Theme.Manito.MyView" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="android:background">@color/g1</item>
         <item name="exampleColor">@color/g4</item>
 
-        <item name="android:textViewStyle">@style/customTextViewFontStyle</item>
-        <item name="android:buttonStyle">@style/customButtonFontStyle</item>
-        <item name="android:editTextStyle">@style/customEditTextFontStyle</item>
-        <item name="android:radioButtonStyle">@style/customRadioButtonFontStyle</item>
-        <item name="android:checkboxStyle">@style/customCheckboxFontStyle</item>
-    </style>
+        </style>
 
     <style name="Splash" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/g1</item>
         <item name="colorPrimaryDark">@color/g2</item>
         <item name="colorAccent">@color/g3</item>
-
-        <item name="android:textViewStyle">@style/customTextViewFontStyle</item>
-        <item name="android:buttonStyle">@style/customButtonFontStyle</item>
-        <item name="android:editTextStyle">@style/customEditTextFontStyle</item>
-        <item name="android:radioButtonStyle">@style/customRadioButtonFontStyle</item>
-        <item name="android:checkboxStyle">@style/customCheckboxFontStyle</item>
+        <item name="android:colorBackground">@color/Background</item>
     </style>
 </resources>
