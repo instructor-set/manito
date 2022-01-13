@@ -10,7 +10,7 @@ object Util {
     const val MESSAGE_UNDEFINED = "_UNDEFINED"
     val nicknameMap: HashMap<String, String> = hashMapOf()
     val timestampMap: HashMap<String, Any> = hashMapOf()
-    fun j(msg: String) = Log.d("jinha", msg)
+    fun j(msg: Any?) = Log.d("jinha", "$msg")
     fun dummy(any: Any?) = any
 
     fun uidToNickname(uid: String, listener: (Any?) -> Unit): String? {

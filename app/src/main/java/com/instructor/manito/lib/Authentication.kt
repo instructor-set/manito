@@ -16,7 +16,7 @@ object Authentication {
     val uid
         get() = FirebaseAuth.getInstance().currentUser?.uid
     val nickname
-        get() = FirebaseAuth.getInstance().currentUser?.displayName
+        get() = user?.nickname
     var user: User? = null
     fun isLoggedIn() = when (FirebaseAuth.getInstance().currentUser) {
         null -> false

@@ -1,6 +1,9 @@
 package com.instructor.manito.network
 
+import com.instructor.manito.dto.Message
 import com.instructor.manito.dto.Token
+import com.instructor.manito.dto.UserEdit
+import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Param
 import com.instructor.manito.lib.Util
 import retrofit2.Call
@@ -19,6 +22,17 @@ object RetrofitClient {
         onUnsuccessful: ((Call<Token>, Response<Token>) -> Unit)? = null,
         onSuccessful: (Call<Token>, Response<Token>) -> Unit
     ) = instance.kakaoLogin(Token(kakaoAccessToken = kakaoAccessToken)).enqueue(
+        if (onUnsuccessful == null) {
+            defaultCallback(onSuccessful = onSuccessful)
+        } else {
+            defaultCallback(onUnsuccessful, onSuccessful)
+        }
+    )
+    fun editUser(
+        nickname: String,
+        onUnsuccessful: ((Call<Message>, Response<Message>) -> Unit)? = null,
+        onSuccessful: (Call<Message>, Response<Message>) -> Unit
+    ) = instance.editUser(Authentication.bearerAccessToken, UserEdit(nickname)).enqueue(
         if (onUnsuccessful == null) {
             defaultCallback(onSuccessful = onSuccessful)
         } else {

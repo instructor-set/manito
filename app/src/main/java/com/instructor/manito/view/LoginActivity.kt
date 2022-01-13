@@ -2,12 +2,14 @@ package com.instructor.manito.view
 
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
+import com.instructor.manito.R
 import com.instructor.manito.databinding.ActivityLoginBinding
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Util
@@ -17,6 +19,7 @@ import com.kakao.sdk.auth.TokenManager
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import splitties.alertdialog.appcompat.*
+import splitties.alertdialog.material.materialAlertDialog
 
 class LoginActivity : AppCompatActivity() {
 
@@ -85,9 +88,32 @@ class LoginActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
-                        Util.j("signInWithCustomToken:success")
-                        val user = auth.currentUser
-                        loginSuccess(token.serverAccessToken!!)
+                        Authentication.serverAccessToken = token.serverAccessToken
+                        if (Authentication.nickname.isNullOrEmpty()) {
+                            val editText = EditText(this@LoginActivity)
+                            // TODO 더 이쁘게
+                            materialAlertDialog {
+                                titleResource = R.string.title_dialog_nickname
+                                // TODO 닉네임 조건 검사 추가
+                                message = "닉네임 조건"
+                                okButton {
+                                    val nickname = editText.text.toString()
+                                    RetrofitClient.editUser(nickname) { _, response ->
+                                        Util.j(response.body())
+                                    }
+                                }
+                                cancelButton()
+
+                            }.onShow {
+
+                            }.run {
+                                setView(editText)
+                                show()
+                            }
+                        } else {
+                            loginSuccess()
+                        }
+
                     } else {
                         // If sign in fails, display a message to the user.
                         Util.j("signInWithCustomToken:failure ${task.exception}")
@@ -101,8 +127,7 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun loginSuccess(serverAccessToken: String) {
+    private fun loginSuccess() {
         bind.progressBar.visibility = View.VISIBLE
-        Authentication.serverAccessToken = serverAccessToken
     }
 }
