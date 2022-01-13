@@ -1,10 +1,16 @@
 package com.instructor.manito.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
 import com.instructor.manito.databinding.ActivityLoginBinding
+import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Util
 import com.instructor.manito.network.RetrofitClient
 import com.kakao.sdk.auth.AuthApiClient
@@ -17,6 +23,10 @@ class LoginActivity : AppCompatActivity() {
 
     private val bind by lazy {
         ActivityLoginBinding.inflate(layoutInflater)
+    }
+
+    private val auth: FirebaseAuth by lazy {
+        Firebase.auth
     }
 
 
@@ -70,22 +80,33 @@ class LoginActivity : AppCompatActivity() {
     private fun loggedInKakao() {
         Util.j("kakao 토큰: ${TokenManager.instance.getToken()?.accessToken}")
         RetrofitClient.kakaoLogin(TokenManager.instance.getToken()?.accessToken) { _, response ->
-            val serverAccessToken = response.body()?.serverAccessToken
+            val token = response.body()!!
             // 회원 정보가 없음
-            if (serverAccessToken == null) {
-
-            } else {
-                loginSuccess(serverAccessToken)
-            }
+            auth.signInWithCustomToken(token.firebaseCustomAuthToken!!)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Util.j("signInWithCustomToken:success")
+                        val user = auth.currentUser
+                        loginSuccess(token.serverAccessToken!!)
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Util.j("signInWithCustomToken:failure", task.exception)
+                        Toast.makeText(
+                            baseContext, "Authentication failed.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
         }
 
     }
 
     private fun loginSuccess(serverAccessToken: String) {
         bind.progressBar.visibility = View.VISIBLE
-        Util.j(serverAccessToken)
-//        Authentication.startMainActivity(this, accessToken) {
-//            finish()
-//        }
+//        Util.j(serverAccessToken)
+        Authentication.startMainActivity(this, accessToken) {
+            finish()
+        }
     }
 }
