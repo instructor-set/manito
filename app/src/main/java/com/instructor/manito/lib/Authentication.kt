@@ -5,6 +5,14 @@ import com.instructor.manito.dto.User
 
 object Authentication {
 
+    var serverAccessToken: String? = null
+        set(value) {
+            Util.j("액세스 토큰: $value")
+            field = value
+        }
+    val bearerAccessToken: String
+        get() = "Bearer $serverAccessToken"
+
     val uid
         get() = FirebaseAuth.getInstance().currentUser?.uid
     var user: User? = null

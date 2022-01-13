@@ -3,12 +3,14 @@
     package="com.instructor.manito">
 
     <application
+        android:name=".GlobalApplication"
         android:allowBackup="true"
         android:icon="@drawable/manito"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Manito">
+        android:theme="@style/Theme.Manito"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".ShowAllActivity"
             android:exported="true" />
@@ -20,7 +22,7 @@
             android:name=".CreateActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".view.LoginActivity" />
         <activity
             android:name=".SplashActivity"
             android:exported="true"
@@ -31,8 +33,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- Redirect URI: "kakao{NATIVE_APP_KEY}://oauth" -->
+                <data
+                    android:host="oauth"
+                    android:scheme="kakao3bb5c133a9b2c4fba526d11fd9fc3303" />
+            </intent-filter>
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
+
 
 </manifest>
