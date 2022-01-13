@@ -1,7 +1,6 @@
 package com.instructor.manito.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -91,7 +90,7 @@ class LoginActivity : AppCompatActivity() {
                         loginSuccess(token.serverAccessToken!!)
                     } else {
                         // If sign in fails, display a message to the user.
-                        Util.j("signInWithCustomToken:failure", task.exception)
+                        Util.j("signInWithCustomToken:failure ${task.exception}")
                         Toast.makeText(
                             baseContext, "Authentication failed.",
                             Toast.LENGTH_SHORT
@@ -104,9 +103,6 @@ class LoginActivity : AppCompatActivity() {
 
     private fun loginSuccess(serverAccessToken: String) {
         bind.progressBar.visibility = View.VISIBLE
-//        Util.j(serverAccessToken)
-        Authentication.startMainActivity(this, accessToken) {
-            finish()
-        }
+        Authentication.serverAccessToken = serverAccessToken
     }
 }
