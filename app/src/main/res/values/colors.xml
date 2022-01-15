@@ -24,5 +24,8 @@
     <color name="g6">#FFE6E4</color>
     <color name="Background">#FFFFFF</color>
     <color name="textColor">#000000</color>
+    <color name="buttonColor">#FFFFFF</color>
+    <color name="left">#CDE5FE</color>
+    <color name="right">#FFFFFF</color>
 
 </resources>

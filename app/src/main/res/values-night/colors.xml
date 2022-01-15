@@ -16,13 +16,16 @@
     <color name="gray_600">#FF757575</color>
     <color name="android">#00E676</color>
 
-    <color name="g1">#F9ECDC</color>
-    <color name="g2">#E5C5A8</color>
-    <color name="g3">#D6B6A0</color>
-    <color name="g4">#816B5E</color>
-    <color name="g5">#B29888</color>
-    <color name="g6">#FFF4DD</color>
-    <color name="Background">#A9A9A9</color>
-    <color name="textColor">#000000</color>
+    <color name="g1">#202020</color>
+    <color name="g2">#84D5E0</color>
+    <color name="g3">#383838</color>
+    <color name="g4">#C0CFD6</color>
+    <color name="g5">#8CA7DC</color>
+    <color name="g6">#A9A9A9</color>
+    <color name="Background">#092A31</color>
+    <color name="textColor">#FFFFFF</color>
+    <color name="buttonColor">#272727</color>
+    <color name="left">#272727</color>
+    <color name="right">#8CA7DC</color>
 
 </resources>

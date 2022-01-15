@@ -1,7 +1,7 @@
 <resources>
 
     <style name="Widget.Theme.Manito.MyView" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="android:background">@color/g1</item>
+        <item name="android:background">@color/Background</item>
         <item name="exampleColor">@color/g4</item>
 
         </style>

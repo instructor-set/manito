@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="@color/Background"
     tools:ignore="ContentDescription, SpUsage">
 
 
@@ -19,7 +18,7 @@
         android:fontFamily="@font/font_custom"
         android:gravity="center"
         android:text="마니또 방"
-        android:textColor="#000000"
+        android:textColor="@color/textColor"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/swipeRefreshLayout"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,7 +34,7 @@
         android:fontFamily="@font/font_custom"
         android:gravity="center"
         android:text="나의 마니또 방"
-        android:textColor="#000000"
+        android:textColor="@color/textColor"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/mainManitoRoomRecycler"
         app:layout_constraintEnd_toEndOf="parent"
@@ -54,7 +53,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="#000000">
+        app:subtitleTextColor="@color/textColor"
+        app:titleTextColor="@color/textColor">
 
         <ImageButton
             android:id="@+id/edit_name"
@@ -63,7 +63,7 @@
             android:background="#00FFFFFF"
             android:scaleType="fitXY"
             android:src="@drawable/ic_edit"
-            app:tint="@color/g2"
+            app:tint="@color/g5"
             tools:layout_editor_absoluteX="52dp"
             tools:layout_editor_absoluteY="18dp" />
 
@@ -87,7 +87,7 @@
             android:fontFamily="@font/font_custom"
             android:shadowColor="@color/g4"
             android:text="방 만들기"
-            android:textColor="#000000"
+            android:textColor="@color/textColor"
             android:textSize="18dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -102,7 +102,7 @@
             android:fontFamily="@font/font_custom"
             android:shadowColor="@color/g4"
             android:text="방 입장하기"
-            android:textColor="#000000"
+            android:textColor="@color/textColor"
             android:textSize="18dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -144,6 +144,7 @@
             android:id="@+id/mainRecycler"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:backgroundTint="@color/Background"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/myManitoRoomText"
             app:layout_constraintEnd_toEndOf="parent"
