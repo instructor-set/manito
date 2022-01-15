@@ -156,34 +156,38 @@ class RoomActivity : AppCompatActivity() {
             menuButton.setOnClickListener {
                 drawerLayout.openDrawer(GravityCompat.END)
             }
-            startButton.setOnClickListener {
-                Database.getReference("rooms/${room.rid}/state").setValue(Room.STATE_READY)
-                    .addOnSuccessListener {
-                        Database.getReference("rooms/${room.rid}/users").get()
-                            .addOnSuccessListener {
-                                val userList = it.getValue<HashMap<String, Any>>()!!
-                                val users = userList.keys.shuffled()
-                                val games = hashMapOf<String, Game>()
-                                val missions = HashMap<String, Boolean>()
-                                val lastUserNumber = users.size - 1
-                                room.missions?.forEach {  mission ->
-                                    missions[mission] = false
-                                }
-                                for (i in users.indices) {
-                                    if (i != lastUserNumber) {
-                                        games[users[i]] = Game(users[i + 1], missions)
-                                    } else {
-                                        games[users[i]] = Game(users[0], missions)
+            startButton.setOnClickListener{
+                if(startButton.text.equals("게임 시작")){
+                    Database.getReference("rooms/${room.rid}/state").setValue(Room.STATE_READY)
+                        .addOnSuccessListener {
+                            Database.getReference("rooms/${room.rid}/users").get()
+                                .addOnSuccessListener {
+                                    val userList = it.getValue<HashMap<String, Any>>()!!
+                                    val users = userList.keys.shuffled()
+                                    val games = hashMapOf<String, Game>()
+                                    val missions = HashMap<String, Boolean>()
+                                    val lastUserNumber = users.size - 1
+                                    room.missions?.forEach {  mission ->
+                                        missions[mission] = false
                                     }
+                                    for (i in users.indices) {
+                                        if (i != lastUserNumber) {
+                                            games[users[i]] = Game(users[i + 1], missions)
+                                        } else {
+                                            games[users[i]] = Game(users[0], missions)
+                                        }
+                                    }
+                                    Database.getReference("")
+                                        .updateChildren(
+                                            hashMapOf<String, Any>(
+                                                "games/${room.rid}" to games,
+                                                "rooms/${room.rid}/state" to Room.STATE_START)
+                                        )
                                 }
-                                Database.getReference("")
-                                    .updateChildren(
-                                        hashMapOf<String, Any>(
-                                            "games/${room.rid}" to games,
-                                            "rooms/${room.rid}/state" to Room.STATE_START)
-                                    )
-                            }
-                    }
+                        }
+
+                }
+
             }
             if (room.manager == Authentication.uid) {
                 startButton.visibility = View.VISIBLE
@@ -195,7 +199,7 @@ class RoomActivity : AppCompatActivity() {
 
             Database.getReference("rooms/${room.rid}/state").get().addOnSuccessListener {
                 if(it.value.toString() == "START"){
-                    startButton.visibility = View.GONE
+                    startButton.text = "게임 종료"
                 }
             }
 
