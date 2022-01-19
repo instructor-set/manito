@@ -8,16 +8,24 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import com.instructor.manito.MainActivity
 import com.instructor.manito.R
 import com.instructor.manito.databinding.ActivityLoginBinding
+import com.instructor.manito.dto.Message
+import com.instructor.manito.dto.User
 import com.instructor.manito.lib.Authentication
+import com.instructor.manito.lib.Database
 import com.instructor.manito.lib.Util
 import com.instructor.manito.network.RetrofitClient
 import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.auth.TokenManager
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
+import retrofit2.Call
+import retrofit2.Response
+import splitties.activities.start
 import splitties.alertdialog.appcompat.*
 import splitties.alertdialog.material.materialAlertDialog
 
@@ -83,36 +91,41 @@ class LoginActivity : AppCompatActivity() {
         Util.j("kakao 토큰: ${TokenManager.instance.getToken()?.accessToken}")
         RetrofitClient.kakaoLogin(TokenManager.instance.getToken()?.accessToken) { _, response ->
             val token = response.body()!!
-            // 회원 정보가 없음
             auth.signInWithCustomToken(token.firebaseCustomAuthToken!!)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         Authentication.serverAccessToken = token.serverAccessToken
-                        if (Authentication.nickname.isNullOrEmpty()) {
-                            val editText = EditText(this@LoginActivity)
-                            // TODO 더 이쁘게
-                            materialAlertDialog {
-                                titleResource = R.string.title_dialog_nickname
-                                // TODO 닉네임 조건 검사 추가
-                                message = "닉네임 조건"
-                                okButton {
-                                    val nickname = editText.text.toString()
-                                    RetrofitClient.editUser(nickname) { _, response ->
-                                        Util.j(response.body())
+                        Database.getReference("users/${Authentication.uid}").get().addOnSuccessListener {
+                            Authentication.user = it.getValue<User>()
+                            if (Authentication.nickname.isNullOrEmpty()) {
+                                val editText = EditText(this@LoginActivity)
+                                // TODO 더 이쁘게
+                                materialAlertDialog {
+                                    titleResource = R.string.title_dialog_nickname
+                                    // TODO 닉네임 조건 검사 추가
+                                    message = "닉네임 조건"
+                                    okButton {
+                                        val nickname = editText.text.toString()
+                                        RetrofitClient.editUser(nickname, onUnsuccessful = { _: Call<Message>, response: Response<Message> ->
+                                            Util.j(response.message())
+                                        }) { _, _ ->
+                                            loginSuccess()
+                                        }
                                     }
+                                    cancelButton()
+
+                                }.onShow {
+
+                                }.run {
+                                    setView(editText)
+                                    show()
                                 }
-                                cancelButton()
-
-                            }.onShow {
-
-                            }.run {
-                                setView(editText)
-                                show()
+                            } else {
+                                loginSuccess()
                             }
-                        } else {
-                            loginSuccess()
                         }
+
 
                     } else {
                         // If sign in fails, display a message to the user.
@@ -129,5 +142,6 @@ class LoginActivity : AppCompatActivity() {
 
     private fun loginSuccess() {
         bind.progressBar.visibility = View.VISIBLE
+        start<MainActivity> {  }
     }
 }

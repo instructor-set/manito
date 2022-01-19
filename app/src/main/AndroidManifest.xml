@@ -22,7 +22,8 @@
             android:name=".CreateActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".view.LoginActivity" />
+        <activity android:name=".view.LoginActivity"
+            android:noHistory="true"/>
         <activity
             android:name=".SplashActivity"
             android:exported="true"
