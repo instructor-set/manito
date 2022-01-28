@@ -102,6 +102,16 @@
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
 
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/missionRecyclerRoom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="#B2FFE6E4"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout6"
+                tools:listitem="@layout/cell_mission_check" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout6"
@@ -129,18 +139,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/missionRecyclerRoom"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="#B2FFE6E4"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout6"
-                tools:listitem="@layout/cell_mission_check"
-                tools:visibility="visible" />
-
-            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/messageRecycler"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -160,6 +158,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/view_background"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/constraintLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

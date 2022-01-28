@@ -29,7 +29,6 @@ class MissionCheckAdapter(private val context: Context, private var listData: Li
         fun binding(mission: String) {
 
             with(bind) {
-
                 cellMissionText.text = mission
 //                missionCheckBox.setOnCheckedChangeListener { compoundButton, b ->
 //                    Util.j(missionCheckBox.isChecked)
