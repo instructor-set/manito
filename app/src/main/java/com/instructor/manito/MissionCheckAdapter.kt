@@ -31,6 +31,8 @@ class MissionCheckAdapter(private val context: Context, private var listData: Li
             with(bind) {
 
                 cellMissionText.text = mission
+
+
             }
 
 

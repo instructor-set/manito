@@ -22,8 +22,6 @@ private const val ARG_PARAM2 = "param2"
 class FinishFragment : Fragment() {
 
 
-
-
     var roomActivity: RoomActivity? = null
 
     override fun onAttach(context: Context) {
@@ -39,7 +37,7 @@ class FinishFragment : Fragment() {
         var bind = FragmentFinishBinding.inflate(inflater, container, false)
         with(bind){
             bind.finishShowAllButton.setOnClickListener {
-                roomActivity!!.setFramgent(true)
+                //roomActivity!!.setFramgent(true)
             }
         }
         return bind.root
