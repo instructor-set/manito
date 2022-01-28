@@ -17,9 +17,9 @@
         <activity
             android:name=".FinishActivity"
             android:exported="true" />
-        <activity android:name=".RoomActivity" />
+        <activity android:name=".view.login.main.RoomActivity" />
         <activity
-            android:name=".CreateActivity"
+            android:name=".view.login.main.CreateActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".view.login.MainActivity" />
         <activity android:name=".view.LoginActivity"

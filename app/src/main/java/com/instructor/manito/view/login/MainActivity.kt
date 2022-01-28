@@ -9,7 +9,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
-import com.instructor.manito.CreateActivity
 import com.instructor.manito.MainMyRoomAdapter
 import com.instructor.manito.MainRoomAdapter
 import com.instructor.manito.databinding.ActivityMainBinding
@@ -19,6 +18,7 @@ import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
 import com.instructor.manito.lib.Util
+import com.instructor.manito.view.login.main.CreateActivity
 import splitties.activities.start
 import splitties.toast.toast
 
@@ -138,7 +138,6 @@ class MainActivity : AppCompatActivity() {
 
                     myRoomValueEventListenerMap[rid] = object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            Util.j("$rid, ${snapshot.getValue<Room>()}")
                             if (!snapshot.exists())
                                 return
                             if (myRoomIndexMap.containsKey(rid)) {

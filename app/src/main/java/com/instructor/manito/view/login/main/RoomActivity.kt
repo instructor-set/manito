@@ -1,27 +1,23 @@
-package com.instructor.manito
+package com.instructor.manito.view.login.main
 
 import android.animation.ValueAnimator
-import android.app.Fragment
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.DisplayMetrics
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import androidx.core.view.get
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
+import com.instructor.manito.*
 import com.instructor.manito.databinding.ActivityRoomBinding
-import com.instructor.manito.databinding.FragmentFinishBinding
 import com.instructor.manito.dto.Chat
 import com.instructor.manito.dto.Game
 import com.instructor.manito.dto.Room
@@ -31,7 +27,6 @@ import com.instructor.manito.lib.Util
 import splitties.bundle.BundleSpec
 import splitties.bundle.bundle
 import splitties.bundle.withExtras
-import splitties.toast.toast
 import java.util.*
 import kotlin.collections.set
 
@@ -159,8 +154,8 @@ class RoomActivity : AppCompatActivity() {
                 drawerLayout.openDrawer(GravityCompat.END)
             }
             // 메뉴 버튼 클릭
-            button1.setOnClickListener{
-                when(button1.text){
+            startButton.setOnClickListener{
+                when(startButton.text){
                     "게임 시작" -> Database.getReference("rooms/${room.rid}/state").setValue(Room.STATE_READY)
                         .addOnSuccessListener {
                             Database.getReference("rooms/${room.rid}/users").get()
@@ -194,7 +189,6 @@ class RoomActivity : AppCompatActivity() {
                     }
 
                 }
-                false
             }
             frameLayout.visibility = View.GONE
 
@@ -207,13 +201,13 @@ class RoomActivity : AppCompatActivity() {
 
 
             if (room.manager != Authentication.uid) {
-                button1.visibility = View.GONE
+                startButton.visibility = View.GONE
             }
 
 
             Database.getReference("rooms/${room.rid}/state").get().addOnSuccessListener {
                 if(it.value.toString() == "START"){
-                    button1.text = "게임 종료"
+                    startButton.text = "게임 종료"
                 }
             }
 

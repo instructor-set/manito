@@ -5,7 +5,7 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RoomActivity"
+    tools:context=".view.login.main.RoomActivity"
     tools:ignore="ContentDescription, SpUsage">
 
 
@@ -180,12 +180,11 @@
                 android:id="@+id/arrowImage2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_keyboard_arrow_down_black_24dp"
+                app:srcCompat="@drawable/ic_keyboard_arrow_up_black_24dp"
                 app:tint="#0A284C" />
 
 
@@ -202,7 +201,7 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:id="@+id/button1"
+                android:id="@+id/startButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
@@ -224,7 +223,7 @@
                 android:clickable="true"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/button1"
+                app:layout_constraintStart_toEndOf="@+id/startButton"
                 app:layout_constraintEnd_toStartOf="@+id/button3"/>
 
             <Button

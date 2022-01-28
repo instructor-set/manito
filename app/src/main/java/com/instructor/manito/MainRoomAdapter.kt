@@ -19,6 +19,7 @@ import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
 import com.instructor.manito.lib.Util
+import com.instructor.manito.view.login.main.RoomActivity
 import splitties.activities.start
 import splitties.bundle.putExtras
 
