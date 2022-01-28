@@ -10,7 +10,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import com.instructor.manito.MainActivity
+import com.instructor.manito.view.login.MainActivity
 import com.instructor.manito.R
 import com.instructor.manito.databinding.ActivityLoginBinding
 import com.instructor.manito.dto.Message

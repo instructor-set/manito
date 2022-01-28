@@ -1,16 +1,17 @@
-package com.instructor.manito
+package com.instructor.manito.view.login
 
 
-import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
+import com.instructor.manito.CreateActivity
+import com.instructor.manito.MainMyRoomAdapter
+import com.instructor.manito.MainRoomAdapter
 import com.instructor.manito.databinding.ActivityMainBinding
 import com.instructor.manito.databinding.AlertdialogEdittextBinding
 import com.instructor.manito.databinding.DialogEditnameBinding
