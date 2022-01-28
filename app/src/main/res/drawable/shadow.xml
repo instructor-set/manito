@@ -83,7 +83,7 @@
         <shape
             android:shape="rectangle">
             <solid
-                android:color="#FFFFFF"/>
+                android:color="@color/buttonColor"/>
             <stroke
                 android:color="@color/g1" />
             <corners android:bottomLeftRadius="10dp"

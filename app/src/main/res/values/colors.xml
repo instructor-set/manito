@@ -22,11 +22,10 @@
     <color name="g4">#CDE5FE</color>
     <color name="g5">#D3C9E7</color>
     <color name="g6">#FFE6E4</color>
+    <color name="Background">#FFFFFF</color>
+    <color name="textColor">#000000</color>
+    <color name="buttonColor">#FFFFFF</color>
+    <color name="left">#CDE5FE</color>
+    <color name="right">#FFFFFF</color>
 
-    <color name="b1">#F9ECDC</color>
-    <color name="b2">#E5C5A8</color>
-    <color name="b3">#D6B6A0</color>
-    <color name="b4">#816B5E</color>
-    <color name="b5">#B29888</color>
-    <color name="b6">#FFF4DD</color>
 </resources>

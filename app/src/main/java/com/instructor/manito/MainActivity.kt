@@ -1,15 +1,19 @@
 package com.instructor.manito
 
 
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.instructor.manito.databinding.ActivityMainBinding
 import com.instructor.manito.databinding.AlertdialogEdittextBinding
+import com.instructor.manito.databinding.DialogEditnameBinding
 import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
@@ -22,6 +26,8 @@ class MainActivity : AppCompatActivity() {
     private val bind by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
+
+    private val inflater: LayoutInflater by lazy { LayoutInflater.from(this@MainActivity) }
 
     private val dataList = arrayListOf<Room>()
     private val adapter = MainRoomAdapter(this@MainActivity, dataList)
@@ -79,6 +85,25 @@ class MainActivity : AppCompatActivity() {
             //bind.swipeRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_CIRCLES);
             swipeRefreshLayout.setOnRefreshListener {
                 refreshRoomList(false)
+            }
+
+            // 닉네임 수정
+            editName.setOnClickListener {
+
+                val uid = Authentication.uid
+
+                val renameBinding =
+                    DialogEditnameBinding.inflate(inflater)
+                with(renameBinding) {
+                    nameEditText.hint = Authentication.user?.nickname
+                    AlertDialog.Builder(this@MainActivity).setView(root)
+                        .setPositiveButton("수정") { _: DialogInterface, _: Int ->
+
+                        }.setNeutralButton("취소", null)
+                        .create()
+                        .show()
+                }
+
             }
 
         }

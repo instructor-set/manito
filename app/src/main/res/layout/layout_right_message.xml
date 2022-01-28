@@ -25,6 +25,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/whiteGray"
             android:textSize="10dp"
+            android:textStyle="normal"
+            android:fontFamily="@font/font_custom"
             app:layout_constraintBottom_toBottomOf="@+id/messageTextView"
             app:layout_constraintEnd_toStartOf="@+id/messageTextView"
             tools:text="오후 11:11" />
@@ -34,7 +36,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/right"
+            android:backgroundTint="@color/right"
             android:textSize="14dp"
+            android:textStyle="normal"
+            android:textColor="@color/textColor"
+            android:fontFamily="@font/font_custom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="가" />
