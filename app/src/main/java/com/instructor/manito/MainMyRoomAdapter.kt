@@ -108,7 +108,7 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
                                     val updates = hashMapOf<String, Any?>()
                                     if (isManager) {
                                         // 유저들의 방 목록에서 지우고
-                                        for (user in roomData?.users?.keys!!) {
+                                        for (user in roomData?.users!!) {
                                             updates["users/$user/rooms/$rid"] = null
                                         }
                                         // 방을 지우고
@@ -150,7 +150,7 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
                             }
                         } else {
                             val updates = hashMapOf(
-                                "rooms/$rid/users/$uid" to true,
+                                "rooms/$rid/users" to listOf(uid),
                                 "users/$uid/rooms/$rid" to ServerValue.TIMESTAMP
                             )
                             Database.getReference("").updateChildren(updates)

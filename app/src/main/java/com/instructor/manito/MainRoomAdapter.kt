@@ -57,7 +57,7 @@ class MainRoomAdapter(private val context: Context, private var listData: ArrayL
                     }
                 } else {
                     val updates = hashMapOf(
-                        "rooms/$rid/users/$uid" to true,
+                        "rooms/$rid/users" to listOf(uid),
                         "users/$uid/rooms/$rid" to ServerValue.TIMESTAMP
                     )
                     Database.getReference("")
