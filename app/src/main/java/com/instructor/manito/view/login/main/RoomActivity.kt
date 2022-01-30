@@ -205,6 +205,10 @@ class RoomActivity : AppCompatActivity() {
             }
 
 
+            Database.getReference("rooms/${room.rid}/users")
+                .addChildEventListener(roomChildEventListener)
+
+
             Database.getReference("rooms/${room.rid}/state").get().addOnSuccessListener {
                 if(it.value.toString() == "START"){
                     startButton.text = "게임 종료"
