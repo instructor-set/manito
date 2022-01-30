@@ -4,10 +4,12 @@ import android.animation.ValueAnimator
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -16,7 +18,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
-import com.instructor.manito.*
+import com.instructor.manito.MissionCheckAdapter
+import com.instructor.manito.R
+import com.instructor.manito.RoomChatAdapter
 import com.instructor.manito.databinding.ActivityRoomBinding
 import com.instructor.manito.dto.Chat
 import com.instructor.manito.dto.Game
@@ -27,6 +31,7 @@ import com.instructor.manito.lib.Util
 import splitties.bundle.BundleSpec
 import splitties.bundle.bundle
 import splitties.bundle.withExtras
+import splitties.toast.toast
 import java.util.*
 import kotlin.collections.set
 
@@ -93,16 +98,17 @@ class RoomActivity : AppCompatActivity() {
     private val myManitoMenu by lazy {
         bind.drawerView.menu.getItem(1).subMenu
     }
-
+    // 종료
+    private val exitMenu by lazy {
+        bind.drawerView.menu.getItem(2)
+    }
     // 미션창
     private var isExpanded = false
     private val missionCheckAdapter by lazy {
         MissionCheckAdapter(this, room.missions ?: arrayListOf())
     }
-    // 메뉴 네비
 
-    private var menuExpanded = false
-    private var showFragment = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -153,10 +159,9 @@ class RoomActivity : AppCompatActivity() {
             menuButton.setOnClickListener {
                 drawerLayout.openDrawer(GravityCompat.END)
             }
-            // 메뉴 버튼 클릭
             startButton.setOnClickListener{
-                when(startButton.text){
-                    "게임 시작" -> Database.getReference("rooms/${room.rid}/state").setValue(Room.STATE_READY)
+                if(startButton.text.equals("게임 시작")){
+                    Database.getReference("rooms/${room.rid}/state").setValue(Room.STATE_READY)
                         .addOnSuccessListener {
                             Database.getReference("rooms/${room.rid}/users").get()
                                 .addOnSuccessListener {
@@ -183,31 +188,17 @@ class RoomActivity : AppCompatActivity() {
                                         )
                                 }
                         }
-                    "게임 종료" -> {
-                        Toast.makeText(this@RoomActivity, "게임 종료", Toast.LENGTH_SHORT).show()
-
-                    }
 
                 }
+
             }
-            frameLayout.visibility = View.GONE
-
-            val transaction = supportFragmentManager.beginTransaction().add(R.id.frameLayout, FinishFragment())
-            transaction.commit()
-
-            button2.setOnClickListener {
-                setFramgent(false)
-            }
-
-
-            if (room.manager != Authentication.uid) {
-                startButton.visibility = View.GONE
+            if (room.manager == Authentication.uid) {
+                startButton.visibility = View.VISIBLE
             }
 
 
             Database.getReference("rooms/${room.rid}/users")
                 .addChildEventListener(roomChildEventListener)
-
 
             Database.getReference("rooms/${room.rid}/state").get().addOnSuccessListener {
                 if(it.value.toString() == "START"){
@@ -222,12 +213,6 @@ class RoomActivity : AppCompatActivity() {
 
             }
             missionRecyclerRoom.adapter = missionCheckAdapter
-
-            // 메뉴
-            constraintLayout8.visibility = View.GONE
-            constraintLayout7.setOnClickListener {
-                menuVisibility()
-            }
 
 
         }
@@ -259,10 +244,8 @@ class RoomActivity : AppCompatActivity() {
             // Animation start
             if (isExpanded) {
                 arrowImage.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp)
-
             } else {
                 arrowImage.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp)
-
             }
             va.start()
 
@@ -271,89 +254,15 @@ class RoomActivity : AppCompatActivity() {
 
     }
 
-    private fun menuVisibility(){
-        with(bind){
-            menuExpanded = !menuExpanded
-            // ValueAnimator.ofInt(int... values)는 View가 변할 값을 지정, 인자는 int 배열
 
-            // ValueAnimator.ofInt(int... values)는 View가 변할 값을 지정, 인자는 int 배열
-
-            constraintLayout8.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            val targetHeight = constraintLayout8.measuredHeight
-
-            val constraints = ConstraintSet()
-            constraints.clone(rootLayout)
-
-
-            val va = if (menuExpanded) ValueAnimator.ofInt(0, targetHeight) else ValueAnimator.ofInt(targetHeight, 0)
-            // Animation이 실행되는 시간, n/1000초
-            // Animation이 실행되는 시간, n/1000초
-            va.duration = 200
-            va.addUpdateListener { animation -> // imageView의 높이 변경
-                //bottomNavi.layoutParams.height = animation.animatedValue as Int
-                //bottomNavi.requestLayout()
-                constraintLayout8.setVisibility(if (menuExpanded) View.VISIBLE else View.GONE)
-
-                // imageView가 실제로 사라지게하는 부분
-
-            }
-
-
-            // Animation start
-            // Animation start
-            if (menuExpanded) {
-                arrowImage2.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp)
-                constraintLayout8.visibility = View.VISIBLE
-                constraints.connect(constraintLayout7.id, ConstraintSet.BOTTOM, constraintLayout8.id, ConstraintSet.TOP)
-                constraints.applyTo(rootLayout)
-            } else {
-                arrowImage2.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp)
-                constraintLayout8.visibility = View.GONE
-                constraints.connect(constraintLayout7.id, ConstraintSet.BOTTOM, constraintLayout.id, ConstraintSet.TOP)
-                constraints.applyTo(rootLayout)
-            }
-
-            va.start()
-
-
-
-
-
-        }
-
-
-    }
-
-    fun setFramgent(showAll: Boolean){
-        with(bind){
-            if(showAll){
-                val transaction = supportFragmentManager.beginTransaction().replace(R.id.frameLayout, ShowAllFragment())
-                transaction.commit()
-            }else {
-                showFragment = !showFragment
-                val transaction = supportFragmentManager.beginTransaction().replace(R.id.frameLayout, FinishFragment())
-                transaction.commit()
-                frameLayout.visibility = if (showFragment) View.VISIBLE else View.GONE
-
-            }
-
-        }
-    }
 
     override fun onBackPressed() {
         with(bind) {
             if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
                 drawerLayout.closeDrawer(GravityCompat.END)
-            } else if(showFragment){
-                frameLayout.visibility = View.GONE
-
-                showFragment = false
-
-            }
-            else {
+            } else {
                 finish()
             }
-
         }
     }
 
