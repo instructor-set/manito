@@ -204,6 +204,8 @@ class RoomActivity : AppCompatActivity() {
                 startButton.visibility = View.GONE
             }
 
+            Database.getReference("rooms/${room.rid}/users").addChildEventListener(roomChildEventListener)
+
 
             Database.getReference("rooms/${room.rid}/state").get().addOnSuccessListener {
                 if(it.value.toString() == "START"){
@@ -388,7 +390,7 @@ class RoomActivity : AppCompatActivity() {
 
         override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
 
-            val uid = snapshot.key!!
+            val uid = snapshot.getValue<String>()!!
             val itemId = nextItemId++
             uidToItemId[uid] = itemId
             Util.uidToNickname(uid) {
