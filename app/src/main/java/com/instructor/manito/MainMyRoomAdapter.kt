@@ -150,7 +150,7 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
                             }
                         } else {
                             val updates = hashMapOf(
-                                "rooms/$rid/users/$uid" to true,
+                                "rooms/$rid/users" to listOf(uid),
                                 "users/$uid/rooms/$rid" to ServerValue.TIMESTAMP
                             )
                             Database.getReference("").updateChildren(updates)
