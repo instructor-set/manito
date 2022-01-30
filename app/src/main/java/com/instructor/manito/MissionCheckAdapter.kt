@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.instructor.manito.databinding.CellMissionCheckBinding
+import com.instructor.manito.lib.Util
 
 class MissionCheckAdapter(private val context: Context, private var listData: List<String>) :
     RecyclerView.Adapter<MissionCheckAdapter.Holder>() {
@@ -30,9 +31,10 @@ class MissionCheckAdapter(private val context: Context, private var listData: Li
 
             with(bind) {
                 cellMissionText.text = mission
-//                missionCheckBox.setOnCheckedChangeListener { compoundButton, b ->
-//                    Util.j(missionCheckBox.isChecked)
-//                }
+
+                missionCheckBox.setOnCheckedChangeListener { compoundButton, b ->
+                    Util.j(missionCheckBox.isChecked)
+                }
             }
 
 

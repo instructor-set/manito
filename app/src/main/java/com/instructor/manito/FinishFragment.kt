@@ -39,7 +39,7 @@ class FinishFragment : Fragment() {
         var bind = FragmentFinishBinding.inflate(inflater, container, false)
         with(bind){
             bind.finishShowAllButton.setOnClickListener {
-                roomActivity!!.setFramgent(true)
+                roomActivity!!.setFragment(true)
             }
         }
         return bind.root
