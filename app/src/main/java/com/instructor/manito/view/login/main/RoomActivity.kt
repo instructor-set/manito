@@ -18,7 +18,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
-import com.instructor.manito.FinishFragment
 import com.instructor.manito.R
 import com.instructor.manito.RoomChatAdapter
 import com.instructor.manito.ShowAllFragment
@@ -29,6 +28,7 @@ import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
 import com.instructor.manito.lib.Util
+import com.instructor.manito.view.login.main.room.FinishFragment
 import com.instructor.manito.view.login.main.room.MissionCheckAdapter
 import splitties.bundle.BundleSpec
 import splitties.bundle.bundle
@@ -98,19 +98,20 @@ class RoomActivity : AppCompatActivity() {
     private val myManitoMenu by lazy {
         bind.drawerView.menu.getItem(1).subMenu
     }
+
     // 종료
     private val exitMenu by lazy {
         bind.drawerView.menu.getItem(2)
     }
+
     // 미션창
     private var isExpanded = false
     private val missionCheckAdapter by lazy {
-        MissionCheckAdapter(this, room.missions ?: arrayListOf())
+        MissionCheckAdapter(this, room.missions ?: arrayListOf(), room.rid!!)
     }
 
     private var menuExpanded = false
     private var showFragment = false
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -134,24 +135,25 @@ class RoomActivity : AppCompatActivity() {
                         .addChildEventListener(chatsChildEventListener)
                 }
             }
-            Database.getReference("games/${room.rid}/${Authentication.uid}").addValueEventListener(object:
-                ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val game = snapshot.getValue<Game>()
-                    if (game != null) {
-                        Util.uidToNickname(game.manito!!) { nickname ->
-                            if (nickname != Util.MESSAGE_UNDEFINED) {
-                                myManitoMenu.add("$nickname")
+            Database.getReference("games/${room.rid}/${Authentication.uid}")
+                .addValueEventListener(object :
+                    ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val game = snapshot.getValue<Game>()
+                        if (game != null) {
+                            Util.uidToNickname(game.manito!!) { nickname ->
+                                if (nickname != Util.MESSAGE_UNDEFINED) {
+                                    myManitoMenu.add("$nickname")
+                                }
                             }
                         }
                     }
-                }
 
-                override fun onCancelled(error: DatabaseError) {
+                    override fun onCancelled(error: DatabaseError) {
 
-                }
+                    }
 
-            })
+                })
 
             sendButton.setOnClickListener {
                 Database.sendChat(room.rid!!, Chat.TYPE_MESSAGE, chatEditText.text.toString())
@@ -162,22 +164,21 @@ class RoomActivity : AppCompatActivity() {
             menuButton.setOnClickListener {
                 drawerLayout.openDrawer(GravityCompat.END)
             }
-            button1.setOnClickListener{
-                if(startButton.text.equals("게임 시작")){
+            button1.setOnClickListener {
+                if (button1.text.equals("게임 시작")) {
                     Database.getReference("rooms/${room.rid}/state").setValue(Room.STATE_READY)
                         .addOnSuccessListener {
                             Database.getReference("rooms/${room.rid}/users").get()
                                 .addOnSuccessListener {
-                                    val userList = it.getValue<HashMap<String, Any>>()!!
-                                    val users = userList.keys.shuffled()
+                                    val userList = it.getValue<HashMap<String, String>>()!!
+                                    val users = userList.values.shuffled()
                                     val games = hashMapOf<String, Game>()
                                     val missions = HashMap<String, Boolean>()
-                                    val lastUserNumber = users.size - 1
-                                    room.missions?.forEach {  mission ->
+                                    room.missions?.forEach { mission ->
                                         missions[mission] = false
                                     }
                                     for (i in users.indices) {
-                                        if (i != lastUserNumber) {
+                                        if (i != users.size - 1) {
                                             games[users[i]] = Game(users[i + 1], missions)
                                         } else {
                                             games[users[i]] = Game(users[0], missions)
@@ -192,21 +193,21 @@ class RoomActivity : AppCompatActivity() {
                                 }
                         }
 
-                }else{
+                } else {
                     Toast.makeText(this@RoomActivity, "게임 종료", Toast.LENGTH_SHORT).show()
                 }
 
             }
             if (room.manager == Authentication.uid) {
-                startButton.visibility = View.VISIBLE
-                button1.visibility = View.GONE
+                button1.visibility = View.VISIBLE
             }
 
-            Database.getReference("rooms/${room.rid}/users").addChildEventListener(roomChildEventListener)
+            Database.getReference("rooms/${room.rid}/users")
+                .addChildEventListener(roomChildEventListener)
 
             Database.getReference("rooms/${room.rid}/state").get().addOnSuccessListener {
-                if(it.value.toString() == "START"){
-                    startButton.text = "게임 종료"
+                if (it.value.toString() == "START") {
+                    button1.text = "게임 종료"
                     button1.text = "게임 종료"
                 }
             }
@@ -219,18 +220,17 @@ class RoomActivity : AppCompatActivity() {
             }
             missionRecyclerRoom.adapter = missionCheckAdapter
 
-            constraintLayout8.visibility = View.GONE
             constraintLayout7.setOnClickListener {
                 menuVisibility()
             }
 
-            frameLayout.visibility = View.GONE
-            val transaction = supportFragmentManager.beginTransaction().add(R.id.frameLayout, FinishFragment())
+            val transaction =
+                supportFragmentManager.beginTransaction().add(R.id.frameLayout, FinishFragment())
             transaction.commit()
-            button2.setOnClickListener{
-               setFragment(false)
+            button2.setOnClickListener {
+                setFragment(false)
             }
-            button3.setOnClickListener{
+            button3.setOnClickListener {
                 Util.j(button3.text)
             }
 
@@ -239,18 +239,21 @@ class RoomActivity : AppCompatActivity() {
 
     }
 
-    private fun changeVisibility(){
-        with(bind){
+    private fun changeVisibility() {
+        with(bind) {
             isExpanded = !isExpanded
             // ValueAnimator.ofInt(int... values)는 View가 변할 값을 지정, 인자는 int 배열
 
             // ValueAnimator.ofInt(int... values)는 View가 변할 값을 지정, 인자는 int 배열
 
 
-            missionRecyclerRoom.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            missionRecyclerRoom.measure(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT)
             val targetHeight = missionRecyclerRoom.measuredHeight
 
-            val va = if (isExpanded) ValueAnimator.ofInt(0, targetHeight) else ValueAnimator.ofInt(targetHeight, 0)
+            val va = if (isExpanded) ValueAnimator.ofInt(0, targetHeight) else ValueAnimator.ofInt(
+                targetHeight,
+                0)
             // Animation이 실행되는 시간, n/1000초
             // Animation이 실행되는 시간, n/1000초
             va.duration = 200
@@ -274,7 +277,7 @@ class RoomActivity : AppCompatActivity() {
 
     }
 
-    private fun menuVisibility(){
+    private fun menuVisibility() {
         with(bind) {
             menuExpanded = !menuExpanded
             // ValueAnimator.ofInt(int... values)는 View가 변할 값을 지정, 인자는 int 배열
@@ -332,14 +335,16 @@ class RoomActivity : AppCompatActivity() {
 
     }
 
-    fun setFragment(showAll: Boolean){
-        with(bind){
-            if(showAll){
-                val transaction = supportFragmentManager.beginTransaction().replace(R.id.frameLayout, ShowAllFragment())
+    fun setFragment(showAll: Boolean) {
+        with(bind) {
+            if (showAll) {
+                val transaction = supportFragmentManager.beginTransaction()
+                    .replace(R.id.frameLayout, ShowAllFragment())
                 transaction.commit()
-            }else {
+            } else {
                 showFragment = !showFragment
-                val transaction = supportFragmentManager.beginTransaction().replace(R.id.frameLayout, FinishFragment())
+                val transaction = supportFragmentManager.beginTransaction()
+                    .replace(R.id.frameLayout, FinishFragment())
                 transaction.commit()
                 frameLayout.visibility = if (showFragment) View.VISIBLE else View.GONE
 
@@ -350,17 +355,20 @@ class RoomActivity : AppCompatActivity() {
     }
 
 
-
     override fun onBackPressed() {
         with(bind) {
-            if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
-                drawerLayout.closeDrawer(GravityCompat.END)
-            }else if(showFragment){
-                frameLayout.visibility = View.GONE
-                showFragment = false
+            when {
+                drawerLayout.isDrawerOpen(GravityCompat.END) -> {
+                    drawerLayout.closeDrawer(GravityCompat.END)
+                }
+                showFragment -> {
+                    frameLayout.visibility = View.GONE
+                    showFragment = false
 
-            } else {
-                finish()
+                }
+                else -> {
+                    finish()
+                }
             }
         }
     }
@@ -368,7 +376,7 @@ class RoomActivity : AppCompatActivity() {
     private val chatsChildEventListener = object : ChildEventListener {
         override fun onChildAdded(
             snapshot: DataSnapshot,
-            previousChildName: String?
+            previousChildName: String?,
         ) {
             val chat = snapshot.getValue<Chat>()!!
             chatList.add(chat)
@@ -378,7 +386,7 @@ class RoomActivity : AppCompatActivity() {
 
         override fun onChildChanged(
             snapshot: DataSnapshot,
-            previousChildName: String?
+            previousChildName: String?,
         ) {
         }
 
@@ -387,7 +395,7 @@ class RoomActivity : AppCompatActivity() {
 
         override fun onChildMoved(
             snapshot: DataSnapshot,
-            previousChildName: String?
+            previousChildName: String?,
         ) {
         }
 

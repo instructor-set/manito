@@ -5,9 +5,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.instructor.manito.databinding.CellMissionCheckBinding
-import com.instructor.manito.lib.Util
+import com.instructor.manito.lib.Authentication
+import com.instructor.manito.lib.Database
 
-class MissionCheckAdapter(private val context: Context, private var listData: List<String>) :
+class MissionCheckAdapter(private val context: Context, private var listData: List<String>, private val rid: String) :
     RecyclerView.Adapter<MissionCheckAdapter.Holder>() {
 
     private val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
@@ -18,7 +19,7 @@ class MissionCheckAdapter(private val context: Context, private var listData: Li
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder.binding(listData[position])
+        holder.binding(listData[position], position)
      }
 
     override fun getItemCount(): Int {
@@ -27,13 +28,14 @@ class MissionCheckAdapter(private val context: Context, private var listData: Li
 
 
     inner class Holder(private val bind: CellMissionCheckBinding) : RecyclerView.ViewHolder(bind.root) {
-        fun binding(mission: String) {
+        fun binding(mission: String, position: Int) {
 
             with(bind) {
                 cellMissionText.text = mission
+                val ref = Database.getReference("games/$rid/${Authentication.uid}/missions/$mission")
 
-                missionCheckBox.setOnCheckedChangeListener { compoundButton, b ->
-                    Util.j(missionCheckBox.isChecked)
+                missionCheckBox.setOnCheckedChangeListener { _, _ ->
+                    ref.setValue(missionCheckBox.isChecked)
                 }
             }
 
