@@ -44,6 +44,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(bind.root)
 
+
         with(bind) {
             kakaoLoginButton.setOnClickListener {
                 UserApiClient.instance.run {
