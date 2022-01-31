@@ -9,8 +9,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
-import com.instructor.manito.MainMyRoomAdapter
-import com.instructor.manito.MainRoomAdapter
 import com.instructor.manito.databinding.ActivityMainBinding
 import com.instructor.manito.databinding.AlertdialogEdittextBinding
 import com.instructor.manito.databinding.DialogEditnameBinding
@@ -19,6 +17,8 @@ import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
 import com.instructor.manito.lib.Util
 import com.instructor.manito.view.login.main.CreateActivity
+import com.instructor.manito.view.login.main.MainMyRoomAdapter
+import com.instructor.manito.view.login.main.MainRoomAdapter
 import splitties.activities.start
 import splitties.toast.toast
 

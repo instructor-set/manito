@@ -46,7 +46,7 @@ class CreateActivity : AppCompatActivity() {
                 }
                 val room = Room(rid, titleEditText.text.toString(), passwordEditText.text.toString(),
                     dummy(16) as Int?,
-                    listOf(uid),
+                    mapOf("$uid!" to uid),
                     uid,
                     Room.STATE_WAIT,
                     missions.distinct()

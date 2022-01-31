@@ -10,7 +10,7 @@ data class Room(
     var title: String? = null,
     var password: String? = null,
     var maxUsers: Int? = 0,
-    var users: List<String>? = null,
+    var users: Map<String, String>? = null,
     var manager: String? = null,
     var state: String? = STATE_WAIT,
     var missions: List<String>? = null

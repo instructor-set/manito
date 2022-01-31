@@ -1,4 +1,4 @@
-package com.instructor.manito
+package com.instructor.manito.view.login.main
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -19,7 +19,6 @@ import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
 import com.instructor.manito.lib.Util
-import com.instructor.manito.view.login.main.RoomActivity
 import splitties.activities.start
 import splitties.bundle.putExtras
 
@@ -28,12 +27,12 @@ class MainRoomAdapter(private val context: Context, private var listData: ArrayL
 
     val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainRoomAdapter.Holder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = CellMainBinding.inflate(inflater, parent, false)
         return Holder(view)
     }
 
-    override fun onBindViewHolder(holder: MainRoomAdapter.Holder, position: Int) {
+    override fun onBindViewHolder(holder: Holder, position: Int) {
         val room: Room = listData[position]
         //Log.e("dataList", "data : $listData")
         holder.binding(room)
@@ -57,7 +56,7 @@ class MainRoomAdapter(private val context: Context, private var listData: ArrayL
                     }
                 } else {
                     val updates = hashMapOf(
-                        "rooms/$rid/users" to listOf(uid),
+                        "rooms/$rid/users/$uid!" to uid,
                         "users/$uid/rooms/$rid" to ServerValue.TIMESTAMP
                     )
                     Database.getReference("")

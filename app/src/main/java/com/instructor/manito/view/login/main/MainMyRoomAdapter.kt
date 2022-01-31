@@ -1,4 +1,4 @@
-package com.instructor.manito
+package com.instructor.manito.view.login.main
 
 import android.content.Context
 import android.content.DialogInterface
@@ -12,6 +12,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
+import com.instructor.manito.R
 import com.instructor.manito.databinding.CellMyRoomBinding
 import com.instructor.manito.dto.Chat
 import com.instructor.manito.dto.Game
@@ -20,7 +21,6 @@ import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
 import com.instructor.manito.lib.Util
 import com.instructor.manito.view.login.MainActivity
-import com.instructor.manito.view.login.main.RoomActivity
 import splitties.activities.start
 import splitties.bundle.putExtras
 
@@ -28,12 +28,12 @@ import splitties.bundle.putExtras
 class MainMyRoomAdapter(private val context: Context, private var listData: ArrayList<Room>) :
     RecyclerView.Adapter<MainMyRoomAdapter.Holder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainMyRoomAdapter.Holder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = CellMyRoomBinding.inflate(LayoutInflater.from(context), parent, false)
         return Holder(view)
     }
 
-    override fun onBindViewHolder(holder: MainMyRoomAdapter.Holder, position: Int) {
+    override fun onBindViewHolder(holder: Holder, position: Int) {
         val room: Room = listData[position]
         //Log.e("dataList", "data : $listData")
         holder.binding(room)
