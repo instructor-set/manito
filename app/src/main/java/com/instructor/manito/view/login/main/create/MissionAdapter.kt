@@ -1,4 +1,4 @@
-package com.instructor.manito
+package com.instructor.manito.view.login.main.create
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -12,12 +12,12 @@ import com.instructor.manito.databinding.CellMissionBinding
 class MissionAdapter(private val context: Context, private var listData: ArrayList<String>) :
   RecyclerView.Adapter<MissionAdapter.Holder>() {
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MissionAdapter.Holder {
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
     val view = CellMissionBinding.inflate(LayoutInflater.from(context), parent, false)
     return Holder(view)
   }
 
-  override fun onBindViewHolder(holder: MissionAdapter.Holder, position: Int) {
+  override fun onBindViewHolder(holder: Holder, position: Int) {
     val mission: String = listData[position]
     holder.binding(mission)
   }

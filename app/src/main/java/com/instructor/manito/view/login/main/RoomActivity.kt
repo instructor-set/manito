@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -19,7 +18,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
-import com.instructor.manito.*
+import com.instructor.manito.FinishFragment
+import com.instructor.manito.R
+import com.instructor.manito.RoomChatAdapter
+import com.instructor.manito.ShowAllFragment
 import com.instructor.manito.databinding.ActivityRoomBinding
 import com.instructor.manito.dto.Chat
 import com.instructor.manito.dto.Game
@@ -27,11 +29,10 @@ import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
 import com.instructor.manito.lib.Util
+import com.instructor.manito.view.login.main.room.MissionCheckAdapter
 import splitties.bundle.BundleSpec
 import splitties.bundle.bundle
 import splitties.bundle.withExtras
-import splitties.toast.toast
-import java.util.*
 import kotlin.collections.set
 
 class RoomActivity : AppCompatActivity() {
@@ -202,10 +203,6 @@ class RoomActivity : AppCompatActivity() {
             }
 
             Database.getReference("rooms/${room.rid}/users").addChildEventListener(roomChildEventListener)
-
-
-            Database.getReference("rooms/${room.rid}/users")
-                .addChildEventListener(roomChildEventListener)
 
             Database.getReference("rooms/${room.rid}/state").get().addOnSuccessListener {
                 if(it.value.toString() == "START"){

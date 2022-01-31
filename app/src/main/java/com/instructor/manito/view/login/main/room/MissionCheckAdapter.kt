@@ -1,4 +1,4 @@
-package com.instructor.manito
+package com.instructor.manito.view.login.main.room
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -12,12 +12,12 @@ class MissionCheckAdapter(private val context: Context, private var listData: Li
 
     private val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MissionCheckAdapter.Holder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = CellMissionCheckBinding.inflate(inflater, parent, false)
         return Holder(view)
     }
 
-    override fun onBindViewHolder(holder: MissionCheckAdapter.Holder, position: Int) {
+    override fun onBindViewHolder(holder: Holder, position: Int) {
         holder.binding(listData[position])
      }
 
