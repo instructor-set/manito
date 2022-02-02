@@ -4,9 +4,10 @@ plugins {
     id 'com.google.gms.google-services'
     id 'kotlin-parcelize'
 }
+apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         applicationId "com.instructor.manito"
@@ -45,7 +46,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
     implementation 'com.google.firebase:firebase-database-ktx'
-
+    //dynamiclink
+    implementation 'com.google.firebase:firebase-dynamic-links-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
     implementation("com.louiscad.splitties:splitties-activities:$splitties_version")
     implementation("com.louiscad.splitties:splitties-bundle:$splitties_version")
@@ -61,8 +64,14 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation 'androidx.navigation:navigation-runtime-ktx:2.3.5'
+    implementation 'com.google.android.gms:play-services-appinvite:18.0.0'
     testImplementation 'junit:junit:4.13.2'
     implementation 'com.baoyz.pullrefreshlayout:library:1.2.0'
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-
+}
+repositories {
+    mavenCentral()
 }

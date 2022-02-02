@@ -138,7 +138,13 @@
             android:text="TextView" />
     </androidx.appcompat.widget.Toolbar>
 
-
+    <TextView
+        android:id="@+id/linkviewReceive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="36dp"
+        tools:layout_editor_absoluteY="36dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

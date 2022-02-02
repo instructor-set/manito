@@ -9,13 +9,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Manito">
+        <meta-data
+            android:name="asset_statements"
+            android:resource="@string/asset_statements" />
+
         <activity
             android:name=".ShowAllActivity"
             android:exported="true" />
         <activity
             android:name=".FinishActivity"
             android:exported="true" />
-        <activity android:name=".RoomActivity" />
+        <activity
+            android:name=".RoomActivity"
+            android:exported="true">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="manito.page.link" android:scheme="http"/>
+                <data android:host="manito.page.link" android:scheme="https"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".CreateActivity"
             android:windowSoftInputMode="adjustPan" />
@@ -31,6 +45,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

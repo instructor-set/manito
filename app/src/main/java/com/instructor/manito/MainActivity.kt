@@ -1,11 +1,15 @@
 package com.instructor.manito
 
 
+import android.R
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.instructor.manito.databinding.ActivityMainBinding
@@ -16,6 +20,7 @@ import com.instructor.manito.lib.Database
 import com.instructor.manito.lib.Util
 import splitties.activities.start
 import splitties.toast.toast
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -83,8 +88,6 @@ class MainActivity : AppCompatActivity() {
 
         }
         test()
-
-
     }
 
     fun refreshRoomList(refreshing: Boolean) {
