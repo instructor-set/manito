@@ -22,8 +22,10 @@
             android:id="@+id/nicknameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/gray_400"
+            android:textColor="@color/whiteGray"
             android:textSize="12dp"
+            android:textStyle="normal"
+            android:fontFamily="@font/font_custom"
             app:layout_constraintStart_toStartOf="@+id/messageTextView"
             app:layout_constraintTop_toBottomOf="@+id/messageTextView"
             tools:text="recsater" />
@@ -34,6 +36,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/whiteGray"
             android:textSize="10dp"
+            android:textStyle="normal"
+            android:fontFamily="@font/font_custom"
             app:layout_constraintBottom_toBottomOf="@+id/messageTextView"
             app:layout_constraintStart_toEndOf="@+id/messageTextView"
             tools:text="오후 11:11" />
@@ -43,8 +47,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/left"
-            android:textColor="@color/white"
             android:textSize="14dp"
+            android:backgroundTint="@color/left"
+            android:textStyle="normal"
+            android:textColor="@color/textColor"
+            android:fontFamily="@font/font_custom"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="a" />

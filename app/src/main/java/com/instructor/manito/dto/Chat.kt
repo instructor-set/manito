@@ -12,5 +12,7 @@ data class Chat(
         const val TYPE_EXIT = 2
         const val MESSAGE_ENTER = "_ENTER_MESSAGE"
         const val MESSAGE_EXIT = "_EXIT_MESSAGE"
+        const val MANITO_MESSAGE = "_MANITO1"
+        const val MANITO_MESSAGE_2 = "_MANITO2"
     }
 }

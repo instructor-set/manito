@@ -10,9 +10,25 @@
         <item name="colorSecondaryVariant">@color/g5</item>
         <item name="colorOnSecondary">@color/g6</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="materialAlertDialogTheme">@style/MaterialAlertDialogTheme</item>
+    </style>
+    <style name="MaterialAlertDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="buttonBarPositiveButtonStyle">@style/Alert.Button.Positive</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Alert.Button.Neutral</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Alert.Button.Neutral</item>
+    </style>
+
+    <style name="Alert.Button.Positive" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="rippleColor">@color/light_blue_400</item>
+        <item name="android:textColor">@color/purple_500</item>
+    </style>
+
+    <style name="Alert.Button.Neutral" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="rippleColor">@color/white</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 </resources>

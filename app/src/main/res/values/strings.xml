@@ -16,6 +16,8 @@
     <string name="title_dialog_nickname">닉네임을 입력하세요.</string>
     <string name="enter_message">%1$s 님이 입장하셨습니다.</string>
     <string name="exit_message">%1$s 님이 퇴장하셨습니다.</string>
+    <string name="manito_message_1">%당신은 %1s 님의 마니또 입니다.</string>
+    <string name="manito_message_2">당신의 마니또는 %1s 님 입니다.</string>
     <string name="player">참가자</string>
     <string name="my_manito">내 마니또</string>
     <string name="title_gizmos" />

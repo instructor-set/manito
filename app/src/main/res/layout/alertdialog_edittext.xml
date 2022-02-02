@@ -6,6 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <EditText
+        android:textStyle="normal"
+        android:fontFamily="@font/font_custom"
         android:id="@+id/alertEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

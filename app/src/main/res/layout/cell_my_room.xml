@@ -10,9 +10,9 @@
         android:layout_height="150dp"
         android:background="@drawable/view_background"
         android:orientation="vertical"
+        android:outlineAmbientShadowColor="@color/g4"
         android:outlineProvider="background"
         android:outlineSpotShadowColor="@color/g4"
-        android:outlineAmbientShadowColor="@color/g4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,9 +22,10 @@
             android:id="@+id/cellRoomTitleText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/font_custom"
             android:text="방제목"
             android:textAlignment="center"
-            android:textColor="#000000"
+            android:textColor="@color/textColor"
             android:textSize="24dp"
             android:textStyle="bold" />
 
@@ -33,40 +34,44 @@
             android:id="@+id/cellMyManitoText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/font_custom"
             android:text="내 마니또"
             android:textAlignment="center"
             android:textColor="#888181"
-            android:textSize="14dp" />
+            android:textSize="14dp"
+            android:textStyle="normal" />
 
         <TextView
             android:id="@+id/cellRoomStateText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/font_custom"
             android:text="방 상태"
             android:textAlignment="center"
             android:textColor="#888181"
-            android:textSize="14dp" />
+            android:textSize="14dp"
+            android:textStyle="normal" />
 
         <TextView
             android:id="@+id/blankText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/font_custom"
             android:textAlignment="viewStart"
             android:textColor="#888181"
-            android:textSize="8dp" />
+            android:textSize="8dp"
+            android:textStyle="normal" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/exitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
             android:background="@drawable/shadow"
             android:text="방 나가기"
-            android:layout_marginStart="4dp"
             android:textAlignment="center"
             android:textColor="#888181"
             android:textSize="14dp" />
-
-
 
 
     </LinearLayout>
