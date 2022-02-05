@@ -7,10 +7,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import com.instructor.manito.view.login.MainActivity
 import com.instructor.manito.R
 import com.instructor.manito.databinding.ActivityLoginBinding
 import com.instructor.manito.dto.Message
@@ -19,6 +17,7 @@ import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
 import com.instructor.manito.lib.Util
 import com.instructor.manito.network.RetrofitClient
+import com.instructor.manito.view.login.MainActivity
 import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.auth.TokenManager
 import com.kakao.sdk.auth.model.OAuthToken
