@@ -2,6 +2,7 @@ package com.instructor.manito.view.login.main.room
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.instructor.manito.databinding.CellMissionCheckBinding
@@ -26,6 +27,9 @@ class MissionCheckAdapter(private val context: Context, private var listData: Li
         return listData.size
     }
 
+    var isGameStart = false
+
+
 
     inner class Holder(private val bind: CellMissionCheckBinding) : RecyclerView.ViewHolder(bind.root) {
         fun binding(mission: String, position: Int) {
@@ -36,6 +40,11 @@ class MissionCheckAdapter(private val context: Context, private var listData: Li
 
                 missionCheckBox.setOnCheckedChangeListener { _, _ ->
                     ref.setValue(missionCheckBox.isChecked)
+                }
+                if (isGameStart) {
+                    missionCheckBox.visibility = View.VISIBLE
+                } else {
+                    missionCheckBox.visibility = View.GONE
                 }
             }
 

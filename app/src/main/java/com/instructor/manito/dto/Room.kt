@@ -20,6 +20,7 @@ data class Room(
         const val STATE_WAIT = "WAIT"
         const val STATE_READY = "READY"
         const val STATE_START = "START"
+        const val STATE_END = "END"
     }
 
 }

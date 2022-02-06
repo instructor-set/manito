@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.Manito" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/g1</item>
+        <item name="colorPrimary">@color/g3</item>
         <item name="colorPrimaryVariant">@color/g2</item>
         <item name="colorOnPrimary">@color/g3</item>
         <!-- Secondary brand color. -->

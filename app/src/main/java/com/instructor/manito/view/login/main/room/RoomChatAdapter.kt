@@ -1,10 +1,11 @@
-package com.instructor.manito
+package com.instructor.manito.view.login.main.room
 
 import android.content.Context
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.instructor.manito.R
 import com.instructor.manito.databinding.LayoutImportantMessageBinding
 import com.instructor.manito.databinding.LayoutLeftMessageBinding
 import com.instructor.manito.databinding.LayoutRightMessageBinding
@@ -76,7 +77,9 @@ class RoomChatAdapter(private val context: Context, private val chatList: ArrayL
               messageTextView1.text = context.getString(R.string.exit_message, it)
             }
           }
-          else -> {}
+          else -> {
+            messageTextView1.text = chat.message
+          }
         }
       }
     }

@@ -7,7 +7,6 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
@@ -19,7 +18,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
 import com.instructor.manito.R
-import com.instructor.manito.RoomChatAdapter
 import com.instructor.manito.ShowAllFragment
 import com.instructor.manito.databinding.ActivityRoomBinding
 import com.instructor.manito.dto.Chat
@@ -30,6 +28,7 @@ import com.instructor.manito.lib.Database
 import com.instructor.manito.lib.Util
 import com.instructor.manito.view.login.main.room.FinishFragment
 import com.instructor.manito.view.login.main.room.MissionCheckAdapter
+import com.instructor.manito.view.login.main.room.RoomChatAdapter
 import splitties.bundle.BundleSpec
 import splitties.bundle.bundle
 import splitties.bundle.withExtras
@@ -166,6 +165,7 @@ class RoomActivity : AppCompatActivity() {
             }
             button1.setOnClickListener {
                 if (button1.text.equals("게임 시작")) {
+                    menuVisibility()
                     Database.getReference("rooms/${room.rid}/state").setValue(Room.STATE_READY)
                         .addOnSuccessListener {
                             Database.getReference("rooms/${room.rid}/users").get()
@@ -190,11 +190,13 @@ class RoomActivity : AppCompatActivity() {
                                                 "games/${room.rid}" to games,
                                                 "rooms/${room.rid}/state" to Room.STATE_START)
                                         )
+                                    Database.sendChat(room.rid!!, Chat.TYPE_IMPORTANT, "게임이 시작되었습니다.")
                                 }
                         }
 
                 } else {
-                    Toast.makeText(this@RoomActivity, "게임 종료", Toast.LENGTH_SHORT).show()
+                    Database.getReference("rooms/${room.rid}/state").setValue(Room.STATE_END)
+                    Database.sendChat(room.rid!!, Chat.TYPE_IMPORTANT, "게임이 종료되었습니다.")
                 }
 
             }
@@ -205,12 +207,29 @@ class RoomActivity : AppCompatActivity() {
             Database.getReference("rooms/${room.rid}/users")
                 .addChildEventListener(roomChildEventListener)
 
-            Database.getReference("rooms/${room.rid}/state").get().addOnSuccessListener {
-                if (it.value.toString() == "START") {
-                    button1.text = "게임 종료"
-                    button1.text = "게임 종료"
-                }
+            root.setOnClickListener {
+                Util.j(it.id)
             }
+            Database.getReference("rooms/${room.rid}/state")
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        when (snapshot.getValue(String::class.java)) {
+                            Room.STATE_START -> {
+                                button1.text = "게임 종료"
+                                missionCheckAdapter.isGameStart = true
+                                missionCheckAdapter.notifyDataSetChanged()
+                            }
+                            Room.STATE_END -> {
+                                button1.visibility = View.GONE
+                                button2.visibility = View.VISIBLE
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+
+                })
 
             //미션창
             missionRecyclerRoom.layoutParams.height = 0

@@ -23,7 +23,6 @@ class FinishFragment : Fragment() {
 
 
 
-
     var roomActivity: RoomActivity? = null
 
     override fun onAttach(context: Context) {
