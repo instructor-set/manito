@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
     private val myRoomValueEventListenerMap = hashMapOf<String, ValueEventListener>()
     private val roomAdapter = MainMyRoomAdapter(this@MainActivity, myRoomList)
 
-    fun withDynamicLink() {
+    private fun withDynamicLink() {
         Firebase.dynamicLinks
             .getDynamicLink(intent)
             .addOnSuccessListener(this) {  data: PendingDynamicLinkData? ->
