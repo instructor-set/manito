@@ -257,7 +257,7 @@ class RoomActivity : AppCompatActivity() {
 
             //링크생성
             shareButton.setOnClickListener{
-                test(this@RoomActivity, "a")
+                test(this@RoomActivity, room.rid!!)
 //                createDynamicLink()
 //                createShortDynamicLink()
 ////                getInvitation()
@@ -493,26 +493,6 @@ class RoomActivity : AppCompatActivity() {
 
     }
 
-    fun processShortLink(shortLink: Uri?, previewLink: Uri?) {
-        shortLink?.let { shareLink(it) }
-        Log.d("A", shortLink.toString())
-        Log.d("A", previewLink.toString())
-    }
-
-    fun createDynamicLink(){
-        val dynamicLink = Firebase.dynamicLinks.dynamicLink {
-            link = Uri.parse("https://manito.page.link/")
-            domainUriPrefix = "https://manito.page.link"
-            // Open links with this app on Android
-            androidParameters { }
-            // Open links with com.example.ios on iOS
-            iosParameters("com.example.ios") { }
-        }
-
-        val dynamicLinkUri = dynamicLink.uri
-        Log.d("DynamicLink!!", dynamicLinkUri.toString())
-    }
-
     fun getInviteDeepLink(roomId: String,): Uri {
 
         return Uri.parse("https://manito.page.link/game/${roomId}")
@@ -520,14 +500,13 @@ class RoomActivity : AppCompatActivity() {
 
     fun test(activity: Activity, roomId: String){
         FirebaseDynamicLinks.getInstance().createDynamicLink()
-            .setLink(getInviteDeepLink("example"))
+            .setLink(getInviteDeepLink(roomId))
             .setDynamicLinkDomain("manito.page.link")
             .buildShortDynamicLink()
             .addOnCompleteListener(activity){
                 task-> if(task.isSuccessful){
                     val shortLink: Uri = task.result.shortLink!!
                 try{
-                    Log.d("testCod", shortLink.toString())
                     val sendIntent = Intent()
                     sendIntent.action = Intent.ACTION_SEND
                     sendIntent.putExtra(Intent.EXTRA_TEXT, shortLink.toString())
@@ -541,36 +520,6 @@ class RoomActivity : AppCompatActivity() {
             }
     }
 
-    fun test2() {
-        Firebase.dynamicLinks
-            .getDynamicLink(intent)
-            .addOnSuccessListener(this) { pendingDynamicLinkData ->
-                var deeplink: Uri? = null
-                if (pendingDynamicLinkData != null) {
-                    deeplink = pendingDynamicLinkData.link
-                }
-
-                if (deeplink != null) {
-                    val segment: String = deeplink.lastPathSegment!!
-                    Log.d("test", segment.toString())
-                }
-            }
-    }
-
-
-                fun createShortDynamicLink() {
-                    val shortLink = Firebase.dynamicLinks.shortLinkAsync {
-                        link = getInviteDeepLink("example")
-                        domainUriPrefix = "https://manito.page.link"
-
-                    }.addOnSuccessListener { (shortLink, flowchartLink) ->
-
-
-                        processShortLink(shortLink, flowchartLink)
-                    }.addOnFailureListener {
-                        //error
-                    }
-                }
 
                 fun shareLink(myDynamicLink: Uri) {
                     // [START ddl_share_link]
@@ -617,22 +566,5 @@ class RoomActivity : AppCompatActivity() {
                         }
                 }
 
-                fun getInvitation() {
-                    // [START ddl_get_invitation]
-                    Firebase.dynamicLinks
-                        .getDynamicLink(intent)
-                        .addOnCompleteListener { task ->
-                            if (!task.isSuccessful) {
-                                // Handle error
-                                // ...
-                            }
-                            val invite = FirebaseAppInvite.getInvitation(task.result)
-                            if (invite != null) {
-                                // Handle invite
-                                // ...
-                            }
-                        }
-                    // [END ddl_get_invitation]
-                }
 
 }

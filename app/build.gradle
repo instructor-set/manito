@@ -69,12 +69,9 @@ dependencies {
     implementation 'com.baoyz.pullrefreshlayout:library:1.2.0'
     implementation "androidx.core:core-ktx:+"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "com.kakao.sdk:v2-user:2.8.4"
 
 }
 repositories {
     mavenCentral()
-}
-
-    implementation "com.kakao.sdk:v2-user:2.8.4"
-
 }
