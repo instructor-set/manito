@@ -212,6 +212,10 @@ class RoomActivity : AppCompatActivity() {
                                     Database.sendChat(room.rid!!,
                                         Chat.TYPE_IMPORTANT,
                                         "게임이 시작되었습니다.")
+                                    Database.sendChat(room.rid!!,
+                                        Chat.TYPE_IMPORTANT,
+                                        "오른쪽 상단 메뉴 버튼을 클릭해 내 마니또를 확인할 수 있습니다.")
+
                                 }
                         }
 
@@ -263,10 +267,6 @@ class RoomActivity : AppCompatActivity() {
             constraintLayout7.setOnClickListener {
                 menuVisibility()
             }
-
-            val transaction =
-                supportFragmentManager.beginTransaction().add(R.id.frameLayout, FinishFragment())
-            transaction.commit()
             button2.setOnClickListener {
                 setFragment(false)
             }
@@ -375,6 +375,10 @@ class RoomActivity : AppCompatActivity() {
 
     }
 
+    private val finishFragment by lazy {
+        FinishFragment.newInstance(room.rid)
+    }
+
     fun setFragment(showAll: Boolean) {
         with(bind) {
             if (showAll) {
@@ -384,7 +388,7 @@ class RoomActivity : AppCompatActivity() {
             } else {
                 showFragment = !showFragment
                 val transaction = supportFragmentManager.beginTransaction()
-                    .replace(R.id.frameLayout, FinishFragment())
+                    .replace(R.id.frameLayout, finishFragment)
                 transaction.commit()
                 frameLayout.visibility = if (showFragment) View.VISIBLE else View.GONE
 

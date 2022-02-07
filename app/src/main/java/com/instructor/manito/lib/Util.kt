@@ -13,7 +13,7 @@ object Util {
     fun j(msg: Any?) = Log.d("jinha", "$msg")
     fun dummy(any: Any?) = any
 
-    fun uidToNickname(uid: String, listener: (Any?) -> Unit): String? {
+    fun uidToNickname(uid: String, repeat: Boolean = false, listener: (Any?) -> Unit): String? {
         return if (nicknameMap.containsKey(uid)) {
             val nickname = nicknameMap.getValue(uid)
             listener(nickname)
@@ -24,7 +24,7 @@ object Util {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val nickname = snapshot.getValue<String>() ?: MESSAGE_UNDEFINED
                     nicknameMap[uid] = nickname
-                    if (first) {
+                    if (first || repeat) {
                         first = false
                         listener(nickname)
                     }

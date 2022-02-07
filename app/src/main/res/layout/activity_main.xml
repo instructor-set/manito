@@ -25,10 +25,11 @@
 
         <ImageButton
             android:id="@+id/edit_name"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="#00FFFFFF"
-            android:scaleType="fitXY"
+            android:paddingRight="24dp"
+            android:scaleType="fitCenter"
             android:src="@drawable/ic_edit"
             app:tint="@color/g5"
             tools:layout_editor_absoluteX="52dp"
@@ -127,7 +128,10 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/createRoomButton"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="130dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/shadow"
             android:fontFamily="@font/font_custom"
             android:shadowColor="@color/g4"
@@ -136,23 +140,9 @@
             android:textSize="18dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/enterRoomButton"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/enterRoomButton"
-            android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:background="@drawable/shadow"
-            android:fontFamily="@font/font_custom"
-            android:shadowColor="@color/g4"
-            android:text="방 입장하기"
-            android:textColor="@color/textColor"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/createRoomButton" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

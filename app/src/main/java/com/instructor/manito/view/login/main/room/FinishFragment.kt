@@ -6,7 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.google.firebase.database.ktx.getValue
 import com.instructor.manito.databinding.FragmentFinishBinding
+import com.instructor.manito.lib.Authentication
+import com.instructor.manito.lib.Database
+import com.instructor.manito.lib.Util
 import com.instructor.manito.view.login.main.RoomActivity
 
 // TODO: Rename parameter arguments, choose names that match
@@ -22,6 +26,7 @@ private const val ARG_PARAM2 = "param2"
 class FinishFragment : Fragment() {
 
 
+    var rid: String? = null
 
     var roomActivity: RoomActivity? = null
 
@@ -36,27 +41,35 @@ class FinishFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         var bind = FragmentFinishBinding.inflate(inflater, container, false)
-        with(bind){
-            bind.finishShowAllButton.setOnClickListener {
+        with(bind) {
+            finishShowAllButton.setOnClickListener {
                 roomActivity!!.setFragment(true)
             }
+            Database.getReference("games/${rid}/${Authentication.uid}/manito").get()
+                .addOnSuccessListener {
+                    Util.uidToNickname(it.getValue<String>()!!) { myManito ->
+                        finishText2.text = "당신은 ${myManito}의 마니또였습니다."
+                        Database.getReference("games/${rid}/$it/manito").get()
+                            .addOnSuccessListener { that ->
+                                Util.uidToNickname(that.getValue<String>()!!) { maManito ->
+                                    finishText3.text = "${myManito}의 마니또는 ${maManito}였습니다."
+                                }
+                            }
+                    }
+                }
+
+
+
+            return root
         }
-        return bind.root
+
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FinishFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(rid: String?) =
             FinishFragment().apply {
+                this.rid = rid
             }
     }
 }
