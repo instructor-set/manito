@@ -43,7 +43,7 @@ class MainRoomAdapter(private val context: Context, private var listData: ArrayL
         //Log.e("dataList", "size : ${listData.size}")
     }
 
-    private fun enterRoom(context: Context, rid: String?, uid: String?) {
+    fun enterRoom(context: Context, rid: String?, uid: String?) {
 
         Database.getReference("rooms/$rid").get().addOnSuccessListener {
             val room = it.getValue<Room>()

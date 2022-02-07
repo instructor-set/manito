@@ -21,7 +21,16 @@
         <activity
             android:name=".view.login.main.CreateActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".view.login.MainActivity" />
+        <activity android:name=".view.login.MainActivity"
+            android:exported="true">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="manito.page.com" android:scheme="manito"/>
+                <data android:host="manito.page.com" android:scheme="https"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".view.LoginActivity"
             android:noHistory="true"/>
         <activity

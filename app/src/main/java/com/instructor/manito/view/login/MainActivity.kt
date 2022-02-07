@@ -7,8 +7,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.database.*
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData
+import com.google.firebase.dynamiclinks.ktx.dynamicLinks
+import com.google.firebase.ktx.Firebase
 import com.instructor.manito.databinding.ActivityMainBinding
 import com.instructor.manito.databinding.AlertdialogEdittextBinding
 import com.instructor.manito.databinding.DialogEditnameBinding
@@ -16,6 +22,7 @@ import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
 import com.instructor.manito.lib.Util
+import com.instructor.manito.view.LoginActivity
 import com.instructor.manito.view.login.main.CreateActivity
 import com.instructor.manito.view.login.main.MainMyRoomAdapter
 import com.instructor.manito.view.login.main.MainRoomAdapter
@@ -39,14 +46,27 @@ class MainActivity : AppCompatActivity() {
     private val myRoomValueEventListenerMap = hashMapOf<String, ValueEventListener>()
     private val roomAdapter = MainMyRoomAdapter(this@MainActivity, myRoomList)
 
+    fun withDynamicLink() {
+        Firebase.dynamicLinks
+            .getDynamicLink(intent)
+            .addOnSuccessListener(this) {  data: PendingDynamicLinkData? ->
+                data?.link?.lastPathSegment?.let {
+                    adapter.enterRoom(this, it, Authentication.uid)
+                }
+            }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         with(bind) {
             setContentView(root)
 
+
             if (!Authentication.isLoggedIn()) {
                 finish()
+                start<LoginActivity>()
             }
+            withDynamicLink()
             Util.uidToNickname(Authentication.uid.toString()) {
                 if (it != Util.MESSAGE_UNDEFINED) {
                     toolbar.title = it as String

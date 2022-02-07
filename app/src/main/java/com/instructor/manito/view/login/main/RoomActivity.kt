@@ -1,6 +1,8 @@
 package com.instructor.manito.view.login.main
 
 import android.animation.ValueAnimator
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,6 +19,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.dynamiclinks.ktx.androidParameters
+import com.google.firebase.dynamiclinks.ktx.dynamicLink
+import com.google.firebase.dynamiclinks.ktx.dynamicLinks
+import com.google.firebase.ktx.Firebase
 import com.instructor.manito.R
 import com.instructor.manito.ShowAllFragment
 import com.instructor.manito.databinding.ActivityRoomBinding
@@ -120,6 +126,19 @@ class RoomActivity : AppCompatActivity() {
 
 
         with(bind) {
+            shareButton.setOnClickListener {
+                val dynamicLink = Firebase.dynamicLinks.dynamicLink {
+                    link = Uri.parse("https://manito.page.com/${room.rid}")
+                    domainUriPrefix = "https://manito.page.link/"
+                    androidParameters { }
+                }
+                startActivity(Intent.createChooser(Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, dynamicLink.uri.toString())
+                    type = "text/plain"
+                }, "Share"))
+            }
+
             sendButton.isEnabled = false
             titleText.text = room.title
             passwordText.text = room.password
@@ -190,7 +209,9 @@ class RoomActivity : AppCompatActivity() {
                                                 "games/${room.rid}" to games,
                                                 "rooms/${room.rid}/state" to Room.STATE_START)
                                         )
-                                    Database.sendChat(room.rid!!, Chat.TYPE_IMPORTANT, "게임이 시작되었습니다.")
+                                    Database.sendChat(room.rid!!,
+                                        Chat.TYPE_IMPORTANT,
+                                        "게임이 시작되었습니다.")
                                 }
                         }
 
