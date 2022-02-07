@@ -2,14 +2,11 @@ package com.instructor.manito
 
 import android.animation.ValueAnimator
 import android.app.Activity
-import android.content.ActivityNotFoundException
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
@@ -19,22 +16,14 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.navigation.NavDeepLinkBuilder
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.appinvite.FirebaseAppInvite
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
-import com.instructor.manito.R
-import com.instructor.manito.RoomChatAdapter
-import com.instructor.manito.ShowAllFragment
-import com.google.firebase.dynamiclinks.DynamicLink
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
-import com.google.firebase.dynamiclinks.ShortDynamicLink
-import com.google.firebase.dynamiclinks.ktx.*
+import com.google.firebase.dynamiclinks.ktx.androidParameters
+import com.google.firebase.dynamiclinks.ktx.dynamicLink
+import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.ktx.Firebase
 import com.instructor.manito.databinding.ActivityRoomBinding
 import com.instructor.manito.dto.Chat
@@ -46,14 +35,15 @@ import com.instructor.manito.lib.Util
 import com.instructor.manito.view.login.main.room.FinishFragment
 import com.instructor.manito.view.login.main.room.MissionCheckAdapter
 import splitties.bundle.BundleSpec
-import splitties.bundle.bundle
+import splitties.bundle.bundleOrDefault
+import splitties.bundle.putExtras
 import splitties.bundle.withExtras
 import kotlin.collections.set
 
 class RoomActivity : AppCompatActivity() {
 
     object Extras : BundleSpec() {
-        var room: Room by bundle()
+        var room: Room by bundleOrDefault(Room())
     }
 
 
@@ -133,6 +123,12 @@ class RoomActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(bind.root)
 
+        handleDeepLink()
+
+    }
+
+
+    fun init() {
         //share link
         val appLinkIntent = intent
         val appLinkAction = appLinkIntent.action
@@ -264,7 +260,6 @@ class RoomActivity : AppCompatActivity() {
 //                Log.d("dynamicLink","success")
             }
         }
-        handleDeepLink()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -493,31 +488,35 @@ class RoomActivity : AppCompatActivity() {
 
     }
 
-    fun getInviteDeepLink(roomId: String,): Uri {
-
-        return Uri.parse("https://manito.page.link/game/${roomId}")
-    }
 
     fun test(activity: Activity, roomId: String){
-        FirebaseDynamicLinks.getInstance().createDynamicLink()
-            .setLink(getInviteDeepLink(roomId))
-            .setDynamicLinkDomain("manito.page.link")
-            .buildShortDynamicLink()
-            .addOnCompleteListener(activity){
-                task-> if(task.isSuccessful){
-                    val shortLink: Uri = task.result.shortLink!!
-                try{
-                    val sendIntent = Intent()
-                    sendIntent.action = Intent.ACTION_SEND
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, shortLink.toString())
-                    sendIntent.type = "text/plain"
-                    activity.startActivity(Intent.createChooser(sendIntent, "Share"))
-                } catch(ignored: ActivityNotFoundException){
-                }
-                }else{
-                    Log.d("test",task.toString())
-                }
-            }
+        val dynamicLink = Firebase.dynamicLinks.dynamicLink {
+            link = Uri.parse("https://manito.page.com/${room.rid}")
+            domainUriPrefix = "https://manito.page.link/"
+            // Open links with this app on Android
+            androidParameters { }
+        }
+        Util.j(dynamicLink.uri)
+        val sendIntent = Intent()
+        sendIntent.action = Intent.ACTION_SEND
+        sendIntent.putExtra(Intent.EXTRA_TEXT, dynamicLink.uri.toString())
+        sendIntent.type = "text/plain"
+        activity.startActivity(Intent.createChooser(sendIntent, "Share"))
+//        FirebaseDynamicLinks.getInstance().createDynamicLink()
+//            .setLink(getInviteDeepLink(roomId))
+//            .setDynamicLinkDomain("manito.page.link")
+//            .buildShortDynamicLink()
+//            .addOnCompleteListener(activity){
+//                task-> if(task.isSuccessful){
+//                    val shortLink: Uri = task.result.shortLink!!
+//                try{
+
+//                } catch(ignored: ActivityNotFoundException){
+//                }
+//                }else{
+//                    Log.d("test",task.toString())
+//                }
+//            }
     }
 
 
@@ -535,35 +534,19 @@ class RoomActivity : AppCompatActivity() {
 
                 fun handleDeepLink() {
                     Firebase.dynamicLinks
-                        .getDynamicLink(intent)
-                        .addOnSuccessListener(this) { pendingDynamicLinkData ->
-                            // Get deep link from result (may be null if no link is found)
-                            var deepLink: Uri? = null
-                            if (pendingDynamicLinkData != null) {
-                                deepLink = pendingDynamicLinkData.link
-                            }
-                            var roomCode = deepLink?.lastPathSegment
-                            Log.d("AAwkfaksA", roomCode.toString())
-
-                            // [START_EXCLUDE]
-                            // Display deep link in the UI
-                            if (deepLink != null) {
-                                Snackbar.make(
-                                    findViewById(android.R.id.content),
-                                    "Found deep link!", Snackbar.LENGTH_LONG
-                                ).show()
-
-                                val linkReceiveTextView = bind.linkviewReceive2
-
-                                linkReceiveTextView.text = deepLink.toString()
+                        .getDynamicLink(intent).addOnSuccessListener(this) {
+                            if (it == null) {
+                                init()
                             } else {
-                                Log.d(this@RoomActivity.toString(), "getDynamicLink: no link found")
+                                Database.getReference("rooms/${it.link?.lastPathSegment}").get().addOnSuccessListener {
+                                    putExtras(Extras) {
+                                        room = it.getValue<Room>()!!
+                                    }
+                                    init()
+                                }
                             }
-                            // [END_EXCLUDE]
                         }
-                        .addOnFailureListener(this) { e ->
-                            Log.w(this@RoomActivity.toString(), "getDynamicLink:onFailure", e)
-                        }
+
                 }
 
 

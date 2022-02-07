@@ -22,7 +22,6 @@
         <activity
             android:name=".FinishActivity"
             android:exported="true" />
-        <activity android:name=".view.login.main.RoomActivity" />
         <activity
             android:name=".RoomActivity"
             android:exported="true">
@@ -30,8 +29,8 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="manito.page.link" android:scheme="http"/>
-                <data android:host="manito.page.link" android:scheme="https"/>
+                <data android:host="manito.page.com" android:scheme="http"/>
+                <data android:host="manito.page.com" android:scheme="https"/>
             </intent-filter>
         </activity>
         <activity
