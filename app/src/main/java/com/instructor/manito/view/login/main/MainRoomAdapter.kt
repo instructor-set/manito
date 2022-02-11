@@ -85,6 +85,7 @@ class MainRoomAdapter(private val context: Context, private var listData: ArrayL
 
             with(bind) {
                 cellTitleText.text = room.title
+                cellTitleText.isSelected = true
                 @SuppressLint("SetTextI18n")
                 cellNumberOfPeople.text = "${room.users?.size ?: 0}/${room.maxUsers}"
                 if (room.password.isNullOrBlank()) {
