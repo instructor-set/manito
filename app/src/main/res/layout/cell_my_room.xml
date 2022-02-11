@@ -9,7 +9,9 @@
         android:layout_width="100dp"
         android:layout_height="150dp"
         android:background="@drawable/view_background"
+        android:elevation="10dp"
         android:orientation="vertical"
+        android:weightSum="10"
         android:outlineAmbientShadowColor="@color/g4"
         android:outlineProvider="background"
         android:outlineSpotShadowColor="@color/g4"
@@ -21,9 +23,13 @@
         <TextView
             android:id="@+id/cellRoomTitleText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:fontFamily="@font/font_custom"
             android:text="방제목"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:layout_weight="3"
+            android:gravity="center"
             android:textAlignment="center"
             android:textColor="@color/textColor"
             android:textSize="24dp"
@@ -33,44 +39,59 @@
         <TextView
             android:id="@+id/cellMyManitoText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:fontFamily="@font/font_custom"
             android:text="내 마니또"
+            android:layout_weight="3"
+            android:singleLine="true"
+            android:gravity="center"
             android:textAlignment="center"
-            android:textColor="#888181"
+            android:textColor="@color/textColor"
             android:textSize="14dp"
             android:textStyle="normal" />
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="6dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/g2" />
 
         <TextView
             android:id="@+id/cellRoomStateText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:fontFamily="@font/font_custom"
             android:text="방 상태"
+            android:gravity="center"
+            android:layout_weight="3"
             android:textAlignment="center"
-            android:textColor="#888181"
+            android:textColor="@color/textColor"
             android:textSize="14dp"
             android:textStyle="normal" />
 
-        <TextView
-            android:id="@+id/blankText"
+        <View
+            android:id="@+id/view2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/font_custom"
-            android:textAlignment="viewStart"
-            android:textColor="#888181"
-            android:textSize="8dp"
-            android:textStyle="normal" />
+            android:layout_height="1px"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="6dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/g2" />
+
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/exitButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:background="@drawable/shadow"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:layout_margin="5dp"
+            android:background="@drawable/cellview"
             android:text="방 나가기"
+            android:elevation="4dp"
             android:textAlignment="center"
-            android:textColor="#888181"
+            android:textColor="@color/textColor"
             android:textSize="14dp" />
 
 

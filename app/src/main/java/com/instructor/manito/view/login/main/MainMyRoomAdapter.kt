@@ -51,6 +51,8 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
 
             with(bind) {
                 cellRoomTitleText.text = room.title
+                cellRoomTitleText.isSelected = true
+                cellMyManitoText.isSelected = true
                 cellRoomStateText.text = when(room.state) {
                     Room.STATE_WAIT -> "대기중"
                     Room.STATE_READY -> "준비"
@@ -66,10 +68,13 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
                         val game = snapshot.getValue<Game>()
                         if (game == null) {
                             cellMyManitoText.visibility = View.GONE
+                            view.visibility = View.GONE
                         } else {
                             Util.uidToNickname(game.manito!!) { nickname ->
                                 if (nickname != Util.MESSAGE_UNDEFINED) {
                                     cellMyManitoText.text = nickname as String
+                                    view.visibility = View.VISIBLE
+
                                 }
                             }
                         }
