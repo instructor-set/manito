@@ -245,6 +245,8 @@ class RoomActivity : AppCompatActivity() {
                                 missionCheckAdapter.notifyDataSetChanged()
                             }
                             Room.STATE_END -> {
+                                missionCheckAdapter.isGameStart = false
+                                missionCheckAdapter.notifyDataSetChanged()
                                 button1.visibility = View.GONE
                                 button2.visibility = View.VISIBLE
                             }

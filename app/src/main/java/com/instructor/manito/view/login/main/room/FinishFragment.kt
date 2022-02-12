@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.ktx.getValue
@@ -34,8 +33,8 @@ class FinishFragment : Fragment() {
     var roomActivity: RoomActivity? = null
 
     data class Mission(
-        val title : String = "",
-        val result : Boolean = false
+        val title: String = "",
+        val result: Boolean = false,
     )
 
     override fun onAttach(context: Context) {
@@ -57,20 +56,11 @@ class FinishFragment : Fragment() {
                 .addOnSuccessListener {
                     Util.uidToNickname(it.getValue<String>()!!) { myManito ->
                         finishText2.text = "당신은 ${myManito}의 마니또입니다."
-                        Database.getReference("games/${rid}").get()
+                        Database.getReference("games/${rid}/$it/manito").get()
                             .addOnSuccessListener { that ->
-                                that.children.forEach{
-                                    Util.j(it.value.toString())
-                                    Util.j(it.value.toString().split("="))
-                                    val uid = it.value.toString().split("=","}")[1]
-                                    Util.j(uid)
-                                    if(uid == Authentication.uid){
-                                        Util.uidToNickname(uid) { maManito ->
-                                            finishText3.text = "당신의 마니또는 ${maManito}입니다."
-                                        }
-                                    }
+                                Util.uidToNickname(that.getValue<String>()!!) { maManito ->
+                                    finishText3.text = "${myManito}의 마니또는 ${maManito}였습니다."
                                 }
-
                             }
                     }
                 }
@@ -96,13 +86,17 @@ class FinishFragment : Fragment() {
                 this.rid = rid
             }
     }
+
     inner class FinishMissionAdapter(
-        private var listData: ArrayList<Mission>
+        private var listData: ArrayList<Mission>,
     ) :
         RecyclerView.Adapter<FinishMissionAdapter.ViewHolder>() {
 
         val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FinishMissionAdapter.ViewHolder {
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int,
+        ): FinishMissionAdapter.ViewHolder {
             val view =
                 LayoutMissionBinding.inflate(inflater, parent, false)
             return ViewHolder(view)
@@ -126,9 +120,9 @@ class FinishFragment : Fragment() {
                     cellMissionText.isSelected = true
 
                     cellMissionTextResult.text =
-                        when(mission.result){
-                            true->" 성공"
-                            false->"실패"
+                        when (mission.result) {
+                            true -> " 성공"
+                            false -> "실패"
                         }
                 }
 
