@@ -13,48 +13,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
-            android:layout_width="0dp"
+        <FrameLayout
+            android:id="@+id/frameLayout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/buttonColor"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_margin="8dp"
+            android:background="@drawable/view_background"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout7"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <EditText
-                android:id="@+id/chatEditText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:background="@color/buttonColor"
-                android:hint="@string/text_sendMessage"
-                android:importantForAutofill="no"
-                android:inputType="textPersonName"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"
-                android:textStyle="normal"
-                android:fontFamily="@font/font_custom"
-                android:textColor="@color/textColor"
-                android:textColorHint="@color/whiteGray"
-                android:textSize="18dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/sendButton"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <ImageButton
-                android:id="@+id/sendButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:tint="@color/white"
-                android:padding="16dp"
-                android:backgroundTint="@color/g5"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/chatEditText"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_baseline_send_24" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
+            tools:visibility="visible" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout2"
@@ -91,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:fontFamily= "@font/font_custom"
+                android:fontFamily="@font/font_custom"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -122,8 +92,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:textSize="16dp"
                     android:fontFamily="@font/font_custom"
+                    android:textSize="16dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/keyImage"
                     app:layout_constraintTop_toTopOf="parent"
@@ -184,6 +154,7 @@
                 android:id="@+id/messageRecycler"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:translationZ="1dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -195,17 +166,48 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <FrameLayout
-            android:id="@+id/frameLayout"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/view_background"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/constraintLayout"
+            android:background="@color/buttonColor"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible" />
+            app:layout_constraintStart_toStartOf="parent">
+
+            <EditText
+                android:id="@+id/chatEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:background="@color/buttonColor"
+                android:fontFamily="@font/font_custom"
+                android:hint="@string/text_sendMessage"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:textColor="@color/textColor"
+                android:textColorHint="@color/whiteGray"
+                android:textSize="18dp"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/sendButton"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageButton
+                android:id="@+id/sendButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/g5"
+                android:padding="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/chatEditText"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_baseline_send_24"
+                app:tint="@color/white" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
