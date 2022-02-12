@@ -3,8 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/missionCheckCell"
     android:background="#00FFFFFF">
+
+    <CheckBox
+        android:id="@+id/missionCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@null"
+        android:gravity="center"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="@id/cellMissionText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/cellMissionText" />
 
     <TextView
         android:id="@+id/cellMissionText"
@@ -22,21 +37,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <CheckBox
-        android:id="@+id/missionCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@null"
-        android:clickable="true"
-        android:gravity="center"
-        android:minWidth="0dp"
-        android:minHeight="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/cellMissionText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/cellMissionText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

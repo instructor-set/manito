@@ -1,18 +1,15 @@
 package com.instructor.manito
 
 import android.animation.ValueAnimator
-import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -21,10 +18,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
-import com.google.firebase.dynamiclinks.ktx.androidParameters
-import com.google.firebase.dynamiclinks.ktx.dynamicLink
-import com.google.firebase.dynamiclinks.ktx.dynamicLinks
-import com.google.firebase.ktx.Firebase
 import com.instructor.manito.databinding.ActivityRoomBinding
 import com.instructor.manito.dto.Chat
 import com.instructor.manito.dto.Game
@@ -32,18 +25,17 @@ import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
 import com.instructor.manito.lib.Util
-import com.instructor.manito.view.login.main.room.FinishFragment
-import com.instructor.manito.view.login.main.room.MissionCheckAdapter
 import splitties.bundle.BundleSpec
-import splitties.bundle.bundleOrDefault
-import splitties.bundle.putExtras
+import splitties.bundle.bundle
 import splitties.bundle.withExtras
+import splitties.toast.toast
+import java.util.*
 import kotlin.collections.set
 
 class RoomActivity : AppCompatActivity() {
 
     object Extras : BundleSpec() {
-        var room: Room by bundleOrDefault(Room())
+        var room: Room by bundle()
     }
 
 
@@ -103,37 +95,22 @@ class RoomActivity : AppCompatActivity() {
     private val myManitoMenu by lazy {
         bind.drawerView.menu.getItem(1).subMenu
     }
-
     // 종료
     private val exitMenu by lazy {
         bind.drawerView.menu.getItem(2)
     }
-
     // 미션창
     private var isExpanded = false
     private val missionCheckAdapter by lazy {
-        MissionCheckAdapter(this, room.missions ?: arrayListOf(), room.rid!!)
+        MissionCheckAdapter(this, room.missions ?: arrayListOf())
     }
 
-    private var menuExpanded = false
-    private var showFragment = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(bind.root)
 
-        handleDeepLink()
-
-    }
-
-
-    fun init() {
-        //share link
-        val appLinkIntent = intent
-        val appLinkAction = appLinkIntent.action
-        val appLinkData = appLinkIntent.data
-        handleIntent(intent)
 
 
         with(bind) {
@@ -151,25 +128,24 @@ class RoomActivity : AppCompatActivity() {
                         .addChildEventListener(chatsChildEventListener)
                 }
             }
-            Database.getReference("games/${room.rid}/${Authentication.uid}")
-                .addValueEventListener(object :
-                    ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        val game = snapshot.getValue<Game>()
-                        if (game != null) {
-                            Util.uidToNickname(game.manito!!) { nickname ->
-                                if (nickname != Util.MESSAGE_UNDEFINED) {
-                                    myManitoMenu.add("$nickname")
-                                }
+            Database.getReference("games/${room.rid}/${Authentication.uid}").addValueEventListener(object:
+                ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val game = snapshot.getValue<Game>()
+                    if (game != null) {
+                        Util.uidToNickname(game.manito!!) { nickname ->
+                            if (nickname != Util.MESSAGE_UNDEFINED) {
+                                myManitoMenu.add("$nickname")
                             }
                         }
                     }
+                }
 
-                    override fun onCancelled(error: DatabaseError) {
+                override fun onCancelled(error: DatabaseError) {
 
-                    }
+                }
 
-                })
+            })
 
             sendButton.setOnClickListener {
                 Database.sendChat(room.rid!!, Chat.TYPE_MESSAGE, chatEditText.text.toString())
@@ -180,21 +156,22 @@ class RoomActivity : AppCompatActivity() {
             menuButton.setOnClickListener {
                 drawerLayout.openDrawer(GravityCompat.END)
             }
-            button1.setOnClickListener {
-                if (button1.text.equals("게임 시작")) {
+            startButton.setOnClickListener{
+                if(startButton.text.equals("게임 시작")){
                     Database.getReference("rooms/${room.rid}/state").setValue(Room.STATE_READY)
                         .addOnSuccessListener {
                             Database.getReference("rooms/${room.rid}/users").get()
                                 .addOnSuccessListener {
-                                    val userList = it.getValue<HashMap<String, String>>()!!
-                                    val users = userList.values.shuffled()
+                                    val userList = it.getValue<HashMap<String, Any>>()!!
+                                    val users = userList.keys.shuffled()
                                     val games = hashMapOf<String, Game>()
                                     val missions = HashMap<String, Boolean>()
-                                    room.missions?.forEach { mission ->
+                                    val lastUserNumber = users.size - 1
+                                    room.missions?.forEach {  mission ->
                                         missions[mission] = false
                                     }
                                     for (i in users.indices) {
-                                        if (i != users.size - 1) {
+                                        if (i != lastUserNumber) {
                                             games[users[i]] = Game(users[i + 1], missions)
                                         } else {
                                             games[users[i]] = Game(users[0], missions)
@@ -209,22 +186,20 @@ class RoomActivity : AppCompatActivity() {
                                 }
                         }
 
-                } else {
-                    Toast.makeText(this@RoomActivity, "게임 종료", Toast.LENGTH_SHORT).show()
                 }
 
             }
             if (room.manager == Authentication.uid) {
-                button1.visibility = View.VISIBLE
+                startButton.visibility = View.VISIBLE
             }
+
 
             Database.getReference("rooms/${room.rid}/users")
                 .addChildEventListener(roomChildEventListener)
 
             Database.getReference("rooms/${room.rid}/state").get().addOnSuccessListener {
-                if (it.value.toString() == "START") {
-                    button1.text = "게임 종료"
-                    button1.text = "게임 종료"
+                if(it.value.toString() == "START"){
+                    startButton.text = "게임 종료"
                 }
             }
 
@@ -236,72 +211,23 @@ class RoomActivity : AppCompatActivity() {
             }
             missionRecyclerRoom.adapter = missionCheckAdapter
 
-            constraintLayout7.setOnClickListener {
-                menuVisibility()
-            }
 
-            val transaction =
-                supportFragmentManager.beginTransaction().add(R.id.frameLayout, FinishFragment())
-            transaction.commit()
-            button2.setOnClickListener {
-                setFragment(false)
-            }
-            button3.setOnClickListener {
-                Util.j(button3.text)
-            }
-
-
-            //링크생성
-            shareButton.setOnClickListener{
-                test(this@RoomActivity, room.rid!!)
-//                createDynamicLink()
-//                createShortDynamicLink()
-////                getInvitation()
-//                Log.d("dynamicLink","success")
-            }
         }
-    }
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        handleIntent(intent)
-    }
-
-    private fun handleIntent(intent: Intent?){
-        val appLinkAction = intent?.action
-        val appLinkData: Uri? = intent?.data
-        if(Intent.ACTION_VIEW == appLinkAction){
-            appLinkData?.lastPathSegment?.also{ roomEnt->
-                Uri.parse("content://com.manito_app/game/")
-                    .buildUpon()
-                    .appendPath(roomEnt)
-                    .build().also { appData ->
-                        enterRoom(appData)
-                    }
-
-            }
-        }
-    }
-
-    private fun enterRoom(appData: Uri?) {
 
     }
 
-    private fun changeVisibility() {
-        with(bind) {
+    private fun changeVisibility(){
+        with(bind){
             isExpanded = !isExpanded
             // ValueAnimator.ofInt(int... values)는 View가 변할 값을 지정, 인자는 int 배열
 
             // ValueAnimator.ofInt(int... values)는 View가 변할 값을 지정, 인자는 int 배열
 
 
-            missionRecyclerRoom.measure(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT)
+            missionRecyclerRoom.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             val targetHeight = missionRecyclerRoom.measuredHeight
 
-            val va = if (isExpanded) ValueAnimator.ofInt(0, targetHeight) else ValueAnimator.ofInt(
-                targetHeight,
-                0)
+            val va = if (isExpanded) ValueAnimator.ofInt(0, targetHeight) else ValueAnimator.ofInt(targetHeight, 0)
             // Animation이 실행되는 시간, n/1000초
             // Animation이 실행되는 시간, n/1000초
             va.duration = 200
@@ -325,98 +251,14 @@ class RoomActivity : AppCompatActivity() {
 
     }
 
-    private fun menuVisibility() {
-        with(bind) {
-            menuExpanded = !menuExpanded
-            // ValueAnimator.ofInt(int... values)는 View가 변할 값을 지정, 인자는 int 배열
-
-            // ValueAnimator.ofInt(int... values)는 View가 변할 값을 지정, 인자는 int 배열
-
-            constraintLayout8.measure(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT)
-            val targetHeight = constraintLayout8.measuredHeight
-
-            val constraints = ConstraintSet()
-            constraints.clone(rootLayout)
-
-
-            val va =
-                if (menuExpanded) ValueAnimator.ofInt(0, targetHeight) else ValueAnimator.ofInt(
-                    targetHeight,
-                    0)
-            // Animation이 실행되는 시간, n/1000초
-            // Animation이 실행되는 시간, n/1000초
-            va.duration = 200
-            va.addUpdateListener { animation -> // imageView의 높이 변경
-                //bottomNavi.layoutParams.height = animation.animatedValue as Int
-                //bottomNavi.requestLayout()
-                constraintLayout8.setVisibility(if (menuExpanded) View.VISIBLE else View.GONE)
-
-                // imageView가 실제로 사라지게하는 부분
-
-            }
-
-
-            // Animation start
-            // Animation start
-            if (menuExpanded) {
-                arrowImage2.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp)
-                constraintLayout8.visibility = View.VISIBLE
-                constraints.connect(constraintLayout7.id,
-                    ConstraintSet.BOTTOM,
-                    constraintLayout8.id,
-                    ConstraintSet.TOP)
-                constraints.applyTo(rootLayout)
-            } else {
-                arrowImage2.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp)
-                constraintLayout8.visibility = View.GONE
-                constraints.connect(constraintLayout7.id,
-                    ConstraintSet.BOTTOM,
-                    constraintLayout.id,
-                    ConstraintSet.TOP)
-                constraints.applyTo(rootLayout)
-            }
-
-            va.start()
-
-        }
-
-    }
-
-    fun setFragment(showAll: Boolean) {
-        with(bind) {
-            if (showAll) {
-                val transaction = supportFragmentManager.beginTransaction()
-                    .replace(R.id.frameLayout, ShowAllFragment())
-                transaction.commit()
-            } else {
-                showFragment = !showFragment
-                val transaction = supportFragmentManager.beginTransaction()
-                    .replace(R.id.frameLayout, FinishFragment())
-                transaction.commit()
-                frameLayout.visibility = if (showFragment) View.VISIBLE else View.GONE
-
-            }
-
-        }
-
-    }
 
 
     override fun onBackPressed() {
         with(bind) {
-            when {
-                drawerLayout.isDrawerOpen(GravityCompat.END) -> {
-                    drawerLayout.closeDrawer(GravityCompat.END)
-                }
-                showFragment -> {
-                    frameLayout.visibility = View.GONE
-                    showFragment = false
-
-                }
-                else -> {
-                    finish()
-                }
+            if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                drawerLayout.closeDrawer(GravityCompat.END)
+            } else {
+                finish()
             }
         }
     }
@@ -424,7 +266,7 @@ class RoomActivity : AppCompatActivity() {
     private val chatsChildEventListener = object : ChildEventListener {
         override fun onChildAdded(
             snapshot: DataSnapshot,
-            previousChildName: String?,
+            previousChildName: String?
         ) {
             val chat = snapshot.getValue<Chat>()!!
             chatList.add(chat)
@@ -434,7 +276,7 @@ class RoomActivity : AppCompatActivity() {
 
         override fun onChildChanged(
             snapshot: DataSnapshot,
-            previousChildName: String?,
+            previousChildName: String?
         ) {
         }
 
@@ -443,7 +285,7 @@ class RoomActivity : AppCompatActivity() {
 
         override fun onChildMoved(
             snapshot: DataSnapshot,
-            previousChildName: String?,
+            previousChildName: String?
         ) {
         }
 
@@ -456,7 +298,7 @@ class RoomActivity : AppCompatActivity() {
 
         override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
 
-            val uid = snapshot.getValue<String>()!!
+            val uid = snapshot.key!!
             val itemId = nextItemId++
             uidToItemId[uid] = itemId
             Util.uidToNickname(uid) {
@@ -487,67 +329,4 @@ class RoomActivity : AppCompatActivity() {
         }
 
     }
-
-
-    fun test(activity: Activity, roomId: String){
-        val dynamicLink = Firebase.dynamicLinks.dynamicLink {
-            link = Uri.parse("https://manito.page.com/${room.rid}")
-            domainUriPrefix = "https://manito.page.link/"
-            // Open links with this app on Android
-            androidParameters { }
-        }
-        Util.j(dynamicLink.uri)
-        val sendIntent = Intent()
-        sendIntent.action = Intent.ACTION_SEND
-        sendIntent.putExtra(Intent.EXTRA_TEXT, dynamicLink.uri.toString())
-        sendIntent.type = "text/plain"
-        activity.startActivity(Intent.createChooser(sendIntent, "Share"))
-//        FirebaseDynamicLinks.getInstance().createDynamicLink()
-//            .setLink(getInviteDeepLink(roomId))
-//            .setDynamicLinkDomain("manito.page.link")
-//            .buildShortDynamicLink()
-//            .addOnCompleteListener(activity){
-//                task-> if(task.isSuccessful){
-//                    val shortLink: Uri = task.result.shortLink!!
-//                try{
-
-//                } catch(ignored: ActivityNotFoundException){
-//                }
-//                }else{
-//                    Log.d("test",task.toString())
-//                }
-//            }
-    }
-
-
-                fun shareLink(myDynamicLink: Uri) {
-                    // [START ddl_share_link]
-                    val sendIntent = Intent().apply {
-                        val msg = "Hey, check this out: $myDynamicLink"
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, msg)
-                        type = "text/plain"
-                    }
-                    startActivity(sendIntent)
-                    // [END ddl_share_link]
-                }
-
-                fun handleDeepLink() {
-                    Firebase.dynamicLinks
-                        .getDynamicLink(intent).addOnSuccessListener(this) {
-                            if (it == null) {
-                                init()
-                            } else {
-                                Database.getReference("rooms/${it.link?.lastPathSegment}").get().addOnSuccessListener {
-                                    putExtras(Extras) {
-                                        room = it.getValue<Room>()!!
-                                    }
-                                    init()
-                                }
-                            }
-                        }
-
-                }
-
-
 }

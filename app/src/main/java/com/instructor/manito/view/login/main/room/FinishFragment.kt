@@ -1,13 +1,13 @@
-package com.instructor.manito.view.login.main.room
+package com.instructor.manito
 
 import android.content.Context
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.instructor.manito.RoomActivity
 import com.instructor.manito.databinding.FragmentFinishBinding
+import com.instructor.manito.dto.Room
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,8 +20,6 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class FinishFragment : Fragment() {
-
-
 
 
     var roomActivity: RoomActivity? = null
@@ -39,7 +37,7 @@ class FinishFragment : Fragment() {
         var bind = FragmentFinishBinding.inflate(inflater, container, false)
         with(bind){
             bind.finishShowAllButton.setOnClickListener {
-                roomActivity!!.setFragment(true)
+                //roomActivity!!.setFramgent(true)
             }
         }
         return bind.root
@@ -58,6 +56,10 @@ class FinishFragment : Fragment() {
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             FinishFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_PARAM1, param1)
+                    putString(ARG_PARAM2, param2)
+                }
             }
     }
 }
