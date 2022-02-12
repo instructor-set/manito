@@ -271,7 +271,8 @@ class RoomActivity : AppCompatActivity() {
                 setFragment(false)
             }
             button3.setOnClickListener {
-                Util.j(button3.text)
+                Database.getReference("users/${Authentication.uid}/rooms/${room.rid}").setValue(null)
+                finish()
             }
 
 
