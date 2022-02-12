@@ -1,6 +1,7 @@
 package com.instructor.manito.view.login.main
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.ServerValue
 import com.instructor.manito.view.login.main.create.MissionAdapter
@@ -34,6 +35,16 @@ class CreateActivity : AppCompatActivity() {
                 titleEditText.text.ifBlank {
                     return@setOnClickListener
                 }
+
+                if(titleEditText.text.length <= 1){
+                    Toast.makeText(this@CreateActivity, "방 제목이 너무 짧습니다.", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                } else if(titleEditText.text.length >= 30){
+                    Toast.makeText(this@CreateActivity, "방 제목이 너무 깁니다.", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+
                 createCreateRoomButton.isEnabled = false
                 val roomRef = Database.getReference("rooms").push()
                 val uid = Authentication.uid!!

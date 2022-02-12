@@ -104,14 +104,19 @@ class LoginActivity : AppCompatActivity() {
                                 materialAlertDialog {
                                     titleResource = R.string.title_dialog_nickname
                                     // TODO 닉네임 조건 검사 추가
-                                    message = "닉네임 조건"
+                                    message = "닉네임에는 공백이 포함될 수 없습니다."
                                     okButton {
-                                        val nickname = editText.text.toString()
-                                        RetrofitClient.editUser(nickname, onUnsuccessful = { _: Call<Message>, response: Response<Message> ->
-                                            Util.j(response.message())
-                                        }) { _, _ ->
-                                            loginSuccess()
+                                        if(editText.text.isBlank()){
+                                            Toast.makeText(context, "잘못된 닉네임입니다.", Toast.LENGTH_SHORT).show()
+                                        } else{
+                                            val nickname = editText.text.toString().replace(" ", "")
+                                            RetrofitClient.editUser(nickname, onUnsuccessful = { _: Call<Message>, response: Response<Message> ->
+                                                Util.j(response.message())
+                                            }) { _, _ ->
+                                                loginSuccess()
+                                            }
                                         }
+
                                     }
                                     cancelButton()
 

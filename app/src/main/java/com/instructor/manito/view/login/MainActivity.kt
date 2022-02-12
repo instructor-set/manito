@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.ChildEventListener
@@ -104,9 +105,13 @@ class MainActivity : AppCompatActivity() {
             // 닉네임 수정
             with(DialogEditnameBinding.inflate(inflater)) {
                 val nicknameEditDialog = AlertDialog.Builder(this@MainActivity).setView(root)
+                    .setMessage("닉네임에는 공백이 포함될 수 없습니다.")
                     .setPositiveButton("수정") { _: DialogInterface, _: Int ->
+                        if(nameEditText.text.isBlank()){
+                           return@setPositiveButton
+                        }
                         Database.getReference("users/${Authentication.uid}/nickname")
-                            .setValue(nameEditText.text.toString())
+                            .setValue(nameEditText.text.toString().replace(" ", ""))
                     }.setNeutralButton("취소", null)
                     .create()
                 editName.setOnClickListener {
