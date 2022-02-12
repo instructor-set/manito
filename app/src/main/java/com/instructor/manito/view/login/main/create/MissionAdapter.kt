@@ -52,7 +52,7 @@ class MissionAdapter(private val context: Context, private var listData: ArrayLi
 
         missionButton.setOnClickListener {
           if (missionButton.text == "추가") {
-            if(missionEditText.text.isDigitsOnly()){
+            if(missionEditText.text.toString().replace(" ", "").isDigitsOnly()){
               Toast.makeText(context, "미션은 숫자로만 이루어질 수 없습니다.", Toast.LENGTH_SHORT).show()
               return@setOnClickListener
             }

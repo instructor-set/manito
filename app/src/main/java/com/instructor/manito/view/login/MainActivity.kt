@@ -105,7 +105,6 @@ class MainActivity : AppCompatActivity() {
             // 닉네임 수정
             with(DialogEditnameBinding.inflate(inflater)) {
                 val nicknameEditDialog = AlertDialog.Builder(this@MainActivity).setView(root)
-                    .setMessage("닉네임에는 공백이 포함될 수 없습니다.")
                     .setPositiveButton("수정") { _: DialogInterface, _: Int ->
                         if(nameEditText.text.isBlank()){
                            return@setPositiveButton

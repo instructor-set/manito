@@ -2,6 +2,7 @@ package com.instructor.manito.view.login.main
 
 import android.animation.ValueAnimator
 import android.content.Intent
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
@@ -14,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -264,6 +266,10 @@ class RoomActivity : AppCompatActivity() {
                 changeVisibility()
 
             }
+
+            val spaceDecoration = VerticalSpaceItemDecoration(10)
+            missionRecyclerRoom.addItemDecoration(spaceDecoration)
+
             missionRecyclerRoom.adapter = missionCheckAdapter
 
             constraintLayout7.setOnClickListener {
@@ -283,6 +289,17 @@ class RoomActivity : AppCompatActivity() {
 
         }
 
+    }
+
+    inner class VerticalSpaceItemDecoration(private val verticalSpaceHeight: Int) : RecyclerView.ItemDecoration() {
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
+            outRect.bottom = verticalSpaceHeight
+        }
     }
 
     private fun changeVisibility() {

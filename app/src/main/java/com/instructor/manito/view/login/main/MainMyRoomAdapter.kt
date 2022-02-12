@@ -57,7 +57,7 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
                     Room.STATE_WAIT -> "대기중"
                     Room.STATE_READY -> "준비"
                     Room.STATE_START -> "게임중"
-                    else -> ""
+                    else -> "게임종료"
                 }
                 if (room.state != Room.STATE_WAIT) {
                     exitButton.visibility = View.GONE

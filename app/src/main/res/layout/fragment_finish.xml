@@ -9,6 +9,8 @@
 
     <TextView
         android:id="@+id/finishText2"
+        android:fontFamily="@font/font_custom"
+        android:textSize="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -24,16 +26,19 @@
 
     <TextView
         android:id="@+id/finishText3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/finishText2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/font_custom"
         android:text="000님은 000님의 마니또였습니다."
         android:textColor="@color/textColor"
-        android:textStyle="bold" />
+        android:textSize="18dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/finishText2" />
 
     <TextView
         android:id="@+id/finishText5"
@@ -43,7 +48,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:textSize="20dp"
         android:text="미션 결과"
+        android:fontFamily="@font/font_custom"
         android:textColor="@color/textColor"
         tools:layout_editor_absoluteX="259dp"
         tools:layout_editor_absoluteY="182dp" />
@@ -66,7 +73,7 @@
         android:background="@drawable/view_background"
         tools:listitem="@layout/layout_mission" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/finishShowAllButton"
         android:layout_width="0dp"
         android:layout_height="40dp"

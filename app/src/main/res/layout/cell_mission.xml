@@ -24,13 +24,14 @@
 
         />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/missionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:background="@drawable/shadow"
         android:text="추가"
+        android:elevation="2dp"
         android:textStyle="normal"
         android:textColor="@color/textColor"
         android:fontFamily="@font/font_custom"
