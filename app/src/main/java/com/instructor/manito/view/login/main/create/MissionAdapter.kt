@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import androidx.core.text.isDigitsOnly
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.instructor.manito.databinding.CellMissionBinding
@@ -50,6 +52,10 @@ class MissionAdapter(private val context: Context, private var listData: ArrayLi
 
         missionButton.setOnClickListener {
           if (missionButton.text == "추가") {
+            if(missionEditText.text.isDigitsOnly()){
+              Toast.makeText(context, "미션은 숫자로만 이루어질 수 없습니다.", Toast.LENGTH_SHORT).show()
+              return@setOnClickListener
+            }
             if (missionEditText.text.isNotBlank()) {
               missionButton.text = "삭제"
               listData.add("")

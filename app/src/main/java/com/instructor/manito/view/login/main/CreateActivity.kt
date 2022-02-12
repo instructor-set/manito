@@ -3,6 +3,7 @@ package com.instructor.manito.view.login.main
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.isDigitsOnly
 import com.google.firebase.database.ServerValue
 import com.instructor.manito.view.login.main.create.MissionAdapter
 import com.instructor.manito.databinding.ActivityCreateBinding
@@ -45,7 +46,7 @@ class CreateActivity : AppCompatActivity() {
                 }
 
 
-                createCreateRoomButton.isEnabled = false
+                //createCreateRoomButton.isEnabled = false
                 val roomRef = Database.getReference("rooms").push()
                 val uid = Authentication.uid!!
                 val rid = roomRef.key
