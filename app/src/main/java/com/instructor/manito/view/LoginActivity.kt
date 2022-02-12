@@ -21,6 +21,7 @@ import com.instructor.manito.view.login.MainActivity
 import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.auth.TokenManager
 import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
 import retrofit2.Call
 import retrofit2.Response
@@ -45,6 +46,8 @@ class LoginActivity : AppCompatActivity() {
 
 
         with(bind) {
+            Util.j(Utility.getKeyHash(this@LoginActivity))
+
             kakaoLoginButton.setOnClickListener {
                 UserApiClient.instance.run {
                     if (isKakaoTalkLoginAvailable(this@LoginActivity)) {
