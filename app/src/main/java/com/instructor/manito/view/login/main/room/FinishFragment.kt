@@ -7,6 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ktx.getValue
 import com.instructor.manito.databinding.FragmentFinishBinding
 import com.instructor.manito.databinding.LayoutMissionBinding
@@ -34,7 +37,7 @@ class FinishFragment : Fragment() {
 
     data class Mission(
         val title: String = "",
-        val result: Boolean = false,
+        var result: Boolean = false,
     )
 
     override fun onAttach(context: Context) {
@@ -54,9 +57,10 @@ class FinishFragment : Fragment() {
             }
             Database.getReference("games/${rid}/${Authentication.uid}/manito").get()
                 .addOnSuccessListener {
-                    Util.uidToNickname(it.getValue<String>()!!) { myManito ->
+                    val myManitoId = it.getValue<String>()!!
+                    Util.uidToNickname(myManitoId) { myManito ->
                         finishText2.text = "당신은 ${myManito}의 마니또입니다."
-                        Database.getReference("games/${rid}/$it/manito").get()
+                        Database.getReference("games/${rid}/$myManitoId/manito").get()
                             .addOnSuccessListener { that ->
                                 Util.uidToNickname(that.getValue<String>()!!) { maManito ->
                                     finishText3.text = "${myManito}의 마니또는 ${maManito}였습니다."
@@ -67,12 +71,38 @@ class FinishFragment : Fragment() {
 
             val missionList = arrayListOf<Mission>()
             val finishMissionAdapter = FinishMissionAdapter(missionList)
+            Database.getReference("games/$rid/${Authentication.uid}/missions")
+                .addChildEventListener(object : ChildEventListener {
+                    override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                        missionList.add(Mission(snapshot.key!!, snapshot.getValue<Boolean>()!!))
+                        finishMissionAdapter.notifyItemInserted(missionList.size)
+                    }
 
-            // mission 데이터 넣기
-            missionList.add(Mission("미션1", false))
-            missionList.add(Mission("미션2", true))
-            missionList.add(Mission("미션3", true))
+                    override fun onChildChanged(
+                        snapshot: DataSnapshot,
+                        previousChildName: String?,
+                    ) {
+                        missionList.forEach {
+                            if (it.title == snapshot.key) {
+                                it.result = snapshot.getValue<Boolean>()!!
+                                finishMissionAdapter.notifyDataSetChanged()
+                            }
+                        }
+                    }
 
+                    override fun onChildRemoved(snapshot: DataSnapshot) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
             missionRecycler.adapter = finishMissionAdapter
             return root
         }

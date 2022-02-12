@@ -2,13 +2,15 @@ package com.instructor.manito
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.ktx.getValue
 import com.instructor.manito.databinding.CellResultBinding
 import com.instructor.manito.databinding.FragmentShowAllBinding
+import com.instructor.manito.lib.Database
 import com.instructor.manito.lib.Util
 import com.instructor.manito.view.login.main.RoomActivity
 
@@ -54,21 +56,23 @@ class ShowAllFragment : Fragment() {
     ): View? {
         val bind = FragmentShowAllBinding.inflate(inflater, container, false)
         with(bind){
-
-            // 총 몇명
-            showAllText1.text = "총 " + "10"
-
-
-            // recyclerview
             val listData = arrayListOf<Manito>()
             val resultRecyclerAdapter = ResultRecylerAdpater(listData)
-
-            // 데이터 넣기
-            listData.add(Manito("나", "너"))
-            listData.add(Manito("사람2", "나"))
-            listData.add(Manito("너", "사람2"))
-            //Util.j(listData)
             resultRecycler.adapter = resultRecyclerAdapter
+            Database.getReference("games/$param1").get().addOnSuccessListener {
+                showAllText1.text = "총 ${it.childrenCount}명"
+                it.children.forEach { that ->
+                    Util.uidToNickname(that.key!!) { me ->
+                        Util.uidToNickname(that.child("manito").getValue<String>()!!) { you ->
+                            listData.add(Manito(me as String, you as String))
+                            resultRecyclerAdapter.notifyItemInserted(listData.size)
+
+                        }
+                    }
+                }
+            }
+            //Util.j(listData)
+
 
             return root
         }

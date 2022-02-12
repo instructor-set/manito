@@ -273,7 +273,10 @@ class RoomActivity : AppCompatActivity() {
                 setFragment(false)
             }
             button3.setOnClickListener {
-                Database.getReference("users/${Authentication.uid}/rooms/${room.rid}").setValue(null)
+                Database.getReference("")
+                    .updateChildren(mapOf("users/${Authentication.uid}/rooms/${room.rid}" to null,
+                    "rooms/${room.rid}/users/${Authentication.uid}!" to null)
+                    )
                 finish()
             }
 
@@ -386,7 +389,7 @@ class RoomActivity : AppCompatActivity() {
         with(bind) {
             if (showAll) {
                 val transaction = supportFragmentManager.beginTransaction()
-                    .replace(R.id.frameLayout, ShowAllFragment())
+                    .replace(R.id.frameLayout, ShowAllFragment.newInstance(room.rid!!, ""))
                 transaction.commit()
             } else {
                 showFragment = !showFragment
@@ -457,7 +460,7 @@ class RoomActivity : AppCompatActivity() {
 
             val uid = snapshot.getValue<String>()!!
             val itemId = nextItemId++
-            uidToItemId[uid] = itemId
+            uidToItemId[uid+"!"] = itemId
             Util.uidToNickname(uid) {
                 if (it == Util.MESSAGE_UNDEFINED) {
                     finish()
