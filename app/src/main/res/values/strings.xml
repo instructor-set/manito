@@ -20,4 +20,6 @@
     <string name="manito_message_2">당신의 마니또는 %1s 님 입니다.</string>
     <string name="player">참가자</string>
     <string name="my_manito">내 마니또</string>
+    <string name="title_gizmos" />
+    <string name="asset_statements" translatable="false">[{ \"include\": \"https://www.manito-app.com/.well-known/assetlinks.json\" }]</string>
 </resources>

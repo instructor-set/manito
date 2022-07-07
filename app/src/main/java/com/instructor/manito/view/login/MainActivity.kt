@@ -1,12 +1,10 @@
-package com.instructor.manito
+package com.instructor.manito.view.login
 
 
-import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.*
@@ -18,6 +16,9 @@ import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
 import com.instructor.manito.lib.Util
+import com.instructor.manito.view.login.main.CreateActivity
+import com.instructor.manito.view.login.main.MainMyRoomAdapter
+import com.instructor.manito.view.login.main.MainRoomAdapter
 import splitties.activities.start
 import splitties.toast.toast
 
@@ -137,7 +138,6 @@ class MainActivity : AppCompatActivity() {
 
                     myRoomValueEventListenerMap[rid] = object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            Util.j("$rid, ${snapshot.getValue<Room>()}")
                             if (!snapshot.exists())
                                 return
                             if (myRoomIndexMap.containsKey(rid)) {

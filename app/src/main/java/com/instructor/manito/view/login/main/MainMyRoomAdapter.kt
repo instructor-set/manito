@@ -1,4 +1,4 @@
-package com.instructor.manito
+package com.instructor.manito.view.login.main
 
 import android.content.Context
 import android.content.DialogInterface
@@ -12,6 +12,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
+import com.instructor.manito.R
+import com.instructor.manito.RoomActivity
 import com.instructor.manito.databinding.CellMyRoomBinding
 import com.instructor.manito.dto.Chat
 import com.instructor.manito.dto.Game
@@ -19,18 +21,20 @@ import com.instructor.manito.dto.Room
 import com.instructor.manito.lib.Authentication
 import com.instructor.manito.lib.Database
 import com.instructor.manito.lib.Util
+import com.instructor.manito.view.login.MainActivity
 import splitties.activities.start
 import splitties.bundle.putExtras
+
 
 class MainMyRoomAdapter(private val context: Context, private var listData: ArrayList<Room>) :
     RecyclerView.Adapter<MainMyRoomAdapter.Holder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainMyRoomAdapter.Holder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = CellMyRoomBinding.inflate(LayoutInflater.from(context), parent, false)
         return Holder(view)
     }
 
-    override fun onBindViewHolder(holder: MainMyRoomAdapter.Holder, position: Int) {
+    override fun onBindViewHolder(holder: Holder, position: Int) {
         val room: Room = listData[position]
         //Log.e("dataList", "data : $listData")
         holder.binding(room)
@@ -57,7 +61,8 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
                 if (room.state != Room.STATE_WAIT) {
                     exitButton.visibility = View.GONE
                 }
-                Database.getReference("games/$rid/$uid").addValueEventListener(object: ValueEventListener {
+                Database.getReference("games/$rid/$uid").addValueEventListener(object:
+                    ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val game = snapshot.getValue<Game>()
                         if (game == null) {
@@ -104,7 +109,7 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
                                     val updates = hashMapOf<String, Any?>()
                                     if (isManager) {
                                         // 유저들의 방 목록에서 지우고
-                                        for (user in roomData?.users?.keys!!) {
+                                        for (user in roomData?.users!!) {
                                             updates["users/$user/rooms/$rid"] = null
                                         }
                                         // 방을 지우고
@@ -146,7 +151,7 @@ class MainMyRoomAdapter(private val context: Context, private var listData: Arra
                             }
                         } else {
                             val updates = hashMapOf(
-                                "rooms/$rid/users/$uid" to true,
+                                "rooms/$rid/users" to listOf(uid),
                                 "users/$uid/rooms/$rid" to ServerValue.TIMESTAMP
                             )
                             Database.getReference("").updateChildren(updates)

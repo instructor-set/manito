@@ -1,16 +1,19 @@
 package com.instructor.manito.lib
 
+import android.net.Uri
 import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.dynamiclinks.DynamicLink
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 
 object Util {
     const val MESSAGE_UNDEFINED = "_UNDEFINED"
     val nicknameMap: HashMap<String, String> = hashMapOf()
     val timestampMap: HashMap<String, Any> = hashMapOf()
-    fun j(msg: String) = Log.d("jinha", msg)
+    fun j(msg: Any?) = Log.d("jinha", "$msg")
     fun dummy(any: Any?) = any
 
     fun uidToNickname(uid: String, listener: (Any?) -> Unit): String? {
@@ -59,5 +62,18 @@ object Util {
 
             })
         }
+    }
+    fun generateContentLink(): Uri {
+        val baseUrl = Uri.parse("https://manito.page.link")
+        val domain = "https://manito.page.link"
+
+        val link = FirebaseDynamicLinks.getInstance()
+            .createDynamicLink()
+            .setLink(baseUrl)
+            .setDomainUriPrefix(domain)
+            .setAndroidParameters(DynamicLink.AndroidParameters.Builder("com.instructor.manito").build())
+            .buildDynamicLink()
+
+        return link.uri
     }
 }

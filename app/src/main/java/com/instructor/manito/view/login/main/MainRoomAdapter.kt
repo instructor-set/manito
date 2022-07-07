@@ -1,4 +1,4 @@
-package com.instructor.manito
+package com.instructor.manito.view.login.main
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ktx.getValue
+import com.instructor.manito.RoomActivity
 import com.instructor.manito.databinding.AlertdialogEdittextBinding
 import com.instructor.manito.databinding.AlertdialogEnterRoomBinding
 import com.instructor.manito.databinding.CellMainBinding
@@ -27,12 +28,12 @@ class MainRoomAdapter(private val context: Context, private var listData: ArrayL
 
     val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainRoomAdapter.Holder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = CellMainBinding.inflate(inflater, parent, false)
         return Holder(view)
     }
 
-    override fun onBindViewHolder(holder: MainRoomAdapter.Holder, position: Int) {
+    override fun onBindViewHolder(holder: Holder, position: Int) {
         val room: Room = listData[position]
         //Log.e("dataList", "data : $listData")
         holder.binding(room)
@@ -56,7 +57,7 @@ class MainRoomAdapter(private val context: Context, private var listData: ArrayL
                     }
                 } else {
                     val updates = hashMapOf(
-                        "rooms/$rid/users/$uid" to true,
+                        "rooms/$rid/users/$uid!" to uid,
                         "users/$uid/rooms/$rid" to ServerValue.TIMESTAMP
                     )
                     Database.getReference("")

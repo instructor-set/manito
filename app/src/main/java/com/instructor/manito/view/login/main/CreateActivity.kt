@@ -1,8 +1,10 @@
-package com.instructor.manito
+package com.instructor.manito.view.login.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.ServerValue
+import com.instructor.manito.RoomActivity
+import com.instructor.manito.view.login.main.create.MissionAdapter
 import com.instructor.manito.databinding.ActivityCreateBinding
 import com.instructor.manito.dto.Chat
 import com.instructor.manito.dto.Room
@@ -45,9 +47,7 @@ class CreateActivity : AppCompatActivity() {
                 }
                 val room = Room(rid, titleEditText.text.toString(), passwordEditText.text.toString(),
                     dummy(16) as Int?,
-                    hashMapOf(
-                        uid to true
-                    ),
+                    mapOf("$uid!" to uid),
                     uid,
                     Room.STATE_WAIT,
                     missions.distinct()
@@ -60,7 +60,7 @@ class CreateActivity : AppCompatActivity() {
                     Database.sendChat(rid!!, Chat.TYPE_ENTER, Chat.MESSAGE_ENTER)
                     start<RoomActivity> {
                         putExtras(RoomActivity.Extras) {
-                            this.room = room
+                            RoomActivity.Extras.room = room
                         }
                     }
                 }
@@ -69,9 +69,6 @@ class CreateActivity : AppCompatActivity() {
             // 어댑터 연결
             missionRecycler.adapter = adapter
         }
-
-
-
 
     }
 
